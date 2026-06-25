@@ -1,0 +1,91 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { useTranslations, defaultLang } from '../lib/i18n';
+
+const lang = defaultLang;
+const t = useTranslations(lang);
+---
+
+<Layout title={t.legal.privacy}>
+  <section class="py-12">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h1 class="font-display text-3xl font-bold mb-8">{t.legal.privacy}</h1>
+
+      <div class="bg-surface rounded-xl p-8 space-y-8">
+        <div>
+          <h2 class="text-xl font-semibold mb-4">1. Donnees collectees</h2>
+          <p class="text-text-muted">
+            Nous collectons les donnees suivantes lors de votre inscription : adresse email, nom d'utilisateur.
+            Lors des paiements, Stripe collecte les informations bancaires necessaires selon sa propre politique de confidentialite.
+          </p>
+        </div>
+
+        <div>
+          <h2 class="text-xl font-semibold mb-4">2. Finalite du traitement</h2>
+          <p class="text-text-muted">
+            Vos donnees sont utilisees pour :
+          </p>
+          <ul class="list-disc list-inside text-text-muted mt-2 space-y-1">
+            <li>Creer et gerer votre compte utilisateur</li>
+            <li>Vous donner acces aux formations achetees</li>
+            <li>Suivre votre progression et delivrer les certificats</li>
+            <li>Vous envoyer des notifications importantes relatives a votre compte</li>
+          </ul>
+        </div>
+
+        <div>
+          <h2 class="text-xl font-semibold mb-4">3. Base legale</h2>
+          <p class="text-text-muted">
+            Le traitement de vos donnees personnelles repose sur l'execution du contrat de vente des formations et votre consentement.
+          </p>
+        </div>
+
+        <div>
+          <h2 class="text-xl font-semibold mb-4">4. Destinataires des donnees</h2>
+          <p class="text-text-muted">
+            Vos donnees sont hebergees par Supabase (service d'infrastructure) et ne sont partagees avec aucun tiers.
+            Les donnees de paiement sont traitees par Stripe conformement a leur politique de confidentialite.
+          </p>
+        </div>
+
+        <div>
+          <h2 class="text-xl font-semibold mb-4">5. Duree de conservation</h2>
+          <p class="text-text-muted">
+            Vos donnees sont conservees pendant la duree de votre inscription et jusqu'a la suppression de votre compte.
+            Apres suppression, vos donnees sont anonymisees ou supprimees dans un delai de 30 jours.
+          </p>
+        </div>
+
+        <div>
+          <h2 class="text-xl font-semibold mb-4">6. Vos droits</h2>
+          <p class="text-text-muted">
+            Conformement au RGPD, vous disposez des droits suivants :
+          </p>
+          <ul class="list-disc list-inside text-text-muted mt-2 space-y-1">
+            <li>Droit d'acces a vos donnees personnelles</li>
+            <li>Droit de rectification</li>
+            <li>Droit a l'effacement (droit a l'oubli)</li>
+            <li>Droit a la portabilite</li>
+            <li>Droit d'opposition</li>
+          </ul>
+        </div>
+
+        <div>
+          <h2 class="text-xl font-semibold mb-4">7. Exercice des droits</h2>
+          <p class="text-text-muted">
+            Pour exercer vos droits ou pour toute question relative a vos donnees personnelles,
+            contactez-nous a : contact@levelup-formation.com
+          </p>
+        </div>
+
+        <div>
+          <h2 class="text-xl font-semibold mb-4">8. Securite</h2>
+          <p class="text-text-muted">
+            Nous mettons en oeuvre des mesures techniques et organisationnelles pour proteger vos donnees
+            (chiffrement, authentification securisee, acces restreint).
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>

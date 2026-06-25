@@ -1,0 +1,138 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { useTranslations, getLocalizedPath, defaultLang } from '../../lib/i18n';
+import { getCourseBySlug, courses } from '../../lib/courses';
+
+const lang = defaultLang;
+const t = useTranslations(lang);
+
+export function getStaticPaths() {
+  return courses.map((course) => ({
+    params: { slug: course.slug },
+  }));
+}
+
+const { slug } = Astro.params;
+const course = getCourseBySlug(slug as string);
+
+if (!course) {
+  return Astro.redirect('/catalogue');
+}
+
+const levelColors: Record<number, string> = {
+  1: 'bg-success text-black',
+  2: 'bg-warning text-black',
+  3: 'bg-error text-white',
+};
+---
+
+<Layout title={course.title}>
+  <section class="py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <nav class="text-text-muted text-sm mb-6">
+        <a href={getLocalizedPath('catalogue', lang)} class="transition-colors">{t.nav.catalogue}</a>
+        <span class="mx-2">/</span>
+        <span>{course.title}</span>
+      </nav>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div class="lg:col-span-2">
+          <div class="aspect-video rounded-xl overflow-hidden mb-6 relative">
+            <img src={course.image} alt={course.title} class="w-full h-full object-cover" />
+            <span class={`absolute top-4 left-4 text-xs font-bold px-2 py-1 rounded ${levelColors[course.level]}`}>
+              LVL{course.level}
+            </span>
+          </div>
+
+          <h1 class="font-display text-3xl font-bold mb-4">{course.title}</h1>
+          <p class="text-text-muted mb-8">{course.longDescription}</p>
+
+          <div class="flex flex-wrap gap-2 mb-8">
+            {course.tags.map((tag) => (
+              <span class="px-3 py-1 bg-surface-light text-text-muted text-sm rounded-full">
+                {tag}
+              </span>
+            ))}
+          </div>
+
+          <div class="bg-surface rounded-xl p-6">
+            <h2 class="font-display text-xl font-semibold mb-6">{t.course.modules}</h2>
+            <div class="space-y-3">
+              {course.modules.map((module) => (
+                <div class={`rounded-lg p-4 ${module.isFree ? 'bg-success/10 border border-success/30' : 'bg-surface-light'}`}>
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                      <span class={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${module.isFree ? 'bg-success text-black' : 'bg-surface text-text-muted'}`}>
+                        {module.order}
+                      </span>
+                      <div>
+                        <h3 class="font-medium">{module.title}</h3>
+                        <p class="text-text-muted text-sm">{module.description}</p>
+                      </div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                      {module.isFree ? (
+                        <span class="px-3 py-1 bg-success text-black text-xs font-bold rounded">{t.course.freeModule}</span>
+                      ) : (
+                        <span class="text-text-muted text-xs">{t.course.lockedModule}</span>
+                      )}
+                      <span class="text-text-muted text-xs">{module.duration}</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div class="lg:col-span-1">
+          <div class="bg-surface rounded-xl p-6 sticky top-24">
+            <div class="text-center mb-6">
+              <span class="text-4xl font-bold text-primary">{course.price}€</span>
+              <p class="text-text-muted text-sm mt-1">{course.level === 1 ? 'Niveau 1' : course.level === 2 ? 'Niveau 2' : 'Niveau 3'}</p>
+            </div>
+
+            <button class="w-full py-3 bg-primary text-white rounded-lg font-semibold mb-4 transition-colors glow-primary">
+              {t.catalogue.buy}
+            </button>
+
+            <div class="text-center text-text-muted text-sm mb-6">
+              <p>Acces a vie aux modules</p>
+              <p>Certificat a la completion</p>
+            </div>
+
+            <div class="border-t border-border pt-6">
+              <h4 class="font-semibold mb-3">Ce cours inclut :</h4>
+              <ul class="space-y-2 text-sm text-text-muted">
+                <li class="flex items-center gap-2">
+                  <svg class="w-4 h-4 text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                  </svg>
+                  {course.modules.length} modules
+                </li>
+                <li class="flex items-center gap-2">
+                  <svg class="w-4 h-4 text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                  </svg>
+                  Quiz par module
+                </li>
+                <li class="flex items-center gap-2">
+                  <svg class="w-4 h-4 text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                  </svg>
+                  Badges numeriques
+                </li>
+                <li class="flex items-center gap-2">
+                  <svg class="w-4 h-4 text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                  </svg>
+                  Certificat PDF
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>

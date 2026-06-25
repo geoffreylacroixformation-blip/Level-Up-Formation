@@ -1,0 +1,159 @@
+{
+  "site": {
+    "name": "Level Up",
+    "slogan": "Montez en compétences, un niveau à la fois"
+  },
+  "nav": {
+    "home": "Accueil",
+    "catalogue": "Catalogue",
+    "about": "A propos",
+    "contact": "Contact",
+    "member": "Espace membre",
+    "login": "Connexion",
+    "logout": "Deconnexion",
+    "dashboard": "Tableau de bord"
+  },
+  "home": {
+    "hero": {
+      "title": "Montez en compétences, un niveau à la fois",
+      "subtitle": "Formations professionnelles en cybersécurité et informatique. Contenu expert, progression structurée, certifications reconnues.",
+      "cta": "Voir les formations"
+    },
+    "why": {
+      "title": "Pourquoi Level Up ?",
+      "reason1": {
+        "title": "Contenu expert",
+        "desc": "Formations conçues par des professionnels actifs dans le domaine de la cybersécurité"
+      },
+      "reason2": {
+        "title": "Progression structurée",
+        "desc": "Parcours pédagogiques en 3 niveaux pour une montée en compétence progressive"
+      },
+      "reason3": {
+        "title": "Certifications",
+        "desc": "Badges numériques et certificats à chaque étape de votre parcours"
+      }
+    },
+    "levels": {
+      "title": "Nos niveaux de formation",
+      "lvl1": {
+        "name": "Niveau 1 - Initiation",
+        "price": "49EUR",
+        "desc": "Fondamentaux de la cybersécurite et premiers pas techniques"
+      },
+      "lvl2": {
+        "name": "Niveau 2 - Perfectionnement",
+        "price": "89EUR",
+        "desc": "Techniques avancees et mise en pratique sur environnements reels"
+      },
+      "lvl3": {
+        "name": "Niveau 3 - Expertise",
+        "price": "149EUR",
+        "desc": "Operations complexes, audit professionnel et specialization"
+      },
+      "bundles": {
+        "title": "Offres groupees",
+        "bundle1": "Pack LVL1 + LVL2 - 119EUR",
+        "bundle2": "Pass All Access - 249EUR"
+      }
+    },
+    "testimonials": {
+      "title": "Ce qu'ils disent de nous",
+      "t1": {
+        "quote": "Une formation complete qui m'a permis de changer de carriere vers la cybersécurité.",
+        "author": "Developpeur reconverti"
+      },
+      "t2": {
+        "quote": "Le format modulaire est parfait pour apprendre a son rythme apres le travail.",
+        "author": "Administrateur systeme"
+      },
+      "t3": {
+        "quote": "Les exercices pratiques sont tres proches des situations reelles rencontrees sur le terrain.",
+        "author": "Consultant en securite"
+      }
+    }
+  },
+  "catalogue": {
+    "title": "Catalogue des formations",
+    "filter": {
+      "all": "Toutes",
+      "lvl1": "Niveau 1",
+      "lvl2": "Niveau 2",
+      "lvl3": "Niveau 3"
+    },
+    "freePreview": "Apercu gratuit disponible",
+    "buy": "Acheter"
+  },
+  "course": {
+    "modules": "Modules",
+    "freeModule": "Module gratuit",
+    "lockedModule": "Module verrouille",
+    "quiz": "Quiz du module",
+    "certificate": "Certificat",
+    "badge": "Badge obtenu",
+    "startQuiz": "Commencer le quiz",
+    "submitQuiz": "Valider",
+    "downloadCert": "Telecharger le certificat"
+  },
+  "member": {
+    "title": "Espace membre",
+    "welcome": "Bienvenue",
+    "myCourses": "Mes formations",
+    "progress": "Progression",
+    "badges": "Mes badges",
+    "certificates": "Mes certificats",
+    "noCourses": "Vous n'avez pas encore achete de formation",
+    "browse": "Parcourir le catalogue"
+  },
+  "auth": {
+    "login": "Connexion",
+    "register": "Inscription",
+    "email": "Email",
+    "password": "Mot de passe",
+    "confirmPassword": "Confirmer le mot de passe",
+    "forgotPassword": "Mot de passe oublie ?",
+    "magicLink": "Envoyer un lien magique",
+    "orSeparator": "ou",
+    "loginSubmit": "Se connecter",
+    "registerSubmit": "S'inscrire",
+    "loginError": "Email ou mot de passe incorrect",
+    "registerSuccess": "Compte cree avec succes"
+  },
+  "about": {
+    "title": "A propos de Level Up",
+    "story": "Level Up est une plateforme de formation dediee a la cybersécurité et a l'informatique. Nous croyons que l'apprentissage doit etre progressif, pratique et valorisant.",
+    "values": {
+      "title": "Nos valeurs",
+      "excellence": "Excellence technique",
+      "excellenceDesc": "Un contenu a jour avec les dernieres technologies et methodes du secteur",
+      "accessibility": "Accessibilite",
+      "accessibilityDesc": "Des formations adaptees a tous les niveaux, du debutant a l'expert",
+      "community": "Communaute",
+      "communityDesc": "Un ecosysteme d'apprenants et de professionnels passionnes"
+    },
+    "stats": {
+      "title": "Quelques chiffres",
+      "students": "apprenants",
+      "courses": "formations",
+      "certificates": "certificats delivres"
+    }
+  },
+  "contact": {
+    "title": "Contact",
+    "name": "Nom",
+    "email": "Email",
+    "message": "Message",
+    "send": "Envoyer",
+    "success": "Message envoye avec succes",
+    "faq": "Consultez notre FAQ"
+  },
+  "legal": {
+    "mentions": "Mentions legales",
+    "cgv": "Conditions generales de vente",
+    "privacy": "Politique de confidentialite"
+  },
+  "footer": {
+    "copyright": "Tous droits reserves",
+    "madeWith": "Fait avec passion"
+  }
+}

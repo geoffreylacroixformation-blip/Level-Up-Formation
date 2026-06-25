@@ -1,0 +1,159 @@
+{
+  "site": {
+    "name": "Level Up",
+    "slogan": "Level up your skills, one level at a time"
+  },
+  "nav": {
+    "home": "Home",
+    "catalogue": "Catalogue",
+    "about": "About",
+    "contact": "Contact",
+    "member": "Member area",
+    "login": "Login",
+    "logout": "Logout",
+    "dashboard": "Dashboard"
+  },
+  "home": {
+    "hero": {
+      "title": "Level up your skills, one level at a time",
+      "subtitle": "Professional training in cybersecurity and IT. Expert content, structured progression, recognized certifications.",
+      "cta": "View courses"
+    },
+    "why": {
+      "title": "Why Level Up?",
+      "reason1": {
+        "title": "Expert content",
+        "desc": "Training designed by active professionals in the cybersecurity field"
+      },
+      "reason2": {
+        "title": "Structured progression",
+        "desc": "Pedagogical paths in 3 levels for a progressive skill development"
+      },
+      "reason3": {
+        "title": "Certifications",
+        "desc": "Digital badges and certificates at every step of your journey"
+      }
+    },
+    "levels": {
+      "title": "Our training levels",
+      "lvl1": {
+        "name": "Level 1 - Introduction",
+        "price": "49EUR",
+        "desc": "Cybersecurity fundamentals and first technical steps"
+      },
+      "lvl2": {
+        "name": "Level 2 - Proficiency",
+        "price": "89EUR",
+        "desc": "Advanced techniques and hands-on practice on real environments"
+      },
+      "lvl3": {
+        "name": "Level 3 - Expertise",
+        "price": "149EUR",
+        "desc": "Complex operations, professional auditing and specialization"
+      },
+      "bundles": {
+        "title": "Bundles",
+        "bundle1": "Pack LVL1 + LVL2 - 119EUR",
+        "bundle2": "All Access Pass - 249EUR"
+      }
+    },
+    "testimonials": {
+      "title": "What they say about us",
+      "t1": {
+        "quote": "A complete training that allowed me to switch careers to cybersecurity.",
+        "author": "Career-changing developer"
+      },
+      "t2": {
+        "quote": "The modular format is perfect for learning at my own pace after work.",
+        "author": "System administrator"
+      },
+      "t3": {
+        "quote": "The practical exercises are very close to real situations encountered in the field.",
+        "author": "Security consultant"
+      }
+    }
+  },
+  "catalogue": {
+    "title": "Course catalogue",
+    "filter": {
+      "all": "All",
+      "lvl1": "Level 1",
+      "lvl2": "Level 2",
+      "lvl3": "Level 3"
+    },
+    "freePreview": "Free preview available",
+    "buy": "Buy"
+  },
+  "course": {
+    "modules": "Modules",
+    "freeModule": "Free module",
+    "lockedModule": "Locked module",
+    "quiz": "Module quiz",
+    "certificate": "Certificate",
+    "badge": "Badge earned",
+    "startQuiz": "Start quiz",
+    "submitQuiz": "Submit",
+    "downloadCert": "Download certificate"
+  },
+  "member": {
+    "title": "Member area",
+    "welcome": "Welcome",
+    "myCourses": "My courses",
+    "progress": "Progress",
+    "badges": "My badges",
+    "certificates": "My certificates",
+    "noCourses": "You haven't purchased any courses yet",
+    "browse": "Browse catalogue"
+  },
+  "auth": {
+    "login": "Login",
+    "register": "Sign up",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm password",
+    "forgotPassword": "Forgot password?",
+    "magicLink": "Send magic link",
+    "orSeparator": "or",
+    "loginSubmit": "Sign in",
+    "registerSubmit": "Sign up",
+    "loginError": "Invalid email or password",
+    "registerSuccess": "Account created successfully"
+  },
+  "about": {
+    "title": "About Level Up",
+    "story": "Level Up is a training platform dedicated to cybersecurity and IT. We believe learning should be progressive, practical, and rewarding.",
+    "values": {
+      "title": "Our values",
+      "excellence": "Technical excellence",
+      "excellenceDesc": "Up-to-date content with the latest technologies and methods in the industry",
+      "accessibility": "Accessibility",
+      "accessibilityDesc": "Training adapted to all levels, from beginner to expert",
+      "community": "Community",
+      "communityDesc": "An ecosystem of passionate learners and professionals"
+    },
+    "stats": {
+      "title": "Some numbers",
+      "students": "learners",
+      "courses": "courses",
+      "certificates": "certificates issued"
+    }
+  },
+  "contact": {
+    "title": "Contact",
+    "name": "Name",
+    "email": "Email",
+    "message": "Message",
+    "send": "Send",
+    "success": "Message sent successfully",
+    "faq": "Check our FAQ"
+  },
+  "legal": {
+    "mentions": "Legal notice",
+    "cgv": "Terms and conditions",
+    "privacy": "Privacy policy"
+  },
+  "footer": {
+    "copyright": "All rights reserved",
+    "madeWith": "Made with passion"
+  }
+}

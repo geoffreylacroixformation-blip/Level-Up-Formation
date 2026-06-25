@@ -1,0 +1,89 @@
+---
+import { useTranslations, languages, getLocalizedPath, defaultLang } from '../lib/i18n';
+
+interface Props {
+  lang: string;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang === 'en' ? 'en' : 'fr');
+
+const isHome = lang === defaultLang ? Astro.url.pathname === '/' : Astro.url.pathname === `/${lang}/`;
+const isCatalogue = Astro.url.pathname.includes('/catalogue');
+const isAbout = Astro.url.pathname.includes('/a-propos') || Astro.url.pathname.includes('/about');
+const isContact = Astro.url.pathname.includes('/contact');
+const isMember = Astro.url.pathname.includes('/membre') || Astro.url.pathname.includes('/member');
+---
+
+<header class="fixed top-0 left-0 right-0 z-50 bg-surface/95 backdrop-blur-sm border-b border-border">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16">
+      <a href={lang === defaultLang ? '/' : `/${lang}/`} class="flex items-center">
+        <img src="/file_000000009a2c71f48eac89c73d4c2381.png" alt="Level Up - Ecole Cyber Virtuelle" class="h-12 w-auto" />
+      </a>
+
+      <nav class="hidden md:flex items-center gap-6">
+        <a
+          href={getLocalizedPath('catalogue', lang)}
+          class:list={["text-sm font-medium transition-colors hover:text-primary", isCatalogue && "text-primary"]}
+        >
+          {t.nav.catalogue}
+        </a>
+        <a
+          href={getLocalizedPath('a-propos', lang)}
+          class:list={["text-sm font-medium transition-colors hover:text-primary", isAbout && "text-primary"]}
+        >
+          {t.nav.about}
+        </a>
+        <a
+          href={getLocalizedPath('contact', lang)}
+          class:list={["text-sm font-medium transition-colors hover:text-primary", isContact && "text-primary"]}
+        >
+          {t.nav.contact}
+        </a>
+        <a
+          href={getLocalizedPath('membre', lang)}
+          class:list={["text-sm font-medium transition-colors hover:text-primary", isMember && "text-primary"]}
+        >
+          {t.nav.member}
+        </a>
+      </nav>
+
+      <div class="flex items-center gap-4">
+        <div class="relative group">
+          <button class="flex items-center gap-1 text-sm font-medium text-text-muted hover:text-text transition-colors">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/>
+            </svg>
+            {languages[lang as keyof typeof languages] || 'FR'}
+          </button>
+          <div class="absolute right-0 mt-2 w-32 bg-surface border border-border rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
+            {Object.entries(languages).map(([code, name]) => (
+              <a
+                href={lang === defaultLang ? `/${code}${Astro.url.pathname}` : `/${code}${Astro.url.pathname.replace(`/${lang}`, '')}`}
+                class:list={["block px-4 py-2 text-sm hover:bg-surface-light transition-colors", lang === code && "text-primary"]}
+              >
+                {name}
+              </a>
+            ))}
+          </div>
+        </div>
+
+        <a
+          href={getLocalizedPath('membre', lang)}
+          class="hidden sm:inline-flex px-4 py-2 bg-primary hover:bg-primary-dark text-white text-sm font-medium rounded-lg transition-colors"
+        >
+          {t.nav.login}
+        </a>
+      </div>
+
+      <button class="md:hidden p-2 text-text-muted hover:text-text" aria-label="Menu">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="h-16"></div>

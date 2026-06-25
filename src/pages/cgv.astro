@@ -1,0 +1,81 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { useTranslations, defaultLang } from '../lib/i18n';
+
+const lang = defaultLang;
+const t = useTranslations(lang);
+---
+
+<Layout title={t.legal.cgv}>
+  <section class="py-12">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h1 class="font-display text-3xl font-bold mb-8">{t.legal.cgv}</h1>
+
+      <div class="bg-surface rounded-xl p-8 space-y-8">
+        <div>
+          <h2 class="text-xl font-semibold mb-4">1. Objet</h2>
+          <p class="text-text-muted">
+            Les presentes conditions generales de vente (CGV) regissent les contrats de vente des formations proposees par Level Up sur son site internet.
+          </p>
+        </div>
+
+        <div>
+          <h2 class="text-xl font-semibold mb-4">2. Produits proposes</h2>
+          <p class="text-text-muted">
+            Les formations proposees sont des formations en ligne accessibles via un espace membre personnalise.
+            Chaque formation comprend des modules video, des quiz et un certificat de fin de parcours.
+          </p>
+        </div>
+
+        <div>
+          <h2 class="text-xl font-semibold mb-4">3. Prix</h2>
+          <p class="text-text-muted">
+            Les prix sont affiches en euros TTC. Level Up se reserve le droit de modifier ses prix a tout moment.
+            Les formations une fois achetees restent accessibles a vie, meme en cas d'augmentation ulterieure des prix.
+          </p>
+        </div>
+
+        <div>
+          <h2 class="text-xl font-semibold mb-4">4. Paiement</h2>
+          <p class="text-text-muted">
+            Le paiement s'effectue en ligne via Stripe, notre partenaire de paiement securise.
+            Nous acceptons les cartes bancaires Visa, Mastercard et American Express.
+          </p>
+        </div>
+
+        <div>
+          <h2 class="text-xl font-semibold mb-4">5. Droit de retractation</h2>
+          <p class="text-text-muted">
+            Conformement a la legislation applicable, vous disposez d'un delai de 14 jours pour exercer votre droit de retractation.
+            Ce droit s'applique uniquement si vous n'avez pas commence la formation.
+            Une fois le premier module commence, le droit de retractation n'est plus applicable.
+          </p>
+        </div>
+
+        <div>
+          <h2 class="text-xl font-semibold mb-4">6. Remboursement</h2>
+          <p class="text-text-muted">
+            En cas de demande de remboursement dans les 14 jours et avant le debut de la formation,
+            le remboursement integral sera effectue sous 14 jours ouvrables.
+          </p>
+        </div>
+
+        <div>
+          <h2 class="text-xl font-semibold mb-4">7. Propriete intellectuelle</h2>
+          <p class="text-text-muted">
+            Le contenu des formations est protege par le droit d'auteur.
+            L'acheteur dispose d'un droit d'acces personnel et non cessible.
+            Toute reproduction ou distribution du contenu est strictement interdite.
+          </p>
+        </div>
+
+        <div>
+          <h2 class="text-xl font-semibold mb-4">8. Contact</h2>
+          <p class="text-text-muted">
+            Pour toute question relative aux CGV, contactez-nous a : contact@levelup-formation.com
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>

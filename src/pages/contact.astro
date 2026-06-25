@@ -1,0 +1,85 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { useTranslations, defaultLang } from '../lib/i18n';
+
+const lang = defaultLang;
+const t = useTranslations(lang);
+---
+
+<Layout title={t.contact.title}>
+  <section class="py-12">
+    <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h1 class="font-display text-3xl font-bold mb-8">{t.contact.title}</h1>
+
+      <div class="bg-surface rounded-xl p-8">
+        <form id="contact-form" class="space-y-6">
+          <div>
+            <label for="name" class="block text-sm font-medium mb-2">{t.contact.name}</label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              required
+              class="w-full px-4 py-3 bg-surface-light border border-border rounded-lg focus:border-primary focus:outline-none transition-colors"
+              placeholder="Votre nom"
+            />
+          </div>
+
+          <div>
+            <label for="email" class="block text-sm font-medium mb-2">{t.contact.email}</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              required
+              class="w-full px-4 py-3 bg-surface-light border border-border rounded-lg focus:border-primary focus:outline-none transition-colors"
+              placeholder="votre@email.com"
+            />
+          </div>
+
+          <div>
+            <label for="message" class="block text-sm font-medium mb-2">{t.contact.message}</label>
+            <textarea
+              id="message"
+              name="message"
+              required
+              rows="6"
+              class="w-full px-4 py-3 bg-surface-light border border-border rounded-lg focus:border-primary focus:outline-none transition-colors resize-none"
+              placeholder="Votre message..."
+            ></textarea>
+          </div>
+
+          <button
+            type="submit"
+            class="w-full py-3 bg-primary hover:bg-primary-dark text-white rounded-lg font-semibold transition-colors"
+          >
+            {t.contact.send}
+          </button>
+        </form>
+
+        <div id="success-message" class="mt-6 p-4 bg-success/10 border border-success/30 rounded-lg text-success text-center hidden">
+          {t.contact.success}
+        </div>
+      </div>
+
+      <div class="mt-8 text-center">
+        <p class="text-text-muted">
+          <a href="#" class="text-accent hover:underline">{t.contact.faq}</a>
+        </p>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<script>
+  const form = document.getElementById('contact-form');
+  const successMessage = document.getElementById('success-message');
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    // In production, this would send to an API endpoint
+    // For now, just show success
+    form.classList.add('hidden');
+    successMessage?.classList.remove('hidden');
+  });
+</script>

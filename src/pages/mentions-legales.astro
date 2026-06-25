@@ -1,0 +1,67 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { useTranslations, defaultLang } from '../lib/i18n';
+
+const lang = defaultLang;
+const t = useTranslations(lang);
+---
+
+<Layout title={t.legal.mentions}>
+  <section class="py-12">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h1 class="font-display text-3xl font-bold mb-8">{t.legal.mentions}</h1>
+
+      <div class="prose prose-invert max-w-none">
+        <div class="bg-surface rounded-xl p-8 space-y-8">
+          <div>
+            <h2 class="text-xl font-semibold mb-4">Editeur</h2>
+            <p class="text-text-muted">
+              Level Up<br />
+              Plateforme de formation en ligne<br />
+              contact@levelup-formation.com
+            </p>
+          </div>
+
+          <div>
+            <h2 class="text-xl font-semibold mb-4">Directeur de la publication</h2>
+            <p class="text-text-muted">
+              Level Up
+            </p>
+          </div>
+
+          <div>
+            <h2 class="text-xl font-semibold mb-4">Hebergeur</h2>
+            <p class="text-text-muted">
+              GitHub Pages<br />
+              88 Colin P Kelly Jr Street<br />
+              San Francisco, CA 94107, USA
+            </p>
+          </div>
+
+          <div>
+            <h2 class="text-xl font-semibold mb-4">Propriete intellectuelle</h2>
+            <p class="text-text-muted">
+              L'ensemble du contenu de ce site (textes, images, videos, logos, etc.) est protege par le droit d'auteur.
+              Toute reproduction, meme partielle, est interdite sans autorisation prealable.
+            </p>
+          </div>
+
+          <div>
+            <h2 class="text-xl font-semibold mb-4">Donnees personnelles</h2>
+            <p class="text-text-muted">
+              Les donnees personnelles collectees sur ce site sont traitees conformement a notre politique de confidentialite.
+              Vous disposez d'un droit d'acces, de rectification et de suppression de vos donnees.
+            </p>
+          </div>
+
+          <div>
+            <h2 class="text-xl font-semibold mb-4">Cookies</h2>
+            <p class="text-text-muted">
+              Ce site utilise des cookies necessaires au bon fonctionnement de la plateforme et a l'authentification des utilisateurs.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>
