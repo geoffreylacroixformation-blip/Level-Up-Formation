@@ -1,7 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import { useTranslations, getLocalizedPath, defaultLang } from '../lib/i18n';
-import { courses, bundles } from '../lib/courses';
+import { courses, bundles, getCoursesByCategory } from '../lib/courses';
 
 const lang = defaultLang;
 const t = useTranslations(lang);
@@ -11,6 +11,11 @@ const levelColors: Record<number, string> = {
   2: 'bg-warning text-black',
   3: 'bg-error text-white',
 };
+
+const cybersecCourses = getCoursesByCategory('cybersecurite');
+const cybersecLvl1 = cybersecCourses.filter(c => c.level === 1);
+const cybersecLvl2 = cybersecCourses.filter(c => c.level === 2);
+const cybersecLvl3 = cybersecCourses.filter(c => c.level === 3);
 ---
 
 <Layout title={t.catalogue.title}>
@@ -33,36 +38,130 @@ const levelColors: Record<number, string> = {
         </button>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-        {courses.map((course) => (
-          <a
-            href={getLocalizedPath(`cours/${course.slug}`, lang)}
-            class="gradient-border rounded-xl overflow-hidden transition-all group"
-          >
-            <div class="aspect-video bg-surface-light relative">
-              <img src={course.image} alt={course.title} class="w-full h-full object-cover opacity-60" />
-              <span class={`absolute top-3 left-3 text-xs font-bold px-2 py-1 rounded ${levelColors[course.level]}`}>
-                LVL{course.level}
-              </span>
+      <!-- ===== FORMATIONS CYBERSÉCURITÉ ===== -->
+      <div class="mb-16">
+        <div class="flex items-center gap-3 mb-2">
+          <div class="w-3 h-3 rounded-full bg-error"></div>
+          <h2 class="font-display text-2xl font-bold">Cybersécurité</h2>
+        </div>
+        <p class="text-text-muted mb-8">13 formations pour couvrir l'ensemble du spectre de la sécurité informatique</p>
+
+        <!-- LVL 1 -->
+        {cybersecLvl1.length > 0 && (
+          <div class="mb-10">
+            <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
+              <span class="text-xs font-bold px-2 py-1 rounded bg-success text-black">LVL1</span>
+              Fondations
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {cybersecLvl1.map((course) => (
+                <a
+                  href={getLocalizedPath(`cours/${course.slug}`, lang)}
+                  class="gradient-border rounded-xl overflow-hidden transition-all group"
+                >
+                  <div class="aspect-video bg-surface-light relative">
+                    <img src={course.image} alt={course.title} class="w-full h-full object-cover opacity-60" />
+                    <span class={`absolute top-3 left-3 text-xs font-bold px-2 py-1 rounded ${levelColors[course.level]}`}>
+                      LVL{course.level}
+                    </span>
+                  </div>
+                  <div class="p-4">
+                    <h3 class="font-semibold mb-2 transition-colors">{course.title}</h3>
+                    <p class="text-text-muted text-sm mb-4">{course.description}</p>
+                    <div class="flex items-center gap-3 text-xs text-text-muted mb-2">
+                      <span>⏱ {course.duree_heures}h</span>
+                      <span>� {course.modules.length} modules</span>
+                    </div>
+                    <div class="flex items-center justify-between mt-3 pt-3 border-t border-border">
+                      <span class="text-xl font-bold text-primary">{course.price}€</span>
+                      <span class="text-xs text-success font-medium">Découvrir →</span>
+                    </div>
+                  </div>
+                </a>
+              ))}
             </div>
-            <div class="p-4">
-              <h3 class="font-semibold mb-2 transition-colors">{course.title}</h3>
-              <p class="text-text-muted text-sm mb-4">{course.description}</p>
-              <div class="flex items-center justify-between">
-                <span class="text-xl font-bold text-primary">{course.price}€</span>
-                <span class="text-text-muted text-xs">{course.modules.length} modules</span>
-              </div>
-              <div class="mt-2 text-xs text-success">
-                {t.catalogue.freePreview}
-              </div>
+          </div>
+        )}
+
+        <!-- LVL 2 -->
+        {cybersecLvl2.length > 0 && (
+          <div class="mb-10">
+            <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
+              <span class="text-xs font-bold px-2 py-1 rounded bg-warning text-black">LVL2</span>
+              Intermédiaire
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {cybersecLvl2.map((course) => (
+                <a
+                  href={getLocalizedPath(`cours/${course.slug}`, lang)}
+                  class="gradient-border rounded-xl overflow-hidden transition-all group"
+                >
+                  <div class="aspect-video bg-surface-light relative">
+                    <img src={course.image} alt={course.title} class="w-full h-full object-cover opacity-60" />
+                    <span class={`absolute top-3 left-3 text-xs font-bold px-2 py-1 rounded ${levelColors[course.level]}`}>
+                      LVL{course.level}
+                    </span>
+                  </div>
+                  <div class="p-4">
+                    <h3 class="font-semibold mb-2 transition-colors">{course.title}</h3>
+                    <p class="text-text-muted text-sm mb-4">{course.description}</p>
+                    <div class="flex items-center gap-3 text-xs text-text-muted mb-2">
+                      <span>� {course.duree_heures}h</span>
+                      <span>📚 {course.modules.length} modules</span>
+                    </div>
+                    <div class="flex items-center justify-between mt-3 pt-3 border-t border-border">
+                      <span class="text-xl font-bold text-primary">{course.price}€</span>
+                      <span class="text-xs text-success font-medium">Découvrir →</span>
+                    </div>
+                  </div>
+                </a>
+              ))}
             </div>
-          </a>
-        ))}
+          </div>
+        )}
+
+        <!-- LVL 3 -->
+        {cybersecLvl3.length > 0 && (
+          <div class="mb-10">
+            <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
+              <span class="text-xs font-bold px-2 py-1 rounded bg-error text-white">LVL3</span>
+              Avancé
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {cybersecLvl3.map((course) => (
+                <a
+                  href={getLocalizedPath(`cours/${course.slug}`, lang)}
+                  class="gradient-border rounded-xl overflow-hidden transition-all group"
+                >
+                  <div class="aspect-video bg-surface-light relative">
+                    <img src={course.image} alt={course.title} class="w-full h-full object-cover opacity-60" />
+                    <span class={`absolute top-3 left-3 text-xs font-bold px-2 py-1 rounded ${levelColors[course.level]}`}>
+                      LVL{course.level}
+                    </span>
+                  </div>
+                  <div class="p-4">
+                    <h3 class="font-semibold mb-2 transition-colors">{course.title}</h3>
+                    <p class="text-text-muted text-sm mb-4">{course.description}</p>
+                    <div class="flex items-center gap-3 text-xs text-text-muted mb-2">
+                      <span>⏱ {course.duree_heures}h</span>
+                      <span>📚 {course.modules.length} modules</span>
+                    </div>
+                    <div class="flex items-center justify-between mt-3 pt-3 border-t border-border">
+                      <span class="text-xl font-bold text-primary">{course.price}€</span>
+                      <span class="text-xs text-success font-medium">Découvrir →</span>
+                    </div>
+                  </div>
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
-      <div class="bg-surface-light rounded-xl p-8">
-        <h2 class="font-display text-2xl font-semibold mb-6 text-center">{t.home.levels.bundles.title}</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- ===== BUNDLES ===== -->
+      <div class="bg-surface-light rounded-xl p-8 mb-12">
+        <h2 class="font-display text-2xl font-semibold mb-6 text-center">Nos Packs & Bundles</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
           {bundles.map((bundle) => (
             <div class="bg-background rounded-xl p-6 transition-all">
               <div class="flex items-center justify-between mb-4">
@@ -70,7 +169,7 @@ const levelColors: Record<number, string> = {
                   <h3 class="font-display font-semibold text-lg">{bundle.name}</h3>
                   <p class="text-text-muted text-sm">{bundle.description}</p>
                 </div>
-                <span class={`text-2xl font-bold ${bundle.id === 'all-access' ? 'text-primary' : 'text-success'}`}>
+                <span class={`text-2xl font-bold ${bundle.id === 'all-access' ? 'text-primary' : bundle.id === 'cybersecurite-pack' ? 'text-error' : 'text-success'}`}>
                   {bundle.price}€
                 </span>
               </div>
