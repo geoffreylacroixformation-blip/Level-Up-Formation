@@ -1,0 +1,66 @@
+---
+// Page de test des boutons
+const buttons = [
+  { cls: 'btn-glow-cyan', label: 'Glow Cyan', group: 'Glow Effects' },
+  { cls: 'btn-glow-magenta', label: 'Glow Magenta', group: 'Glow Effects' },
+  { cls: 'btn-glow-violet', label: 'Glow Violet', group: 'Glow Effects' },
+  { cls: 'btn-dual-glow', label: 'Dual Glow', group: 'Glow Effects' },
+  { cls: 'btn-slide-right', label: 'Slide Right', group: 'Slide Effects' },
+  { cls: 'btn-slide-left', label: 'Slide Left', group: 'Slide Effects' },
+  { cls: 'btn-slide-down', label: 'Slide Down', group: 'Slide Effects' },
+  { cls: 'btn-center-expand', label: 'Center Expand', group: 'Slide Effects' },
+  { cls: 'btn-shine', label: 'Shine', group: 'Shine Effects' },
+  { cls: 'btn-shimmer', label: 'Shimmer', group: 'Shine Effects' },
+  { cls: 'btn-border-draw', label: 'Border Draw', group: 'Border Animations' },
+  { cls: 'btn-pulse-border', label: 'Pulse Border', group: 'Border Animations' },
+  { cls: 'btn-3d-push', label: '3D Push', group: '3D Effects' },
+  { cls: 'btn-3d-cyan', label: '3D Cyan', group: '3D Effects' },
+  { cls: 'btn-elevate', label: 'Elevate', group: '3D Effects' },
+  { cls: 'btn-gradient-shift', label: 'Gradient Shift', group: 'Animated Gradients' },
+  { cls: 'btn-gradient-border', label: 'Gradient Border', group: 'Animated Gradients' },
+  { cls: 'btn-neon', label: 'Neon Flicker', group: 'Neon' },
+  { cls: 'btn-synthwave', label: 'Synthwave', group: 'Neon' },
+  { cls: 'btn-lift-tilt', label: 'Lift and Tilt', group: 'Lift and Transform' },
+  { cls: 'btn-scale-bounce', label: 'Scale Bounce', group: 'Lift and Transform' },
+  { cls: 'btn-rotate', label: 'Rotate', group: 'Lift and Transform' },
+  { cls: 'btn-glass', label: 'Glass', group: 'Glassmorphism' },
+  { cls: 'btn-levelup-primary', label: 'Level Up', group: 'Level Up Branded' },
+  { cls: 'btn-levelup-outline', label: 'En savoir plus', group: 'Level Up Branded' },
+  { cls: 'btn-cyber-alert', label: 'Alerte', group: 'Level Up Branded' },
+  { cls: 'btn-terminal', label: 'connect_ssh', group: 'Level Up Branded' },
+  { cls: 'btn-scanlines', label: 'Scanlines', group: 'Level Up Branded' },
+  { cls: 'btn-notch', label: 'CYBER', group: 'Level Up Branded' },
+  { cls: 'btn-magnetic', label: 'Magnetic', group: 'Level Up Branded' },
+  { cls: 'btn-glitch', label: 'GLITCH', group: 'Glitch' },
+];
+
+const groups = [...new Set(buttons.map(b => b.group))]
+---
+
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Level Up - Boutons CSS</title>
+  <link rel="stylesheet" href="/buttons-test.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>LEVEL UP - Boutons CSS</h1>
+    <p class="subtitle">Survole les boutons pour voir les effets</p>
+
+    {groups.map(group => (
+      <div class="section">
+        <h2>{group}</h2>
+        <div class="buttons-grid">
+          {buttons.filter(b => b.group === group).map(btn => (
+            <button class={`btn ${btn.cls}`} data-text={btn.label}>
+              {btn.label}
+            </button>
+          ))}
+        </div>
+      </div>
+    ))}
+  </div>
+</body>
+</html>
