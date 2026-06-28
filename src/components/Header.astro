@@ -22,28 +22,28 @@ const isMember = Astro.url.pathname.includes('/membre') || Astro.url.pathname.in
         <img src={`${import.meta.env.BASE_URL}/logo.jpg`} alt="Level Up - École Cyber Virtuelle" class="h-12 w-auto" />
       </a>
 
-      <nav class="hidden md:flex items-center gap-6">
+      <nav class="hidden md:flex items-center gap-4">
         <a
           href={getLocalizedPath('catalogue', lang)}
-          class:list={["text-sm font-medium transition-colors hover:text-primary", isCatalogue && "text-primary"]}
+          class:list={["nav-link", isCatalogue && "active"]}
         >
           {t.nav.catalogue}
         </a>
         <a
           href={getLocalizedPath('a-propos', lang)}
-          class:list={["text-sm font-medium transition-colors hover:text-primary", isAbout && "text-primary"]}
+          class:list={["nav-link", isAbout && "active"]}
         >
           {t.nav.about}
         </a>
         <a
           href={getLocalizedPath('contact', lang)}
-          class:list={["text-sm font-medium transition-colors hover:text-primary", isContact && "text-primary"]}
+          class:list={["nav-link", isContact && "active"]}
         >
           {t.nav.contact}
         </a>
         <a
           href={getLocalizedPath('membre', lang)}
-          class:list={["text-sm font-medium transition-colors hover:text-primary", isMember && "text-primary"]}
+          class:list={["nav-link", isMember && "active"]}
         >
           {t.nav.member}
         </a>
