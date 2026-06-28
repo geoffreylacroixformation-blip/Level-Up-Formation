@@ -1,0 +1,20 @@
+[api]
+port = 54321
+
+[db]
+port = 54322
+
+[studio]
+port = 54323
+
+[auth]
+site_url = "https://geoffreylacroixformation-blip.github.io/Level-Up-Formation"
+
+[auth.email]
+enable_signup = true
+
+[functions.stripe-checkout]
+verify_jwt = false
+
+[functions.stripe-webhook]
+verify_jwt = false
