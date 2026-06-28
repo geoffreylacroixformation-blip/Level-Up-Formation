@@ -33,7 +33,11 @@ export function getRouteFromUrl(url: URL, lang: string): string {
 
 export function getLocalizedPath(path: string, lang: string): string {
   const cleanPath = path.startsWith('/') ? path.slice(1) : path;
-  return lang === defaultLang ? `/${cleanPath}` : `/${lang}/${cleanPath}`;
+  const base = import.meta.env.BASE_URL || '';
+  const normalizedBase = base.endsWith('/') ? base.slice(0, -1) : base;
+  return lang === defaultLang 
+    ? `${normalizedBase}/${cleanPath}` 
+    : `${normalizedBase}/${lang}/${cleanPath}`;
 }
 
 export type TranslationKey = typeof fr;
