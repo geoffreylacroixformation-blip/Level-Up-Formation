@@ -16,7 +16,7 @@ const t = useTranslations(lang);
 
     <div class="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
       <div class="flex justify-center mb-8">
-        <img src="/file_000000009a2c71f48eac89c73d4c2381.png" alt="Level Up - Ecole Cyber Virtuelle" class="h-40 sm:h-52 w-auto drop-shadow-2xl" />
+        <img src={`${import.meta.env.BASE_URL}/logo.jpg`} alt="Level Up - École Cyber Virtuelle" class="h-40 sm:h-52 w-auto drop-shadow-2xl" />
       </div>
       <h1 class="font-display text-4xl sm:text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
         {t.home.hero.title}
