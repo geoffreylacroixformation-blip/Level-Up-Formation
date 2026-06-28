@@ -49,3 +49,33 @@ body {
 .animate-pulse-glow {
   animation: pulse-glow 2s ease-in-out infinite;
 }
+
+/* ============================================ */
+/* BOUTON SYNTHWAVE NAV                          */
+/* ============================================ */
+.btn-synthwave-nav {
+  padding: 10px 28px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: linear-gradient(180deg, #1a1a2e, #0f0f1a);
+  color: #f72585;
+  border: 2px solid #f72585;
+  border-radius: 50px;
+  box-shadow: 0 0 10px rgba(247, 37, 133, 0.3), 0 4px 0 #7209b7, 0 6px 20px rgba(247, 37, 133, 0.2);
+  transition: all 0.3s ease;
+  text-decoration: none;
+  cursor: pointer;
+}
+.btn-synthwave-nav:hover {
+  background: linear-gradient(180deg, #f72585, #7209b7);
+  color: #fff;
+  box-shadow: 0 0 25px rgba(247, 37, 133, 0.6), 0 0 50px rgba(247, 37, 133, 0.3), 0 4px 0 #7209b7;
+  transform: translateY(-2px);
+}
+.btn-synthwave-nav:active {
+  transform: translateY(2px);
+  box-shadow: 0 0 15px rgba(247, 37, 133, 0.4), 0 2px 0 #7209b7;
+}
