@@ -1,5 +1,7 @@
 ---
-// Page de test des boutons
+import { readFileSync } from 'fs';
+const css = readFileSync(new URL('../../public/buttons-test.css', import.meta.url), 'utf-8');
+
 const buttons = [
   { cls: 'btn-glow-cyan', label: 'Glow Cyan', group: 'Glow Effects' },
   { cls: 'btn-glow-magenta', label: 'Glow Magenta', group: 'Glow Effects' },
@@ -42,7 +44,7 @@ const groups = [...new Set(buttons.map(b => b.group))]
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Level Up - Boutons CSS</title>
-  <link rel="stylesheet" href="/buttons-test.css" />
+  <style set:html={css}></style>
 </head>
 <body>
   <div class="container">
