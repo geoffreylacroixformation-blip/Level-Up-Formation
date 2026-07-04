@@ -143,29 +143,6 @@ export const courses: Course[] = [
       { id: 'mod-4', title: 'Outils OSINT', titleEn: 'OSINT Tools', description: 'Maltego, Shodan et autres', descriptionEn: 'Maltego, Shodan and others', isFree: false, order: 4, duration: '1h30' },
     ]
   },
-  {
-    id: 'malware-analysis',
-    slug: 'analyse-malware',
-    category: 'cybersecurite',
-    title: 'Analyse de malwares - Niveau expert',
-    titleEn: 'Malware Analysis - Expert Level',
-    description: 'Analyse statique et dynamique de codes malveillants',
-    descriptionEn: 'Static and dynamic analysis of malicious code',
-    longDescription: "Plongez dans l'analyse de malwares. Techniques de sandboxing, desassemblage, ingenierie inverse et creation de signatures. Pour experts uniquement.",
-    longDescriptionEn: 'Dive into malware analysis. Sandboxing techniques, disassembly, reverse engineering, and signature creation. Experts only.',
-    level: 3,
-    price: 149,
-    image: 'https://images.pexels.com/photos/60504/security-hacker-black-background-60504.jpeg?w=800',
-    tags: ['malware', 'reverse-engineering', 'analyse'],
-    modules: [
-      { id: 'mod-0', title: 'Types de malwares', titleEn: 'Types of Malware', description: 'Classification et comportements typiques', descriptionEn: 'Classification and typical behaviors', isFree: true, order: 0, duration: '45min' },
-      { id: 'mod-1', title: 'Analyse statique', titleEn: 'Static Analysis', description: 'Strings, imports et indicateurs', descriptionEn: 'Strings, imports and indicators', isFree: false, order: 1, duration: '2h' },
-      { id: 'mod-2', title: 'Analyse dynamique', titleEn: 'Dynamic Analysis', description: 'Sandboxing et surveillance systeme', descriptionEn: 'Sandboxing and system monitoring', isFree: false, order: 2, duration: '2h' },
-      { id: 'mod-3', title: 'Desassemblage', titleEn: 'Disassembly', description: 'IDA Pro, Ghidra et assembleur', descriptionEn: 'IDA Pro, Ghidra and assembly', isFree: false, order: 3, duration: '2h' },
-      { id: 'mod-4', title: 'Anti-analyse et bypass', titleEn: 'Anti-analysis and Bypass', description: "Techniques d'evasion et contournement", descriptionEn: 'Evasion techniques and bypassing', isFree: false, order: 4, duration: '2h' },
-      { id: 'mod-5', title: 'Creation de signatures YARA', titleEn: 'YARA Signature Creation', description: 'Detection et partage', descriptionEn: 'Detection and sharing', isFree: false, order: 5, duration: '1h30' },
-    ]
-  },
   // ===== 13 NOUVELLES FORMATIONS CYBERSÉCURITÉ =====
   {
     id: 'cyber-intro',
@@ -316,44 +293,6 @@ export const courses: Course[] = [
       { id: 'mod-5', title: 'Protocoles cryptographiques', titleEn: 'Cryptographic protocols', description: 'SSL/TLS, IPsec', descriptionEN: 'SSL/TLS, IPsec', isFree: false, order: 5, duration: '2h' },
       { id: 'mod-6', title: 'Applications pratiques en cybersécurité', titleEn: 'Practical applications in cybersecurity', description: 'Cas d\'usage concrets', descriptionEN: 'Concrete use cases', isFree: false, order: 6, duration: '2h' },
       { id: 'mod-7', title: 'TP – Mise en œuvre d\'outils', titleEn: 'Hands-on – Implementing tools', description: 'Chiffrement et hashage en pratique', descriptionEN: 'Encryption and hashing in practice', isFree: false, order: 7, duration: '2h' },
-    ]
-  },
-  {
-    id: 'cyber-malware',
-    slug: 'analyse-malware',
-    category: 'cybersecurite',
-    title: 'Analyse de Malware',
-    titleEn: 'Malware Analysis',
-    description: 'Analyse statique et dynamique des malwares : laboratoire sécurisé, outils professionnels et rédaction de rapports.',
-    descriptionEN: 'Static and dynamic malware analysis: secure lab, professional tools and report writing.',
-    longDescription: "Apprendre à analyser les logiciels malveillants en utilisant les techniques d'analyse statique et dynamique. L'apprenant sera capable de comprendre le fonctionnement d'un malware, d'évaluer son impact et de définir des méthodes d'éradication appropriées.",
-    longDescriptionEN: "Learn to analyze malware using static and dynamic analysis techniques. Learners will understand how malware works, evaluate its impact and define appropriate eradication methods.",
-    level: 2,
-    price: 99,
-    duree_heures: 20,
-    image: 'https://images.pexels.com/photos/5380643/pexels-photo-5380643.jpeg?w=800',
-    tags: ['cybersecurite', 'malware', 'analyse', 'reverse-engineering'],
-    competences: [
-      "Mettre en place un environnement d'analyse sécurisé et isolé",
-      "Réaliser une analyse statique complète d'un exécutable suspect",
-      "Effectuer une analyse dynamique et observer le comportement d'un malware",
-      "Utiliser des outils professionnels (IDA Pro, Wireshark, Cuckoo Sandbox)",
-      "Identifier les indicateurs de compromission (IOC)",
-      "Rédiger un rapport d'analyse de malware professionnel",
-      "Comprendre les techniques d'obfuscation et de packing"
-    ],
-    public_cible: 'Intermédiaire',
-    prerequis: 'Connaissances en systèmes d\'exploitation (Windows/Linux), bases de réseaux, notions de programmation',
-    modules: [
-      { id: 'mod-0', title: 'Introduction à l\'analyse de malware', titleEn: 'Introduction to malware analysis', description: 'Pourquoi et comment', descriptionEN: 'Why and how', isFree: true, order: 0, duration: '1h30' },
-      { id: 'mod-1', title: 'Mise en place d\'un laboratoire sécurisé', titleEn: 'Setting up a secure lab', description: 'VM, réseau isolé', descriptionEN: 'VM, isolated network', isFree: false, order: 1, duration: '2h' },
-      { id: 'mod-2', title: 'Analyse statique', titleEn: 'Static analysis', description: 'Strings, hex éditeur, format PE', descriptionEN: 'Strings, hex editor, PE format', isFree: false, order: 2, duration: '2h' },
-      { id: 'mod-3', title: 'Analyse statique avancée', titleEn: 'Advanced static analysis', description: 'Désassemblage avec IDA Pro', descriptionEN: 'Disassembly with IDA Pro', isFree: false, order: 3, duration: '2h' },
-      { id: 'mod-4', title: 'Analyse dynamique', titleEn: 'Dynamic analysis', description: 'RegShot, Capture-BAT, LordPE', descriptionEN: 'RegShot, Capture-BAT, LordPE', isFree: false, order: 4, duration: '2h' },
-      { id: 'mod-5', title: 'Analyse réseau des malwares', titleEn: 'Malware network analysis', description: 'Wireshark', descriptionEN: 'Wireshark', isFree: false, order: 5, duration: '2h' },
-      { id: 'mod-6', title: 'Sandboxing automatisé', titleEn: 'Automated sandboxing', description: 'Cuckoo Sandbox, Malwr', descriptionEN: 'Cuckoo Sandbox, Malwr', isFree: false, order: 6, duration: '2h' },
-      { id: 'mod-7', title: 'Techniques d\'obfuscation et contre-mesures', titleEn: 'Obfuscation techniques and countermeasures', description: 'Packing, anti-debug', descriptionEN: 'Packing, anti-debug', isFree: false, order: 7, duration: '2h' },
-      { id: 'mod-8', title: 'Rédaction de rapports d\'analyse', titleEN: 'Writing analysis reports', description: 'Structure et livrables', descriptionEN: 'Structure and deliverables', isFree: false, order: 8, duration: '2h' },
     ]
   },
   {

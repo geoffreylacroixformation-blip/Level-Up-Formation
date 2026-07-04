@@ -1,0 +1,64 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { useTranslations, getLocalizedPath } from '../lib/i18n';
+const t = useTranslations('fr');
+
+const url = getLocalizedPath();
+const lang = window.location.pathname.split('/')[1] || 'fr';
+---
+<Layout title={t.admin.dashboard} lang={lang}>
+  <section class="py-12">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h1 class="font-display text-3xl font-bold mb-8">{t.admin.title}</h1>
+
+      <div class="bg-surface rounded-xl p-8 space-y-8 mb-12">
+        <div>
+          <h2 class="text-xl font-semibold mb-4">{t.admin.add_course}</h2>
+          <form method="POST" action="/api/admin/courses">
+            <div class="space-y-4">
+              <div>
+                <label class="block text-text-sm font-medium">{t.admin.title}</label>
+                <input type="text" name="title" required class="mt-1 block w-full rounded-md bg-surface border border-border text-text p-2.5" />
+              </div>
+              <div>
+                <label class="block text-text-sm font-medium">{t.admin.level}</label>
+                <select name="level" required class="mt-1 block w-full rounded-md bg-surface border border-border text-text p-2.5">
+                  <option value="1">{t.admin.level_1}</option>
+                  <option value="2">{t.admin.level_2}</option>
+                  <option value="3">{t.admin.level_3}</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-text-sm font-medium">{t.admin.price}</label>
+                <input type="number" name="price" step="0.01" required class="mt-1 block w-full rounded-md bg-surface border border-border text-text p-2.5" />
+              </div>
+              <div>
+                <label class="block text-text-sm font-medium">{t.admin.document}</label>
+                <input type="file" name="document" accept=".pdf,.docx" required class="mt-1 block w-full rounded-md bg-surface border border-border text-text p-2.5" />
+              </div>
+              <div>
+                <label class="block text-text-sm font-medium">{t.admin.image}</label>
+                <input type="file" name="image" accept=".jpg,.png" class="mt-1 block w-full rounded-md bg-surface border border-border text-text p-2.5" />
+              </div>
+            </div>
+            
+          </form>
+        </div>
+
+        <div>
+          <h2 class="text-xl font-semibold mb-4">{t.admin.existing_courses}</h2>
+          <ul class="space-y-2">
+            <!-- Courses would be listed here dynamically -->
+            <!-- Example: <li>Course Title - Level {course.level} - €{course.price}</li> -->
+          </ul>
+        </div>
+      </div>
+
+      <div class="space-y-8">
+        <h2 class="text-xl font-semibold">{t.admin.manage_catalog}</h2>
+        <p class="text-text-muted">{t.admin.manage_desc}</p>
+      </div>
+    </div>
+  </section>
+</Layout>
+</

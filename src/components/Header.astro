@@ -23,30 +23,10 @@ const isMember = Astro.url.pathname.includes('/membre') || Astro.url.pathname.in
       </a>
 
       <nav class="hidden md:flex items-center gap-4">
-        <a
-          href={getLocalizedPath('catalogue', lang)}
-          class:list={["nav-link", isCatalogue && "active"]}
-        >
-          {t.nav.catalogue}
-        </a>
-        <a
-          href={getLocalizedPath('a-propos', lang)}
-          class:list={["nav-link", isAbout && "active"]}
-        >
-          {t.nav.about}
-        </a>
-        <a
-          href={getLocalizedPath('contact', lang)}
-          class:list={["nav-link", isContact && "active"]}
-        >
-          {t.nav.contact}
-        </a>
-        <a
-          href={getLocalizedPath('membre', lang)}
-          class:list={["nav-link", isMember && "active"]}
-        >
-          {t.nav.member}
-        </a>
+
+
+
+
       </nav>
 
       <div class="flex items-center gap-4">
@@ -69,12 +49,7 @@ const isMember = Astro.url.pathname.includes('/membre') || Astro.url.pathname.in
           </div>
         </div>
 
-        <a
-          href={getLocalizedPath('membre', lang)}
-          class="hidden sm:inline-flex btn-synthwave-nav"
-        >
-          {t.nav.login}
-        </a>
+
       </div>
 
       <button class="md:hidden p-2 text-text-muted hover:text-text" aria-label="Menu">
