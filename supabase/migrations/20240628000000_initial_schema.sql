@@ -12,6 +12,7 @@ CREATE TABLE IF NOT EXISTS cours (
 -- Table progression
 CREATE TABLE IF NOT EXISTS progression (
   user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+    role TEXT DEFAULT 'user'
   cours_id UUID REFERENCES cours(id) ON DELETE CASCADE,
   module_id TEXT NOT NULL,
   completed BOOLEAN DEFAULT FALSE,
