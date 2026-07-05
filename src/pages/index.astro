@@ -7,31 +7,13 @@ const t = useTranslations(lang);
 ---
 
 <Layout title={t.home.hero.title}>
-  <section class="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
-    <div class="absolute inset-0 bg-gradient-to-br from-primary/20 via-background to-accent/10"></div>
-    <div class="absolute inset-0">
-      <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/30 rounded-full blur-3xl animate-pulse-glow"></div>
-      <div class="absolute bottom-1/4 right-1/4 w-72 h-72 bg-accent/20 rounded-full blur-3xl animate-pulse-glow" style="animation-delay: 1s"></div>
-    </div>
-
-    <div class="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-      <div class="flex justify-center mb-8">
-        <img src=${{import.meta.env.BASE_URL}}/banner.jpg alt="Banner Level Up - École Cyber Virtuelle" class="h-40 sm:h-52 w-auto drop-shadow-2xl" style="display:block;margin:auto;" />
-      </div>
-      <h1 class="font-display text-4xl sm:text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
-        {t.home.hero.title}
-      </h1>
-      <p class="text-text-muted text-lg sm:text-xl mb-8 max-w-2xl mx-auto">
-        {t.home.hero.subtitle}
-      </p>
-      <a
-        href={getLocalizedPath('catalogue', lang)}
-        class="btn-lift-tilt"
-      >
-        {t.home.hero.cta}
-        <span class="arrow">→</span>
-      </a>
-    </div>
+  <section class="relative w-full overflow-hidden">
+    <img
+      src={`${import.meta.env.BASE_URL}/banner.jpg`}
+      alt="Banner Level Up - École Cyber Virtuelle"
+      class="w-full h-auto object-cover"
+      style="display:block;margin:0;"
+    />
   </section>
 
   <section class="py-20 bg-surface">
