@@ -159,90 +159,102 @@ const cybersecLvl3 = cybersecCourses.filter(c => c.level === 3);
       </div>
 
       <!-- ===== BUNDLES ===== -->
-      <div class="bg-surface-light rounded-xl p-8 mb-12">
-        <h2 class="font-display text-2xl font-semibold mb-6 text-center">Nos Packs & Bundles</h2>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="mb-16">
+        <h2 class="font-display text-2xl font-bold mb-2 text-center">Nos Packs & Bundles</h2>
+        <p class="text-text-muted text-center mb-8">Économisez en choisissant une offre groupée</p>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <!-- Bundle: 3 Formations LVL1 = 109€ -->
-          <div class="bg-background rounded-xl p-6 transition-all">
-            <div class="flex items-center justify-between mb-4">
-              <div>
-                <h3 class="font-display font-semibold text-lg">3 Formations LVL1</h3>
-                <p class="text-text-muted text-sm">Fondations</p>
+          <div class="gradient-border rounded-xl overflow-hidden transition-all hover:scale-[1.02]">
+            <div class="bg-background p-6">
+              <div class="flex items-center justify-between mb-4">
+                <div>
+                  <h3 class="font-display font-semibold text-lg">3 Formations LVL1</h3>
+                  <p class="text-text-muted text-sm">Fondations</p>
+                </div>
+                <span class="text-2xl font-bold text-primary">109€</span>
               </div>
-              <span class="text-2xl font-bold text-primary">109€</span>
+              <div class="flex flex-wrap gap-2 mb-4">
+                <span class="text-xs font-bold px-2 py-1 rounded bg-success text-black">LVL1</span>
+              </div>
+              <button class="w-full py-2 bg-primary text-white rounded-lg font-medium transition-colors">
+                Découvrir
+              </button>
             </div>
-            <div class="flex flex-wrap gap-2 mb-4">
-              <span class="text-xs font-bold px-2 py-1 rounded bg-success text-black">LVL1</span>
-            </div>
-            <button class="w-full py-2 bg-primary text-white rounded-lg font-medium transition-colors">
-              Découvrir
-            </button>
           </div>
           <!-- Bundle: 3 Formations LVL2 = 199€ -->
-          <div class="bg-background rounded-xl p-6 transition-all">
-            <div class="flex items-center justify-between mb-4">
-              <div>
-                <h3 class="font-display font-semibold text-lg">3 Formations LVL2</h3>
-                <p class="text-text-muted text-sm">Intermédiaire</p>
+          <div class="gradient-border rounded-xl overflow-hidden transition-all hover:scale-[1.02]">
+            <div class="bg-background p-6">
+              <div class="flex items-center justify-between mb-4">
+                <div>
+                  <h3 class="font-display font-semibold text-lg">3 Formations LVL2</h3>
+                  <p class="text-text-muted text-sm">Intermédiaire</p>
+                </div>
+                <span class="text-2xl font-bold text-primary">199€</span>
               </div>
-              <span class="text-2xl font-bold text-primary">199€</span>
+              <div class="flex flex-wrap gap-2 mb-4">
+                <span class="text-xs font-bold px-2 py-1 rounded bg-warning text-black">LVL2</span>
+              </div>
+              <button class="w-full py-2 bg-primary text-white rounded-lg font-medium transition-colors">
+                Découvrir
+              </button>
             </div>
-            <div class="flex flex-wrap gap-2 mb-4">
-              <span class="text-xs font-bold px-2 py-1 rounded bg-warning text-black">LVL2</span>
-            </div>
-            <button class="w-full py-2 bg-primary text-white rounded-lg font-medium transition-colors">
-              Découvrir
-            </button>
           </div>
           <!-- Bundle: 3 Formations LVL3 = 399€ -->
-          <div class="bg-background rounded-xl p-6 transition-all">
-            <div class="flex items-center justify-between mb-4">
-              <div>
-                <h3 class="font-display font-semibold text-lg">3 Formations LVL3</h3>
-                <p class="text-text-muted text-sm">Avancé</p>
+          <div class="gradient-border rounded-xl overflow-hidden transition-all hover:scale-[1.02]">
+            <div class="bg-background p-6">
+              <div class="flex items-center justify-between mb-4">
+                <div>
+                  <h3 class="font-display font-semibold text-lg">3 Formations LVL3</h3>
+                  <p class="text-text-muted text-sm">Avancé</p>
+                </div>
+                <span class="text-2xl font-bold text-primary">399€</span>
               </div>
-              <span class="text-2xl font-bold text-primary">399€</span>
+              <div class="flex flex-wrap gap-2 mb-4">
+                <span class="text-xs font-bold px-2 py-1 rounded bg-error text-white">LVL3</span>
+              </div>
+              <button class="w-full py-2 bg-primary text-white rounded-lg font-medium transition-colors">
+                Découvrir
+              </button>
             </div>
-            <div class="flex flex-wrap gap-2 mb-4">
-              <span class="text-xs font-bold px-2 py-1 rounded bg-error text-white">LVL3</span>
-            </div>
-            <button class="w-full py-2 bg-primary text-white rounded-lg font-medium transition-colors">
-              Découvrir
-            </button>
           </div>
           <!-- Bundle: 1 Formation LVL1 + 1 Formation LVL2 = 119€ -->
-          <div class="bg-background rounded-xl p-6 transition-all">
-            <div class="flex items-center justify-between mb-4">
-              <div>
-                <h3 class="font-display font-semibold text-lg">1 Formation LVL1 + 1 Formation LVL2</h3>
-                <p class="text-text-muted text-sm">Combo</p>
+          <div class="gradient-border rounded-xl overflow-hidden transition-all hover:scale-[1.02]">
+            <div class="bg-background p-6">
+              <div class="flex items-center justify-between mb-4">
+                <div>
+                  <h3 class="font-display font-semibold text-lg">1 Formation LVL1 + 1 Formation LVL2</h3>
+                  <p class="text-text-muted text-sm">Combo</p>
+                </div>
+                <span class="text-2xl font-bold text-primary">119€</span>
               </div>
-              <span class="text-2xl font-bold text-primary">119€</span>
+              <div class="flex flex-wrap gap-2 mb-4">
+                <span class="text-xs font-bold px-2 py-1 rounded bg-success text-black">LVL1</span>
+                <span class="text-xs font-bold px-2 py-1 rounded bg-warning text-black">LVL2</span>
+              </div>
+              <button class="w-full py-2 bg-primary text-white rounded-lg font-medium transition-colors">
+                Découvrir
+              </button>
             </div>
-            <div class="flex flex-wrap gap-2 mb-4">
-              <span class="text-xs font-bold px-2 py-1 rounded bg-success text-black">LVL1</span>
-              <span class="text-xs font-bold px-2 py-1 rounded bg-warning text-black">LVL2</span>
-            </div>
-            <button class="w-full py-2 bg-primary text-white rounded-lg font-medium transition-colors">
-              Découvrir
-            </button>
           </div>
           <!-- Bundle: 1 Formation LVL2 + 1 Formation LVL3 = 209€ -->
-          <div class="bg-background rounded-xl p-6 transition-all">
-            <div class="flex items-center justify-between mb-4">
-              <div>
-                <h3 class="font-display font-semibold text-lg">1 Formation LVL2 + 1 Formation LVL3</h3>
-                <p class="text-text-muted text-sm">Combo</p>
+          <div class="gradient-border rounded-xl overflow-hidden transition-all hover:scale-[1.02]">
+            <div class="bg-background p-6">
+              <div class="flex items-center justify-between mb-4">
+                <div>
+                  <h3 class="font-display font-semibold text-lg">1 Formation LVL2 + 1 Formation LVL3</h3>
+                  <p class="text-text-muted text-sm">Combo</p>
+                </div>
+                <span class="text-2xl font-bold text-primary">209€</span>
               </div>
-              <span class="text-2xl font-bold text-primary">209€</span>
+              <div class="flex flex-wrap gap-2 mb-4">
+                <span class="text-xs font-bold px-2 py-1 rounded bg-warning text-black">LVL2</span>
+                <span class="text-xs font-bold px-2 py-1 rounded bg-error text-white">LVL3</span>
+              </div>
+              <button class="w-full py-2 bg-primary text-white rounded-lg font-medium transition-colors">
+                Découvrir
+              </button>
             </div>
-            <div class="flex flex-wrap gap-2 mb-4">
-              <span class="text-xs font-bold px-2 py-1 rounded bg-warning text-black">LVL2</span>
-              <span class="text-xs font-bold px-2 py-1 rounded bg-error text-white">LVL3</span>
-            </div>
-            <button class="w-full py-2 bg-primary text-white rounded-lg font-medium transition-colors">
-              Découvrir
-            </button>
           </div>
         </div>
       </div>
+
