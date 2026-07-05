@@ -7,7 +7,7 @@ const lang = Astro.url.pathname.split('/')[1] || defaultLang;
 ---
 <Layout title={t.admin.dashboard} lang={lang}>
   <section class="py-12">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="max-w-4xl mx-auto px-4 sm-px-6 lg-px-8">
       <h1 class="font-display text-3xl font-bold mb-8">{t.admin.title}</h1>
 
       <div class="bg-surface rounded-xl p-8 space-y-8 mb-12">
@@ -60,4 +60,43 @@ const lang = Astro.url.pathname.split('/')[1] || defaultLang;
     </div>
   </section>
 </Layout>
-</
+
+<script>
+  // Admin guard: check auth + role before rendering
+  (async () => {
+    const token = localStorage.getItem('sb-auth-token');
+    
+    if (!token) {
+      window.location.href = '/admin/login';
+      return;
+    }
+    
+    try {
+      const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
+      const supabaseAnonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
+      
+      // Verify token is valid and check admin role
+      const profileRes = await fetch(`${supabaseUrl}/rest/v1/profiles?select=role`, {
+        headers: {
+          'apikey': supabaseAnonKey,
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      const profileData = await profileRes.json();
+      
+      if (profileData.length === 0 || profileData[0].role !== 'admin') {
+        localStorage.removeItem('sb-auth-token');
+        localStorage.removeItem('sb-auth-user');
+        window.location.href = '/admin/login';
+        return;
+      }
+    } catch (err) {
+      localStorage.removeItem('sb-auth-token');
+      localStorage.removeItem('sb-auth-user');
+      window.location.href = '/admin/login';
+      return;
+    }
+  })();
+</script>
