@@ -1,10 +1,9 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import { useTranslations, getLocalizedPath } from '../lib/i18n';
+import Layout from '../../layouts/Layout.astro';
+import { useTranslations, defaultLang } from '../../lib/i18n';
 const t = useTranslations('fr');
 
-const url = getLocalizedPath();
-const lang = window.location.pathname.split('/')[1] || 'fr';
+const lang = Astro.url.pathname.split('/')[1] || defaultLang;
 ---
 <Layout title={t.admin.dashboard} lang={lang}>
   <section class="py-12">
