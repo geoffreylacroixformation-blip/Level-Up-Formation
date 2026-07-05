@@ -118,6 +118,9 @@ const t = {
       .empty-state { text-align: center; padding: 60px 20px; color: var(--text-muted); }
       .empty-state h3 { font-family: 'Orbitron', sans-serif; color: var(--text); margin-bottom: 16px; }
       
+      .loading-state { text-align: center; padding: 60px 20px; color: var(--text-muted); }
+      .loading-state h3 { font-family: 'Orbitron', sans-serif; color: var(--text); margin-bottom: 16px; }
+      
       @media (max-width: 768px) {
         th:nth-child(1), td:nth-child(1),
         th:nth-child(3), td:nth-child(3) { display: none; }
@@ -127,7 +130,8 @@ const t = {
   </head>
   <body class="admin-layout">
     <Header lang={lang} />
-    <main>
+    <!-- Content hidden by default — shown only after auth verification -->
+    <main id="admin-content" style="display: none;">
       <div class="admin-header">
         <h1>{t.title}</h1>
         <p>{t.subtitle}</p>
@@ -186,6 +190,68 @@ const t = {
     <Footer lang={lang} />
     
     <script>
+      // --- Client-side auth gate ---
+      (async () => {
+        const content = document.getElementById('admin-content');
+        if (!content) return;
+
+        // Check token in cookie first, then localStorage
+        function getCookie(name) {
+          const match = document.cookie.match(new RegExp('(?:^|;)\\s*' + name + '=([^;]*)'));
+          return match ? decodeURIComponent(match[1]) : null;
+        }
+
+        const cookieToken = getCookie('sb-auth-token');
+        const lsToken = localStorage.getItem('sb-auth-token');
+        const token = cookieToken || lsToken;
+
+        if (!token) {
+          window.location.href = '/admin/login';
+          return;
+        }
+
+        // Verify token is valid and check admin role
+        const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
+        const supabaseAnonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
+
+        try {
+          const profileRes = await fetch(`${supabaseUrl}/rest/v1/profiles?select=role&email=eq.${encodeURIComponent('jo@levelup-formation.fr')}`, {
+            headers: {
+              'apikey': supabaseAnonKey,
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json'
+            }
+          });
+
+          if (!profileRes.ok) {
+            localStorage.removeItem('sb-auth-token');
+            localStorage.removeItem('sb-auth-user');
+            document.cookie = 'sb-auth-token=; path=/; max-age=0';
+            window.location.href = '/admin/login';
+            return;
+          }
+
+          const profileData = await profileRes.json();
+
+          if (profileData.length === 0 || profileData[0].role !== 'admin') {
+            localStorage.removeItem('sb-auth-token');
+            localStorage.removeItem('sb-auth-user');
+            document.cookie = 'sb-auth-token=; path=/; max-age=0';
+            window.location.href = '/admin/login';
+            return;
+          }
+
+          // Auth verified — show content
+          content.style.display = 'block';
+        } catch (err) {
+          localStorage.removeItem('sb-auth-token');
+          localStorage.removeItem('sb-auth-user');
+          document.cookie = 'sb-auth-token=; path=/; max-age=0';
+          window.location.href = '/admin/login';
+          return;
+        }
+      })();
+
       async function confirmDelete(btn) {
         const slug = btn.dataset.slug;
         const title = btn.dataset.title;

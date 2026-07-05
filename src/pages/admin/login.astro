@@ -177,7 +177,8 @@ const lang = getLangFromUrl(Astro.url);
           const data = await response.json();
           
           if (data.access_token) {
-            // Store token
+            // Store token in cookie (server-readable) AND localStorage (client-readable)
+            document.cookie = `sb-auth-token=${data.access_token}; path=/; max-age=86400; SameSite=Lax`;
             localStorage.setItem('sb-auth-token', data.access_token);
             localStorage.setItem('sb-auth-user', JSON.stringify(data.user));
             
