@@ -157,19 +157,19 @@
     "madeWith": "Fait avec passion"
   },
   "admin": {
-    "title": "Admin",
     "dashboard": "Tableau de bord",
+    "title": "Administration",
     "add_course": "Ajouter une formation",
-    "existing_courses": "Formations existantes",
-    "manage_catalog": "Gérer le catalogue",
-    "manage_desc": "Ajoutez et gérez vos formations depuis ici.",
-    "name": "Nom",
+    "course_title": "Titre",
     "level": "Niveau",
-    "level_1": "Niveau 1",
-    "level_2": "Niveau 2",
-    "level_3": "Niveau 3",
     "price": "Prix",
     "document": "Document",
-    "image": "Image"
+    "image": "Image",
+    "existing_courses": "Formations existantes",
+    "manage_catalog": "Gestion du catalogue",
+    "manage_desc": "Ajoutez ou modifiez les formations disponibles sur la plateforme",
+    "level_1": "Niveau 1",
+    "level_2": "Niveau 2",
+    "level_3": "Niveau 3"
   }
 }

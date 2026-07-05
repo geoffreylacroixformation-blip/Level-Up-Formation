@@ -1,6 +1,8 @@
 import { courses } from '../../../../lib/courses';
 import type { APIRoute } from 'astro';
 
+export const getStaticPaths = async () => [];
+
 export const DELETE: APIRoute = async ({ params, request }) => {
   const slug = params.slug;
 
