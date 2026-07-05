@@ -186,10 +186,17 @@ const lang = getLangFromUrl(Astro.url);
               headers: {
                 'apikey': supabaseAnonKey,
                 'Authorization': `Bearer ${data.access_token}`,
-                'Content-Type': 'application/json',
-                'Accept-Profile': 'admin'
+                'Content-Type': 'application/json'
               }
             });
+            
+            const profileData = await profileRes.json();
+            
+            if (profileData.length === 0 || profileData[0].role !== 'admin') {
+              errorMsg.textContent = 'Accès réservé au propriétaire uniquement.';
+              errorMsg.style.display = 'block';
+              return;
+            }
             
             window.location.href = '/admin/dashboard';
           } else {
