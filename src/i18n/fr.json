@@ -155,5 +155,21 @@
   "footer": {
     "copyright": "Tous droits reserves",
     "madeWith": "Fait avec passion"
+  },
+  "admin": {
+    "title": "Admin",
+    "dashboard": "Tableau de bord",
+    "add_course": "Ajouter une formation",
+    "existing_courses": "Formations existantes",
+    "manage_catalog": "Gérer le catalogue",
+    "manage_desc": "Ajoutez et gérez vos formations depuis ici.",
+    "name": "Nom",
+    "level": "Niveau",
+    "level_1": "Niveau 1",
+    "level_2": "Niveau 2",
+    "level_3": "Niveau 3",
+    "price": "Prix",
+    "document": "Document",
+    "image": "Image"
   }
 }
