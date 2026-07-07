@@ -6,9 +6,6 @@ import { getLangFromUrl } from '../../lib/i18n';
 import { courses } from '../../lib/courses';
 
 const lang = getLangFromUrl(Astro.url);
-
-// Disable prerendering so the dynamic dashboard renders correctly
-export const prerender = false;
 const t = {
   fr: {
     title: 'Administration - Catalogue',
