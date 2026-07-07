@@ -99,6 +99,13 @@ const lang = getLangFromUrl(Astro.url);
         font-size: 0.9rem;
         display: none;
       }
+      .success-msg {
+        color: #00ff88;
+        text-align: center;
+        margin-top: 16px;
+        font-size: 0.9rem;
+        display: none;
+      }
       .back-link {
         display: block;
         text-align: center;
@@ -109,6 +116,17 @@ const lang = getLangFromUrl(Astro.url);
       }
       .back-link:hover {
         color: #00ff88;
+      }
+      .config-warning {
+        color: #f59e0b;
+        text-align: center;
+        margin-top: 16px;
+        font-size: 0.85rem;
+        display: none;
+        padding: 12px;
+        background: rgba(245, 158, 11, 0.1);
+        border: 1px solid rgba(245, 158, 11, 0.3);
+        border-radius: 8px;
       }
     </style>
   </head>
@@ -135,6 +153,8 @@ const lang = getLangFromUrl(Astro.url);
           </form>
           
           <div class="error-msg" id="errorMsg"></div>
+          <div class="success-msg" id="successMsg"></div>
+          <div class="config-warning" id="configWarning">Configuration Supabase manquante. Impossible de se connecter.</div>
           
           <a href="/" class="back-link">← Retour au site</a>
         </div>
@@ -145,11 +165,25 @@ const lang = getLangFromUrl(Astro.url);
     <script>
       const loginForm = document.getElementById('loginForm');
       const errorMsg = document.getElementById('errorMsg');
+      const successMsg = document.getElementById('successMsg');
+      const configWarning = document.getElementById('configWarning');
       const submitBtn = document.getElementById('submitBtn');
       
-      loginForm.addEventListener('submit', async (e) => {
+      const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL || '';
+      const supabaseAnonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY || '';
+
+      // Check if Supabase is configured
+      if (!supabaseUrl || !supabaseAnonKey) {
+        configWarning.style.display = 'block';
+        loginForm.style.display = 'none';
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Configuration manquante';
+      }
+
+      loginForm?.addEventListener('submit', async (e) => {
         e.preventDefault();
         errorMsg.style.display = 'none';
+        successMsg.style.display = 'none';
         submitBtn.disabled = true;
         submitBtn.textContent = 'Connexion...';
         
@@ -157,36 +191,29 @@ const lang = getLangFromUrl(Astro.url);
         const password = document.getElementById('password').value;
         
         try {
-          const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
-          const supabaseAnonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
+          // Use the Supabase JS client for proper auth handling
+          const { createClient } = await import('https://esm.sh/@supabase/supabase-js@2');
+          const supabase = createClient(supabaseUrl, supabaseAnonKey);
           
-          const response = await fetch(`${supabaseUrl}/auth/v1/token`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'apikey': supabaseAnonKey,
-              'Authorization': `Bearer ${supabaseAnonKey}`
-            },
-            body: JSON.stringify({
-              email: email,
-              password: password,
-              grant_type: 'password'
-            })
-          });
+          const { data, error } = await supabase.auth.signInWithPassword({ email, password });
           
-          const data = await response.json();
+          if (error) {
+            errorMsg.textContent = error.message;
+            errorMsg.style.display = 'block';
+            return;
+          }
           
-          if (data.access_token) {
+          if (data?.session?.access_token) {
             // Store token in cookie (server-readable) AND localStorage (client-readable)
-            document.cookie = `sb-auth-token=${data.access_token}; path=/; max-age=86400; SameSite=Lax`;
-            localStorage.setItem('sb-auth-token', data.access_token);
-            localStorage.setItem('sb-auth-user', JSON.stringify(data.user));
+            document.cookie = `sb-auth-token=${data.session.access_token}; path=/; max-age=86400; SameSite=Lax`;
+            localStorage.setItem('sb-auth-token', data.session.access_token);
+            localStorage.setItem('sb-auth-user', JSON.stringify(data.session.user));
             
             // Check admin role
             const profileRes = await fetch(`${supabaseUrl}/rest/v1/profiles?select=role`, {
               headers: {
                 'apikey': supabaseAnonKey,
-                'Authorization': `Bearer ${data.access_token}`,
+                'Authorization': `Bearer ${data.session.access_token}`,
                 'Content-Type': 'application/json'
               }
             });
@@ -199,10 +226,11 @@ const lang = getLangFromUrl(Astro.url);
               return;
             }
             
-            window.location.href = '/admin/dashboard';
-          } else {
-            errorMsg.textContent = data.error_description || 'Erreur de connexion';
-            errorMsg.style.display = 'block';
+            successMsg.textContent = 'Connexion réussie ! Redirection...';
+            successMsg.style.display = 'block';
+            setTimeout(() => {
+              window.location.href = '/admin/dashboard';
+            }, 500);
           }
         } catch (err) {
           errorMsg.textContent = 'Erreur de connexion. Vérifiez vos identifiants.';

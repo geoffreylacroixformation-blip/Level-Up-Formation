@@ -13,6 +13,7 @@ const isCatalogue = Astro.url.pathname.includes('/catalogue');
 const isAbout = Astro.url.pathname.includes('/a-propos') || Astro.url.pathname.includes('/about');
 const isContact = Astro.url.pathname.includes('/contact');
 const isMember = Astro.url.pathname.includes('/membre') || Astro.url.pathname.includes('/member');
+const isRegisterTab = isMember && Astro.url.search.includes('tab=register');
 ---
 
 <header class="fixed top-0 left-0 right-0 z-50 bg-surface/95 backdrop-blur-sm border-b border-border">
@@ -44,8 +45,16 @@ const isMember = Astro.url.pathname.includes('/membre') || Astro.url.pathname.in
           {t.nav.contact}
         </a>
         <a href={getLocalizedPath('membre', lang)}
-           class="btn-synthwave-nav text-sm font-medium">
+           class:list={["btn-synthwave-nav", isRegisterTab ? "active-reg" : ""]}
+           style={isRegisterTab ? "background: linear-gradient(180deg, #1a1a2e, #0f0f1a); color: #f72585; border-color: #f72585;" : ""}
+           class="text-sm font-medium">
           {t.nav.login}
+        </a>
+        <a href={getLocalizedPath('membre', lang) + '?tab=register'}
+           class:list={["btn-synthwave-nav", isRegisterTab ? "active-reg" : ""]}
+           style={isRegisterTab ? "background: linear-gradient(180deg, #f72585, #7209b7); color: #fff; border-color: #f72585; box-shadow: 0 0 25px rgba(247, 37, 133, 0.6), 0 0 50px rgba(247, 37, 133, 0.3), 0 4px 0 #7209b7;" : "background: linear-gradient(180deg, #1a1a2e, #0f0f1a); color: #f72585; border-color: #f72585;"}
+           class="text-sm font-medium">
+          S'inscrire
         </a>
       </nav>
 

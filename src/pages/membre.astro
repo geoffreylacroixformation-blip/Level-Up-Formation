@@ -141,6 +141,24 @@ const authError = document.getElementById('auth-error');
 
 let isLoginMode = true;
 
+// Auto-switch to register tab if ?tab=register is in URL
+const urlParams = new URLSearchParams(window.location.search);
+if (urlParams.get('tab') === 'register') {
+  isLoginMode = false;
+  tabRegister?.classList.add('bg-primary', 'text-white');
+  tabRegister?.classList.remove('bg-surface-light', 'text-text-muted');
+  tabLogin?.classList.remove('bg-primary', 'text-white');
+  tabLogin?.classList.add('bg-surface-light', 'text-text-muted');
+  confirmPasswordField?.classList.remove('hidden');
+  authError?.classList.add('hidden');
+  const submitBtn = document.getElementById('submit-btn');
+  if (submitBtn) submitBtn.textContent = "S'inscrire";
+  // Clean URL
+  const url = new URL(window.location);
+  url.searchParams.delete('tab');
+  window.history.replaceState({}, '', url);
+}
+
 tabLogin?.addEventListener('click', () => {
 isLoginMode = true;
 tabLogin.classList.add('bg-primary', 'text-white');
