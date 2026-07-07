@@ -19,7 +19,7 @@ const t = useTranslations(lang);
             <button id="tab-login" class="flex-1 py-2 bg-primary text-white rounded-lg font-medium">
               {t.auth.login}
             </button>
-            <button id="tab-register" class="flex-1 py-2 bg-surface-light text-text-muted rounded-lg font-medium">
+            <button id="tab-register" class="flex-1 py-2 bg-surface-light text-text-muted border border-border rounded-lg font-medium cursor-pointer hover:bg-surface-light/80 transition-colors">
               {t.auth.register}
             </button>
           </div>
@@ -125,100 +125,140 @@ const t = useTranslations(lang);
 </Layout>
 
 <script define:vars={{}}>
-  import { createClient } from '@supabase/supabase-js';
+import { createClient } from '@supabase/supabase-js';
 
-  const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL || '';
-  const supabaseAnonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY || '';
+const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL || '';
+const supabaseAnonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY || '';
 
-  if (supabaseUrl && supabaseAnonKey) {
-    const supabase = createClient(supabaseUrl, supabaseAnonKey);
+// ============================================
+// TAB SWITCHING (always works, no Supabase needed)
+// ============================================
+const tabLogin = document.getElementById('tab-login');
+const tabRegister = document.getElementById('tab-register');
+const confirmPasswordField = document.getElementById('confirm-password-field');
+const authError = document.getElementById('auth-error');
 
-    const loginForm = document.getElementById('login-form');
-    const dashboard = document.getElementById('dashboard');
-    const tabLogin = document.getElementById('tab-login');
-    const tabRegister = document.getElementById('tab-register');
-    const confirmPasswordField = document.getElementById('confirm-password-field');
-    const authError = document.getElementById('auth-error');
-    const authForm = document.getElementById('auth-form') as HTMLFormElement | null;
+let isLoginMode = true;
 
-    let isLoginMode = true;
+tabLogin?.addEventListener('click', () => {
+isLoginMode = true;
+tabLogin.classList.add('bg-primary', 'text-white');
+tabLogin.classList.remove('bg-surface-light', 'text-text-muted');
+tabRegister?.classList.remove('bg-primary', 'text-white');
+tabRegister?.classList.add('bg-surface-light', 'text-text-muted');
+confirmPasswordField?.classList.add('hidden');
+authError?.classList.add('hidden');
+});
 
-    tabLogin?.addEventListener('click', () => {
-      isLoginMode = true;
-      tabLogin.classList.add('bg-primary', 'text-white');
-      tabLogin.classList.remove('bg-surface-light', 'text-text-muted');
-      tabRegister?.classList.remove('bg-primary', 'text-white');
-      tabRegister?.classList.add('bg-surface-light', 'text-text-muted');
-      confirmPasswordField?.classList.add('hidden');
-      authError?.classList.add('hidden');
-    });
+tabRegister?.addEventListener('click', () => {
+isLoginMode = false;
+tabRegister.classList.add('bg-primary', 'text-white');
+tabRegister.classList.remove('bg-surface-light', 'text-text-muted');
+tabLogin?.classList.remove('bg-primary', 'text-white');
+tabLogin?.classList.add('bg-surface-light', 'text-text-muted');
+confirmPasswordField?.classList.remove('hidden');
+authError?.classList.add('hidden');
+});
 
-    tabRegister?.addEventListener('click', () => {
-      isLoginMode = false;
-      tabRegister.classList.add('bg-primary', 'text-white');
-      tabRegister.classList.remove('bg-surface-light', 'text-text-muted');
-      tabLogin?.classList.remove('bg-primary', 'text-white');
-      tabLogin?.classList.add('bg-surface-light', 'text-text-muted');
-      confirmPasswordField?.classList.remove('hidden');
-      authError?.classList.add('hidden');
-    });
+// ============================================
+// AUTH (only if Supabase is configured)
+// ============================================
+if (supabaseUrl && supabaseAnonKey) {
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-    authForm?.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const emailInput = document.getElementById('email') as HTMLInputElement;
-      const passwordInput = document.getElementById('password') as HTMLInputElement;
+const loginForm = document.getElementById('login-form');
+const dashboard = document.getElementById('dashboard');
+const authForm = document.getElementById('auth-form') as HTMLFormElement | null;
 
-      if (emailInput && passwordInput) {
-        const email = emailInput.value;
-        const password = passwordInput.value;
+authForm?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const emailInput = document.getElementById('email') as HTMLInputElement;
+  const passwordInput = document.getElementById('password') as HTMLInputElement;
 
-        if (isLoginMode) {
-          const { error } = await supabase.auth.signInWithPassword({ email, password });
-          if (error && authError) {
-            authError.textContent = error.message;
-            authError.classList.remove('hidden');
-          }
-        } else {
-          const confirmInput = document.getElementById('confirm-password') as HTMLInputElement;
-          if (confirmInput && password !== confirmInput.value) {
-            if (authError) {
-              authError.textContent = 'Les mots de passe ne correspondent pas';
-              authError.classList.remove('hidden');
-            }
-            return;
-          }
-          const { error } = await supabase.auth.signUp({ email, password });
-          if (error && authError) {
-            authError.textContent = error.message;
-            authError.classList.remove('hidden');
-          }
+  if (emailInput && passwordInput) {
+    const email = emailInput.value;
+    const password = passwordInput.value;
+
+    if (isLoginMode) {
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error && authError) {
+        authError.textContent = error.message;
+        authError.classList.remove('hidden');
+      }
+    } else {
+      const confirmInput = document.getElementById('confirm-password') as HTMLInputElement;
+      if (confirmInput && password !== confirmInput.value) {
+        if (authError) {
+          authError.textContent = 'Les mots de passe ne correspondent pas';
+          authError.classList.remove('hidden');
         }
+        return;
       }
-    });
-
-    document.getElementById('logout-btn')?.addEventListener('click', async () => {
-      await supabase.auth.signOut();
-    });
-
-    supabase.auth.onAuthStateChange((_, session) => {
-      if (session) {
-        loginForm?.classList.add('hidden');
-        dashboard?.classList.remove('hidden');
-        const userName = document.getElementById('user-name');
-        if (userName) userName.textContent = session.user.email?.split('@')[0] || 'Utilisateur';
-      } else {
-        loginForm?.classList.remove('hidden');
-        dashboard?.classList.add('hidden');
+      const { error } = await supabase.auth.signUp({ email, password });
+      if (error && authError) {
+        authError.textContent = error.message;
+        authError.classList.remove('hidden');
       }
-    });
-
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) {
-        loginForm?.classList.add('hidden');
-        dashboard?.classList.remove('hidden');
-        const userName = document.getElementById('user-name');
-        if (userName) userName.textContent = session.user.email?.split('@')[0] || 'Utilisateur';
-      }
-    });
+    }
   }
+});
+
+document.getElementById('logout-btn')?.addEventListener('click', async () => {
+  await supabase.auth.signOut();
+});
+
+// ============================================
+// MAGIC LINK
+// ============================================
+document.getElementById('magic-link-btn')?.addEventListener('click', async () => {
+  const emailInput = document.getElementById('email') as HTMLInputElement;
+  if (!emailInput || !emailInput.value) {
+    if (authError) {
+      authError.textContent = 'Veuillez entrer votre email';
+      authError.classList.remove('hidden');
+    }
+    return;
+  }
+  const { error } = await supabase.auth.signInWithOtp({ email: emailInput.value });
+  if (error && authError) {
+    authError.textContent = error.message;
+    authError.classList.remove('hidden');
+  } else if (authError) {
+    authError.textContent = 'Lien magique envoyé ! Vérifiez votre boîte mail.';
+    authError.classList.remove('hidden');
+    authError.classList.add('text-primary');
+  }
+});
+
+// ============================================
+// AUTH STATE CHANGE
+// ============================================
+supabase.auth.onAuthStateChange((_, session) => {
+  if (session) {
+    loginForm?.classList.add('hidden');
+    dashboard?.classList.remove('hidden');
+    const userName = document.getElementById('user-name');
+    if (userName) userName.textContent = session.user.email?.split('@')[0] || 'Utilisateur';
+  } else {
+    loginForm?.classList.remove('hidden');
+    dashboard?.classList.add('hidden');
+  }
+});
+
+supabase.auth.getSession().then(({ data: { session } }) => {
+  if (session) {
+    loginForm?.classList.add('hidden');
+    dashboard?.classList.remove('hidden');
+    const userName = document.getElementById('user-name');
+    if (userName) userName.textContent = session.user.email?.split('@')[0] || 'Utilisateur';
+  }
+});
+} else {
+// Show a message if Supabase is not configured
+const authErrorEl = document.getElementById('auth-error');
+if (authErrorEl) {
+  authErrorEl.textContent = 'Configuration Supabase manquante. Impossible de se connecter.';
+  authErrorEl.classList.remove('hidden');
+}
+}
 </script>
