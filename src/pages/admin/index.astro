@@ -77,7 +77,7 @@ const lang = Astro.url.pathname.split('/')[1] || defaultLang;
     const token = cookieToken || lsToken;
 
     if (!token) {
-      window.location.href = '/admin/login';
+      window.location.href = '/Level-Up-Formation/admin/login';
       return;
     }
 
@@ -98,7 +98,7 @@ const lang = Astro.url.pathname.split('/')[1] || defaultLang;
         localStorage.removeItem('sb-auth-token');
         localStorage.removeItem('sb-auth-user');
         document.cookie = 'sb-auth-token=; path=/; max-age=0';
-        window.location.href = '/admin/login';
+        window.location.href = '/Level-Up-Formation/admin/login';
         return;
       }
 
@@ -108,7 +108,7 @@ const lang = Astro.url.pathname.split('/')[1] || defaultLang;
         localStorage.removeItem('sb-auth-token');
         localStorage.removeItem('sb-auth-user');
         document.cookie = 'sb-auth-token=; path=/; max-age=0';
-        window.location.href = '/admin/login';
+        window.location.href = '/Level-Up-Formation/admin/login';
         return;
       }
 
@@ -118,7 +118,7 @@ const lang = Astro.url.pathname.split('/')[1] || defaultLang;
       localStorage.removeItem('sb-auth-token');
       localStorage.removeItem('sb-auth-user');
       document.cookie = 'sb-auth-token=; path=/; max-age=0';
-      window.location.href = '/admin/login';
+      window.location.href = '/Level-Up-Formation/admin/login';
       return;
     }
   })();

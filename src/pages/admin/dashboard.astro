@@ -138,7 +138,7 @@ const t = {
       </div>
       
       <div class="toolbar">
-        <a href="/admin/creer" class="btn btn-primary">+ {t.addCourse}</a>
+        <a href="/Level-Up-Formation/admin/creer" class="btn btn-primary">+ {t.addCourse}</a>
       </div>
       
       <div class="table-container">
@@ -167,7 +167,7 @@ const t = {
                   <td>{course.modules.length} modules</td>
                   <td>
                     <div class="actions">
-                      <a href={`/admin/editer/${course.slug}`} class="action-btn edit">{t.edit}</a>
+                      <a href={`/Level-Up-Formation/admin/editer/${course.slug}`} class="action-btn edit">{t.edit}</a>
                       <button class="action-btn delete" 
                               data-slug={course.slug} 
                               data-title={course.title}
@@ -182,7 +182,7 @@ const t = {
           <div class="empty-state">
             <h3>{t.noCourses}</h3>
             <p>Aucun cours configuré. Cliquez sur "Ajouter un cours" pour commencer.</p>
-            <a href="/admin/creer" class="btn btn-primary" style="margin-top: 16px; display: inline-block;">+ {t.addCourse}</a>
+            <a href="/Level-Up-Formation/admin/creer" class="btn btn-primary" style="margin-top: 16px; display: inline-block;">+ {t.addCourse}</a>
           </div>
         )}
       </div>
@@ -206,7 +206,7 @@ const t = {
         const token = cookieToken || lsToken;
 
         if (!token) {
-          window.location.href = '/admin/login';
+          window.location.href = '/Level-Up-Formation/admin/login';
           return;
         }
 
@@ -221,7 +221,7 @@ const t = {
           localStorage.removeItem('sb-auth-token');
           localStorage.removeItem('sb-auth-user');
           document.cookie = 'sb-auth-token=; path=/; max-age=0';
-          window.location.href = '/admin/login';
+          window.location.href = '/Level-Up-Formation/admin/login';
           return;
         }
 
@@ -238,7 +238,7 @@ const t = {
             localStorage.removeItem('sb-auth-token');
             localStorage.removeItem('sb-auth-user');
             document.cookie = 'sb-auth-token=; path=/; max-age=0';
-            window.location.href = '/admin/login';
+            window.location.href = '/Level-Up-Formation/admin/login';
             return;
           }
 
@@ -248,7 +248,7 @@ const t = {
             localStorage.removeItem('sb-auth-token');
             localStorage.removeItem('sb-auth-user');
             document.cookie = 'sb-auth-token=; path=/; max-age=0';
-            window.location.href = '/admin/login';
+            window.location.href = '/Level-Up-Formation/admin/login';
             return;
           }
 
@@ -258,7 +258,7 @@ const t = {
           localStorage.removeItem('sb-auth-token');
           localStorage.removeItem('sb-auth-user');
           document.cookie = 'sb-auth-token=; path=/; max-age=0';
-          window.location.href = '/admin/login';
+          window.location.href = '/Level-Up-Formation/admin/login';
           return;
         }
       })();
@@ -272,7 +272,7 @@ const t = {
         btn.textContent = '...';
         
         try {
-          const res = await fetch(`/api/admin/courses/${slug}`, { method: 'DELETE' });
+          const res = await fetch(`/Level-Up-Formation/api/admin/courses/${slug}`, { method: 'DELETE' });
           const data = await res.json();
           if (res.ok) {
             btn.closest('tr').remove();
