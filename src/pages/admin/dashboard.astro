@@ -214,8 +214,19 @@ const t = {
         const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
         const supabaseAnonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
+        // Get the logged-in user's email from localStorage
+        const userStr = localStorage.getItem('sb-auth-user');
+        const userEmail = userStr ? JSON.parse(userStr).email : null;
+        if (!userEmail) {
+          localStorage.removeItem('sb-auth-token');
+          localStorage.removeItem('sb-auth-user');
+          document.cookie = 'sb-auth-token=; path=/; max-age=0';
+          window.location.href = '/admin/login';
+          return;
+        }
+
         try {
-          const profileRes = await fetch(`${supabaseUrl}/rest/v1/profiles?select=role&email=eq.${encodeURIComponent('jo@levelup-formation.fr')}`, {
+          const profileRes = await fetch(`${supabaseUrl}/rest/v1/profiles?select=role&email=eq.${encodeURIComponent(userEmail)}`, {
             headers: {
               'apikey': supabaseAnonKey,
               'Authorization': `Bearer ${token}`,
