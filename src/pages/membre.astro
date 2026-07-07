@@ -194,10 +194,20 @@ authForm?.addEventListener('submit', async (e) => {
         }
         return;
       }
-      const { error } = await supabase.auth.signUp({ email, password });
+      const { data, error } = await supabase.auth.signUp({ email, password });
       if (error && authError) {
         authError.textContent = error.message;
         authError.classList.remove('hidden');
+      } else if (data?.user?.identities?.length === 0) {
+        if (authError) {
+          authError.textContent = 'Un compte avec cet email existe déjà. Utilisez "Connexion" ou "Mot de passe oublié".';
+          authError.classList.remove('hidden');
+          authError.classList.add('text-warning');
+        }
+      } else if (authError) {
+        authError.textContent = 'Compte créé ! Vérifiez votre boîte mail pour confirmer votre adresse.';
+        authError.classList.remove('hidden');
+        authError.classList.add('text-primary');
       }
     }
   }
