@@ -81,13 +81,60 @@ const isRegisterTab = isMember && Astro.url.search.includes('tab=register');
 
       </div>
 
-      <button class="md:hidden p-2 text-text-muted hover:text-text" aria-label="Menu">
+      <button id="mobile-menu-btn" class="md:hidden p-2 text-text-muted hover:text-text" aria-label="Menu">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
         </svg>
       </button>
     </div>
   </div>
+
+  <!-- Mobile/Tablet Menu -->
+  <div id="mobile-menu" class="hidden md:hidden bg-surface border-t border-border">
+    <div class="max-w-7xl mx-auto px-4 py-4 space-y-3">
+      <a href={lang === defaultLang ? getLocalizedPath('', lang) : `/${lang}/`}
+         class="block py-2 px-3 rounded-lg text-text hover:bg-surface-light transition-colors">
+        {t.nav.home}
+      </a>
+      <a href={getLocalizedPath('catalogue', lang)}
+         class="block py-2 px-3 rounded-lg text-text hover:bg-surface-light transition-colors">
+        {t.nav.catalogue}
+      </a>
+      <a href={getLocalizedPath('a-propos', lang)}
+         class="block py-2 px-3 rounded-lg text-text hover:bg-surface-light transition-colors">
+        {t.nav.about}
+      </a>
+      <a href={getLocalizedPath('contact', lang)}
+         class="block py-2 px-3 rounded-lg text-text hover:bg-surface-light transition-colors">
+        {t.nav.contact}
+      </a>
+      <div class="flex gap-3 pt-3 border-t border-border">
+        <a href={getLocalizedPath('membre', lang)}
+           class="flex-1 text-center btn-synthwave-nav text-sm font-medium">
+          {t.nav.login}
+        </a>
+        <a href={getLocalizedPath('membre', lang) + '?tab=register'}
+           class="flex-1 text-center btn-synthwave-nav text-sm font-medium"
+           style="background: linear-gradient(180deg, #f72585, #7209b7); color: #fff; border-color: #f72585;">
+          S'inscrire
+        </a>
+      </div>
+    </div>
+  </div>
 </header>
 
 <div class="h-16"></div>
+
+<script>
+const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+const mobileMenu = document.getElementById('mobile-menu');
+mobileMenuBtn?.addEventListener('click', () => {
+  mobileMenu?.classList.toggle('hidden');
+});
+// Close menu when clicking a link
+mobileMenu?.querySelectorAll('a').forEach(link => {
+  link.addEventListener('click', () => {
+    mobileMenu?.classList.add('hidden');
+  });
+});
+</script>
