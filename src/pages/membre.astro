@@ -57,9 +57,10 @@ const t = useTranslations(lang);
             </div>
             <button
               type="submit"
+              id="submit-btn"
               class="w-full py-3 bg-primary text-white rounded-lg font-semibold transition-colors"
             >
-              {t.auth.loginSubmit}
+              Se connecter
             </button>
           </form>
 
@@ -148,6 +149,8 @@ tabRegister?.classList.remove('bg-primary', 'text-white');
 tabRegister?.classList.add('bg-surface-light', 'text-text-muted');
 confirmPasswordField?.classList.add('hidden');
 authError?.classList.add('hidden');
+const submitBtn = document.getElementById('submit-btn');
+if (submitBtn) { submitBtn.textContent = 'Se connecter'; submitBtn.disabled = false; }
 });
 
 tabRegister?.addEventListener('click', () => {
@@ -158,6 +161,8 @@ tabLogin?.classList.remove('bg-primary', 'text-white');
 tabLogin?.classList.add('bg-surface-light', 'text-text-muted');
 confirmPasswordField?.classList.remove('hidden');
 authError?.classList.add('hidden');
+const submitBtn = document.getElementById('submit-btn');
+if (submitBtn) { submitBtn.textContent = "S'inscrire"; submitBtn.disabled = false; }
 });
 
 // ============================================
@@ -174,13 +179,17 @@ authForm?.addEventListener('submit', async (e) => {
   e.preventDefault();
   const emailInput = document.getElementById('email') as HTMLInputElement;
   const passwordInput = document.getElementById('password') as HTMLInputElement;
+  const submitBtn = document.getElementById('submit-btn');
+  const originalText = submitBtn?.textContent;
 
   if (emailInput && passwordInput) {
     const email = emailInput.value;
     const password = passwordInput.value;
 
     if (isLoginMode) {
+      if (submitBtn) { submitBtn.textContent = 'Connexion...'; submitBtn.disabled = true; }
       const { error } = await supabase.auth.signInWithPassword({ email, password });
+      if (submitBtn) { submitBtn.textContent = originalText; submitBtn.disabled = false; }
       if (error && authError) {
         authError.textContent = error.message;
         authError.classList.remove('hidden');
@@ -194,7 +203,9 @@ authForm?.addEventListener('submit', async (e) => {
         }
         return;
       }
+      if (submitBtn) { submitBtn.textContent = "Inscription..."; submitBtn.disabled = true; }
       const { data, error } = await supabase.auth.signUp({ email, password });
+      if (submitBtn) { submitBtn.textContent = originalText; submitBtn.disabled = false; }
       if (error && authError) {
         authError.textContent = error.message;
         authError.classList.remove('hidden');
