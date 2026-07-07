@@ -34,16 +34,6 @@ const isRegisterTab = isMember && Astro.url.search.includes('tab=register');
            class="text-sm font-medium transition-colors">
           {t.nav.catalogue}
         </a>
-        <a href={getLocalizedPath('a-propos', lang)}
-           class:list={["nav-link", isAbout && "active"]}
-           class="text-sm font-medium transition-colors">
-          {t.nav.about}
-        </a>
-        <a href={getLocalizedPath('contact', lang)}
-           class:list={["nav-link", isContact && "active"]}
-           class="text-sm font-medium transition-colors">
-          {t.nav.contact}
-        </a>
         <a href={getLocalizedPath('membre', lang)}
            class:list={["btn-synthwave-nav", isRegisterTab ? "active-reg" : ""]}
            style={isRegisterTab ? "background: linear-gradient(180deg, #1a1a2e, #0f0f1a); color: #f72585; border-color: #f72585;" : ""}
@@ -99,14 +89,6 @@ const isRegisterTab = isMember && Astro.url.search.includes('tab=register');
       <a href={getLocalizedPath('catalogue', lang)}
          class="block py-2 px-3 rounded-lg text-text hover:bg-surface-light transition-colors">
         {t.nav.catalogue}
-      </a>
-      <a href={getLocalizedPath('a-propos', lang)}
-         class="block py-2 px-3 rounded-lg text-text hover:bg-surface-light transition-colors">
-        {t.nav.about}
-      </a>
-      <a href={getLocalizedPath('contact', lang)}
-         class="block py-2 px-3 rounded-lg text-text hover:bg-surface-light transition-colors">
-        {t.nav.contact}
       </a>
       <div class="flex gap-3 pt-3 border-t border-border">
         <a href={getLocalizedPath('membre', lang)}
