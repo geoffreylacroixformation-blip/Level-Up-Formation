@@ -1,0 +1,177 @@
+---
+interface Props {
+  title: string;
+  lang?: string;
+}
+
+const { title, lang = 'fr' } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang={lang}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
+    <title>{title} - Level Up Formation</title>
+    <style>
+      :root {
+        --primary: #2563eb;
+        --primary-light: #3b82f6;
+        --accent: #f59e0b;
+        --accent-light: #fbbf24;
+        --success: #10b981;
+        --error: #ef4444;
+        --warning: #f59e0b;
+        --text: #1e293b;
+        --text-muted: #64748b;
+        --surface: #ffffff;
+        --background: #f8fafc;
+        --border: #e2e8f0;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Inter', sans-serif;
+        color: var(--text);
+        background-color: var(--background);
+        line-height: 1.6;
+      }
+
+      .font-display {
+        font-family: 'Playfair Display', serif;
+      }
+
+      .gradient-border {
+        position: relative;
+        border-radius: 1rem;
+        padding: 2px;
+        background: linear-gradient(135deg, var(--primary), var(--accent));
+      }
+
+      .gradient-border::before {
+        content: '';
+        position: absolute;
+        inset: 2px;
+        border-radius: calc(1rem - 2px);
+        background: var(--surface);
+      }
+
+      .gradient-border > * {
+        position: relative;
+        z-index: 1;
+      }
+
+      nav {
+        backdrop-filter: blur(12px);
+        background: rgba(255, 255, 255, 0.8);
+        border-bottom: 1px solid var(--border);
+      }
+
+      nav a {
+        color: var(--text-muted);
+        transition: color 0.2s;
+      }
+
+      nav a:hover {
+        color: var(--primary);
+      }
+
+      .text-primary { color: var(--primary); }
+      .text-accent { color: var(--accent); }
+      .text-success { color: var(--success); }
+      .text-error { color: var(--error); }
+      .text-warning { color: var(--warning); }
+      .text-text { color: var(--text); }
+      .text-text-muted { color: var(--text-muted); }
+      .bg-primary { background-color: var(--primary); }
+      .bg-accent { background-color: var(--accent); }
+      .bg-success { background-color: var(--success); }
+      .bg-error { background-color: var(--error); }
+      .bg-warning { background-color: var(--warning); }
+      .bg-surface { background-color: var(--surface); }
+      .bg-background { background-color: var(--background); }
+      .bg-primary\\/20 { background-color: rgba(37, 99, 235, 0.2); }
+      .bg-accent\\/20 { background-color: rgba(245, 158, 11, 0.2); }
+      .border-border { border-color: var(--border); }
+    </style>
+  </head>
+  <body>
+    <nav class="sticky top-0 z-50 py-4">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
+        <a href="/" class="font-display text-2xl font-bold text-primary">Level Up</a>
+        <div class="hidden md:flex items-center gap-6">
+          <a href="/" class="font-medium">Accueil</a>
+          <a href="/catalogue" class="font-medium">Catalogue</a>
+          <a href="/a-propos" class="font-medium">À propos</a>
+          <a href="/contact" class="font-medium">Contact</a>
+          <a href="/membre" class="font-medium">Membre</a>
+          <a href="/admin/login" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-light transition-colors">Admin</a>
+        </div>
+        <button class="md:hidden text-text" id="menu-toggle">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+        </button>
+      </div>
+      <div class="md:hidden hidden mt-4 pb-4" id="mobile-menu">
+        <div class="flex flex-col gap-3">
+          <a href="/" class="font-medium">Accueil</a>
+          <a href="/catalogue" class="font-medium">Catalogue</a>
+          <a href="/a-propos" class="font-medium">À propos</a>
+          <a href="/contact" class="font-medium">Contact</a>
+          <a href="/membre" class="font-medium">Membre</a>
+          <a href="/admin/login" class="px-4 py-2 bg-primary text-white rounded-lg text-center">Admin</a>
+        </div>
+      </div>
+    </nav>
+
+    <main id="page-content">
+      <slot />
+    </main>
+
+    <footer class="bg-surface border-t border-border py-12">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div>
+            <h3 class="font-display text-xl font-bold text-primary mb-4">Level Up</h3>
+            <p class="text-text-muted text-sm">Votre parcours de formation en cybersécurité, du niveau 1 au niveau expert.</p>
+          </div>
+          <div>
+            <h4 class="font-semibold mb-4">Liens rapides</h4>
+            <ul class="space-y-2 text-sm text-text-muted">
+              <li><a href="/catalogue" class="hover:text-primary">Catalogue</a></li>
+              <li><a href="/a-propos" class="hover:text-primary">À propos</a></li>
+              <li><a href="/contact" class="hover:text-primary">Contact</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="font-semibold mb-4">Mentions légales</h4>
+            <ul class="space-y-2 text-sm text-text-muted">
+              <li><a href="/cgv" class="hover:text-primary">CGV</a></li>
+              <li><a href="/confidentialite" class="hover:text-primary">Confidentialité</a></li>
+              <li><a href="/mentions-legales" class="hover:text-primary">Mentions légales</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="mt-8 pt-8 border-t border-border text-center text-sm text-text-muted">
+          <p>&copy; {new Date().getFullYear()} Level Up Formation. Tous droits réservés.</p>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      document.getElementById('menu-toggle')?.addEventListener('click', () => {
+        document.getElementById('mobile-menu')?.classList.toggle('hidden');
+      });
+    </script>
+  </body>
+</html>
