@@ -176,6 +176,7 @@ const lang = Astro.url.pathname.split('/')[1] || defaultLang;
   async function handleDelete(e) {
     const btn = e.currentTarget;
     const slug = btn.getAttribute('data-slug');
+    console.log('[admin] handleDelete clicked, slug:', slug);
     if (!slug) return;
 
     // Confirm deletion
@@ -193,9 +194,13 @@ const lang = Astro.url.pathname.split('/')[1] || defaultLang;
     const cookieToken = getCookie('sb-auth-token');
     const lsToken = localStorage.getItem('sb-auth-token');
     const token = cookieToken || lsToken;
+    console.log('[admin] token:', token ? token.substring(0, 20) + '...' : 'NULL');
 
     try {
-      const res = await fetch(`/api/admin/courses/${slug}`, {
+      const url = `/api/admin/courses/${slug}`;
+      console.log('[admin] DELETE', url);
+
+      const res = await fetch(url, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -203,22 +208,34 @@ const lang = Astro.url.pathname.split('/')[1] || defaultLang;
         }
       });
 
+      console.log('[admin] response status:', res.status);
       const result = await res.json();
+      console.log('[admin] response body:', JSON.stringify(result, null, 2));
 
-      if (res.ok && result.success) {
+      if (res.ok) {
         // Remove from DOM
         const courseEl = btn.closest('.flex');
+        console.log('[admin] courseEl found:', !!courseEl);
         if (courseEl) {
+          courseEl.style.transition = 'opacity 0.3s';
           courseEl.style.opacity = '0';
-          setTimeout(() => courseEl.remove(), 300);
+          setTimeout(() => {
+            courseEl.remove();
+            console.log('[admin] course element removed from DOM');
+          }, 300);
         }
-        alert(`Cours supprimé avec succès !\n\nFichiers supprimés: ${result.deleted.files.length}\nCatalogue: ${result.deleted.catalog ? 'Oui' : 'Non'}`);
+        if (result.deleted && result.deleted.catalog !== false) {
+          alert(`Cours supprimé avec succès !\n\nFichiers supprimés: ${result.deleted.files.length}\nCatalogue: ${result.deleted.catalog ? 'Oui' : 'Non'}`);
+        } else {
+          alert(`Cours supprimé !\n\n${result.errors ? result.errors.join('\n') : 'Cours supprimé.'}`);
+        }
       } else {
-        alert(`Erreur: ${result.error || 'Erreur inconnue'}`);
+        alert(`Erreur (${res.status}): ${result.error || 'Erreur inconnue'}`);
         btn.disabled = false;
         btn.textContent = 'Supprimer';
       }
     } catch (err) {
+      console.error('[admin] fetch error:', err);
       alert(`Erreur de connexion: ${err.message}`);
       btn.disabled = false;
       btn.textContent = 'Supprimer';
