@@ -3,9 +3,11 @@ import '../../styles/global.css';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
 import { getLangFromUrl } from '../../lib/i18n';
-import { courses } from '../../lib/courses';
 
 const lang = getLangFromUrl(Astro.url);
+// Dashboard is fully dynamic — loaded from Supabase client-side.
+// This empty array is only for static build compatibility.
+const courses: any[] = [];
 const t = {
   fr: {
     title: 'Administration - Catalogue',
@@ -190,131 +192,196 @@ const t = {
     <Footer lang={lang} />
     
     <script>
-      // --- Client-side auth gate ---
+      // --- Config ---
+      const SUPABASE_URL = import.meta.env.PUBLIC_SUPABASE_URL;
+      const SUPABASE_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
+      const GITHUB_REPO = 'geoffreylacroixformation-blip/Level-Up-Formation';
+      const GITHUB_FILE = 'src/lib/courses.ts';
+
+      // --- Helpers ---
+      function getCookie(name) {
+        const match = document.cookie.match(new RegExp('(?:^|;)\\s*' + name + '=([^;]*)'));
+        return match ? decodeURIComponent(match[1]) : null;
+      }
+
+      function getToken() {
+        return getCookie('sb-auth-token') || localStorage.getItem('sb-auth-token');
+      }
+
+      function getUserEmail() {
+        const userStr = localStorage.getItem('sb-auth-user');
+        return userStr ? JSON.parse(userStr).email : null;
+      }
+
+      function logout() {
+        localStorage.removeItem('sb-auth-token');
+        localStorage.removeItem('sb-auth-user');
+        document.cookie = 'sb-auth-token=; path=/; max-age=0';
+        window.location.href = '/Level-Up-Formation/admin/login';
+      }
+
+      // --- Level badge ---
+      function levelBadge(level, t) {
+        const labels = { 1: 'LVL 1 - 49€', 2: 'LVL 2 - 89€', 3: 'LVL 3 - 149€' };
+        return `<span class="level-badge level-${level}">${labels[level] || level}</span>`;
+      }
+
+      // --- Render table ---
+      function renderTable(courses, tbody) {
+        tbody.innerHTML = '';
+        if (courses.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="7" class="empty-state"><h3>Aucun cours en base</h3></td></tr>`;
+          return;
+        }
+        courses.forEach(course => {
+          const tr = document.createElement('tr');
+          tr.dataset.slug = course.slug;
+          tr.innerHTML = `
+            <td><img src="${course.image}" alt="" class="course-thumb" loading="lazy" onerror="this.style.display='none'" /></td>
+            <td class="course-title">${course.title}</td>
+            <td class="course-slug">${course.slug}</td>
+            <td>${levelBadge(course.level, {})}</td>
+            <td class="price">${course.price}€</td>
+            <td>${(course.modules || []).length} modules</td>
+            <td>
+              <div class="actions">
+                <a href="/Level-Up-Formation/admin/editer/${course.slug}" class="action-btn edit">Modifier</a>
+                <button class="action-btn delete" data-slug="${course.slug}" data-title="${course.title}" onclick="confirmDelete(this)">Supprimer</button>
+              </div>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+      }
+
+      // --- Refresh from Supabase ---
+      async function refreshCourses() {
+        const token = getToken();
+        if (!token || !SUPABASE_URL) return;
+
+        const tbody = document.querySelector('#admin-content tbody');
+        if (!tbody) return;
+
+        tbody.innerHTML = '<tr><td colspan="7" class="loading-state"><h3>Chargement...</h3></td></tr>';
+
+        try {
+          const res = await fetch(
+            `${SUPABASE_URL}/rest/v1/courses?select=*,modules(*),image,title,slug,level,price`,
+            {
+              headers: {
+                'apikey': SUPABASE_KEY,
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+                'Prefer': 'rel=representation'
+              }
+            }
+          );
+          if (!res.ok) {
+            tbody.innerHTML = `<tr><td colspan="7" class="empty-state"><h3>Erreur: ${res.status}</h3><p>Vérifiez les politiques RLS sur la table courses</p></td></tr>`;
+            return;
+          }
+          const data = await res.json();
+          renderTable(data, tbody);
+        } catch (err) {
+          console.error('[refresh] error:', err);
+          tbody.innerHTML = `<tr><td colspan="7" class="empty-state"><h3>Erreur réseau</h3></td></tr>`;
+        }
+      }
+
+      // --- Auth gate + load courses ---
       (async () => {
         const content = document.getElementById('admin-content');
         if (!content) return;
 
-        // Check token in cookie first, then localStorage
-        function getCookie(name) {
-          const match = document.cookie.match(new RegExp('(?:^|;)\\s*' + name + '=([^;]*)'));
-          return match ? decodeURIComponent(match[1]) : null;
-        }
-
-        const cookieToken = getCookie('sb-auth-token');
-        const lsToken = localStorage.getItem('sb-auth-token');
-        const token = cookieToken || lsToken;
-
+        const token = getToken();
         if (!token) {
-          window.location.href = '/Level-Up-Formation/admin/login';
+          logout();
           return;
         }
 
-        // Verify token is valid and check admin role
-        const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
-        const supabaseAnonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
-
-        // Get the logged-in user's email from localStorage
-        const userStr = localStorage.getItem('sb-auth-user');
-        const userEmail = userStr ? JSON.parse(userStr).email : null;
+        const userEmail = getUserEmail();
         if (!userEmail) {
-          localStorage.removeItem('sb-auth-token');
-          localStorage.removeItem('sb-auth-user');
-          document.cookie = 'sb-auth-token=; path=/; max-age=0';
-          window.location.href = '/Level-Up-Formation/admin/login';
+          logout();
           return;
         }
 
         try {
-          const profileRes = await fetch(`${supabaseUrl}/rest/v1/profiles?select=role&email=eq.${encodeURIComponent(userEmail)}`, {
-            headers: {
-              'apikey': supabaseAnonKey,
-              'Authorization': `Bearer ${token}`,
-              'Content-Type': 'application/json'
+          const profileRes = await fetch(
+            `${SUPABASE_URL}/rest/v1/profiles?select=role&email=eq.${encodeURIComponent(userEmail)}`,
+            {
+              headers: {
+                'apikey': SUPABASE_KEY,
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+              }
             }
-          });
+          );
 
           if (!profileRes.ok) {
-            localStorage.removeItem('sb-auth-token');
-            localStorage.removeItem('sb-auth-user');
-            document.cookie = 'sb-auth-token=; path=/; max-age=0';
-            window.location.href = '/Level-Up-Formation/admin/login';
+            logout();
             return;
           }
 
           const profileData = await profileRes.json();
 
           if (profileData.length === 0 || profileData[0].role !== 'admin') {
-            localStorage.removeItem('sb-auth-token');
-            localStorage.removeItem('sb-auth-user');
-            document.cookie = 'sb-auth-token=; path=/; max-age=0';
-            window.location.href = '/Level-Up-Formation/admin/login';
+            logout();
             return;
           }
 
-          // Auth verified — show content
+          // Auth verified — show content and load courses from Supabase
           content.style.display = 'block';
+          await refreshCourses();
         } catch (err) {
-          localStorage.removeItem('sb-auth-token');
-          localStorage.removeItem('sb-auth-user');
-          document.cookie = 'sb-auth-token=; path=/; max-age=0';
-          window.location.href = '/Level-Up-Formation/admin/login';
-          return;
+          console.error('[auth] error:', err);
+          logout();
         }
       })();
 
+      // --- Delete course ---
       async function confirmDelete(btn) {
         const slug = btn.dataset.slug;
         const title = btn.dataset.title;
-        if (!confirm(`${title}\n\nConfirmer la suppression ?`)) return;
-        
+        if (!confirm(`"${title}"\n\nConfirmer la suppression ?\n\nCe cours sera supprimé de la base de données ET du catalogue.`)) return;
+
         btn.disabled = true;
-        btn.textContent = '...';
-        
+        btn.textContent = 'Suppression...';
+
+        const token = getToken();
+        if (!token) {
+          alert('Erreur: non connecté. Veuillez vous reconnecter.');
+          btn.disabled = false;
+          btn.textContent = 'Supprimer';
+          return;
+        }
+
         try {
-          // Read token from localStorage (cookie path may not match in dev)
-          const lsToken = localStorage.getItem('sb-auth-token');
-          const token = lsToken;
-          
-          console.log('[delete] token:', token ? token.slice(0, 16) + '...' : 'NONE');
-          console.log('[delete] localStorage keys:', Object.keys(localStorage));
-          
-          if (!token) {
-            alert('Erreur: aucun token d\'authentification trouvé. Veuillez vous reconnecter.');
-            btn.disabled = false;
-            btn.textContent = 'Supprimer';
-            return;
-          }
-          
-          const url = `/api/admin/courses/${slug}`;
-          console.log('[delete] URL:', url);
-          
-          const res = await fetch(url, {
+          // Call Astro API route (handles Supabase + catalog cleanup server-side)
+          const res = await fetch(`/Level-Up-Formation/api/admin/courses/${slug}`, {
             method: 'DELETE',
             headers: {
               'Authorization': `Bearer ${token}`,
               'Content-Type': 'application/json'
             }
           });
-          console.log('[delete] status:', res.status, res.statusText);
-          
-          let data;
-          try {
-            data = await res.json();
-          } catch {
-            data = { error: (await res.text()).slice(0, 500) };
+
+          const result = await res.json();
+
+          if (!res.ok) {
+            alert(`Erreur (${res.status}): ${result.error || 'Erreur inconnue'}`);
+            btn.disabled = false;
+            btn.textContent = 'Supprimer';
+            return;
           }
-          console.log('[delete] response:', data);
-          
-          if (res.ok) {
-            btn.closest('tr').remove();
-            alert(`✅ Cours "${title}" supprimé`);
-          } else {
-            alert(`Erreur (${res.status}): ${data.error || 'Inconnue'}`);
-          }
+
+          // Remove from DOM
+          const row = btn.closest('tr');
+          if (row) row.remove();
+
+          alert(`✅ Cours "${title}" supprimé !`);
         } catch (e) {
           console.error('[delete] error:', e);
-          alert('Erreur réseau: ' + e.message);
+          alert('Erreur: ' + e.message);
         }
         btn.disabled = false;
         btn.textContent = 'Supprimer';

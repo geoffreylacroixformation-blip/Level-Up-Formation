@@ -87,7 +87,18 @@ const lang = Astro.url.pathname.split('/')[1] || defaultLang;
     const supabaseAnonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
     try {
-      const profileRes = await fetch(`${supabaseUrl}/rest/v1/profiles?select=role&email=eq.${encodeURIComponent('jo@levelup-formation.fr')}`, {
+      // Get user email from localStorage (set by login.astro)
+      const userStr = localStorage.getItem('sb-auth-user');
+      if (!userStr) {
+        localStorage.removeItem('sb-auth-token');
+        localStorage.removeItem('sb-auth-user');
+        document.cookie = 'sb-auth-token=; path=/; max-age=0';
+        window.location.href = '/Level-Up-Formation/admin/login';
+        return;
+      }
+      const userEmail = JSON.parse(userStr).email;
+
+      const profileRes = await fetch(`${supabaseUrl}/rest/v1/profiles?select=role&email=eq.${encodeURIComponent(userEmail)}`, {
         headers: {
           'apikey': supabaseAnonKey,
           'Authorization': `Bearer ${token}`,
