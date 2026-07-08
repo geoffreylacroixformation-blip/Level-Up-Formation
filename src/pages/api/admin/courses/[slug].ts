@@ -36,7 +36,20 @@ export const DELETE: APIRoute = async ({ params, request }) => {
   }
 
   try {
-    const profileRes = await fetch(`${supabaseUrl}/rest/v1/profiles?select=role&email=eq.${encodeURIComponent('jo@levelup-formation.fr')}`, {
+    // Verify the token via Supabase auth
+    const { createClient } = await import('@supabase/supabase-js');
+    const supabase = createClient(supabaseUrl, supabaseAnonKey);
+    const { data: { user }, error: userError } = await supabase.auth.getUser(token);
+
+    if (userError || !user) {
+      return new Response(JSON.stringify({ error: 'Token invalide' }), { 
+        status: 401,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+
+    // Check admin role from profiles table
+    const profileRes = await fetch(`${supabaseUrl}/rest/v1/profiles?select=role&email=eq.${encodeURIComponent(user.email)}`, {
       headers: {
         'apikey': supabaseAnonKey,
         'Authorization': `Bearer ${token}`,
