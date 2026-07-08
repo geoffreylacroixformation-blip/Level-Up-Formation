@@ -272,15 +272,49 @@ const t = {
         btn.textContent = '...';
         
         try {
-          const res = await fetch(`/Level-Up-Formation/api/admin/courses/${slug}`, { method: 'DELETE' });
-          const data = await res.json();
+          // Read token from localStorage (cookie path may not match in dev)
+          const lsToken = localStorage.getItem('sb-auth-token');
+          const token = lsToken;
+          
+          console.log('[delete] token:', token ? token.slice(0, 16) + '...' : 'NONE');
+          console.log('[delete] localStorage keys:', Object.keys(localStorage));
+          
+          if (!token) {
+            alert('Erreur: aucun token d\'authentification trouvé. Veuillez vous reconnecter.');
+            btn.disabled = false;
+            btn.textContent = 'Supprimer';
+            return;
+          }
+          
+          const url = `/api/admin/courses/${slug}`;
+          console.log('[delete] URL:', url);
+          
+          const res = await fetch(url, {
+            method: 'DELETE',
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json'
+            }
+          });
+          console.log('[delete] status:', res.status, res.statusText);
+          
+          let data;
+          try {
+            data = await res.json();
+          } catch {
+            data = { error: (await res.text()).slice(0, 500) };
+          }
+          console.log('[delete] response:', data);
+          
           if (res.ok) {
             btn.closest('tr').remove();
+            alert(`✅ Cours "${title}" supprimé`);
           } else {
-            alert(data.error || 'Erreur');
+            alert(`Erreur (${res.status}): ${data.error || 'Inconnue'}`);
           }
         } catch (e) {
-          alert('Erreur réseau');
+          console.error('[delete] error:', e);
+          alert('Erreur réseau: ' + e.message);
         }
         btn.disabled = false;
         btn.textContent = 'Supprimer';
