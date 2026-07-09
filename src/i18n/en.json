@@ -1,159 +1,148 @@
 {
-  "site": {
-    "name": "Level Up",
-    "slogan": "Level up your skills, one level at a time"
-  },
   "nav": {
     "home": "Home",
-    "catalogue": "Catalogue",
+    "catalogue": "Catalog",
     "about": "About",
     "contact": "Contact",
-    "member": "Member area",
     "login": "Login",
     "logout": "Logout",
-    "dashboard": "Dashboard"
+    "dashboard": "Admin Dashboard",
+    "language": "Language"
   },
   "home": {
     "hero": {
-      "title": "Level up your skills, one level at a time",
-      "subtitle": "Professional training in cybersecurity and IT. Expert content, structured progression, recognized certifications.",
-      "cta": "View courses"
+      "title": "Level up your skills, one step at a time",
+      "subtitle": "Online courses in cybersecurity and IT designed to help you progress concretely",
+      "cta": "Discover courses",
+      "levels": "3 progressive levels"
     },
-    "why": {
-      "title": "Why Level Up?",
-      "reason1": {
-        "title": "Expert content",
-        "desc": "Training designed by active professionals in the cybersecurity field"
-      },
-      "reason2": {
+    "features": {
+      "title": "Why Level-Up?",
+      "progression": {
         "title": "Structured progression",
-        "desc": "Pedagogical paths in 3 levels for a progressive skill development"
+        "desc": "3-level pathways adapted to your current level"
       },
-      "reason3": {
-        "title": "Certifications",
-        "desc": "Digital badges and certificates at every step of your journey"
+      "pratique": {
+        "title": "Practical approach",
+        "desc": "Concrete modules with quizzes and exercises"
+      },
+      "flexible": {
+        "title": "At your own pace",
+        "desc": "Access courses whenever, wherever you want"
       }
     },
     "levels": {
-      "title": "Our training levels",
-      "lvl1": {
-        "name": "Level 1 - Introduction",
-        "price": "49EUR",
-        "desc": "Cybersecurity fundamentals and first technical steps"
-      },
-      "lvl2": {
-        "name": "Level 2 - Proficiency",
-        "price": "89EUR",
-        "desc": "Advanced techniques and hands-on practice on real environments"
-      },
-      "lvl3": {
-        "name": "Level 3 - Expertise",
-        "price": "149EUR",
-        "desc": "Complex operations, professional auditing and specialization"
-      },
-      "bundles": {
-        "title": "Bundles",
-        "bundle1": "Pack LVL1 + LVL2 - 119EUR",
-        "bundle2": "All Access Pass - 249EUR"
-      }
+      "title": "Training levels",
+      "lvl1": "Level 1 - Fundamentals",
+      "lvl2": "Level 2 - Intermediate",
+      "lvl3": "Level 3 - Expert"
     },
-    "testimonials": {
-      "title": "What they say about us",
-      "t1": {
-        "quote": "A complete training that allowed me to switch careers to cybersecurity.",
-        "author": "Career-changing developer"
-      },
-      "t2": {
-        "quote": "The modular format is perfect for learning at my own pace after work.",
-        "author": "System administrator"
-      },
-      "t3": {
-        "quote": "The practical exercises are very close to real situations encountered in the field.",
-        "author": "Security consultant"
-      }
+    "cta": {
+      "title": "Ready to level up?",
+      "subtitle": "Choose your course and start today",
+      "button": "View catalog"
     }
   },
   "catalogue": {
-    "title": "Course catalogue",
-    "filter": {
-      "all": "All",
-      "lvl1": "Level 1",
-      "lvl2": "Level 2",
-      "lvl3": "Level 3"
-    },
-    "freePreview": "Free preview available",
-    "buy": "Buy"
+    "title": "Course Catalog",
+    "subtitle": "Find the course that fits your goals",
+    "filterAll": "All",
+    "filterLvl1": "Level 1",
+    "filterLvl2": "Level 2",
+    "filterLvl3": "Level 3",
+    "bundle": "Bundle offers",
+    "price": "€",
+    "enroll": "Enroll",
+    "details": "Details"
   },
   "course": {
+    "back": "← Back to catalog",
     "modules": "Modules",
-    "freeModule": "Free module",
-    "lockedModule": "Locked module",
-    "quiz": "Module quiz",
-    "certificate": "Certificate",
-    "badge": "Badge earned",
-    "startQuiz": "Start quiz",
-    "submitQuiz": "Submit",
-    "downloadCert": "Download certificate"
-  },
-  "member": {
-    "title": "Member area",
-    "welcome": "Welcome",
-    "myCourses": "My courses",
-    "progress": "Progress",
-    "badges": "My badges",
-    "certificates": "My certificates",
-    "noCourses": "You haven't purchased any courses yet",
-    "browse": "Browse catalogue"
-  },
-  "auth": {
-    "login": "Login",
-    "register": "Sign up",
-    "email": "Email",
-    "password": "Password",
-    "confirmPassword": "Confirm password",
-    "forgotPassword": "Forgot password?",
-    "magicLink": "Send magic link",
-    "orSeparator": "or",
-    "loginSubmit": "Sign in",
-    "registerSubmit": "Sign up",
-    "loginError": "Invalid email or password",
-    "registerSuccess": "Account created successfully"
+    "enroll": "Enroll now",
+    "prerequisites": "Prerequisites",
+    "target": "Target audience",
+    "skills": "Skills acquired",
+    "duration": "Duration",
+    "certificate": "Certificate included"
   },
   "about": {
-    "title": "About Level Up",
-    "story": "Level Up is a training platform dedicated to cybersecurity and IT. We believe learning should be progressive, practical, and rewarding.",
+    "title": "About Level-Up",
+    "story": "Level-Up is an online training platform dedicated to cybersecurity and IT. Our mission is to make learning accessible, structured and practical for all levels.",
     "values": {
       "title": "Our values",
-      "excellence": "Technical excellence",
-      "excellenceDesc": "Up-to-date content with the latest technologies and methods in the industry",
-      "accessibility": "Accessibility",
-      "accessibilityDesc": "Training adapted to all levels, from beginner to expert",
-      "community": "Community",
-      "communityDesc": "An ecosystem of passionate learners and professionals"
-    },
-    "stats": {
-      "title": "Some numbers",
-      "students": "learners",
-      "courses": "courses",
-      "certificates": "certificates issued"
+      "excellence": "Excellence",
+      "excellenceDesc": "Rigorous and up-to-date content",
+      "pratique": "Practical",
+      "pratiqueDesc": "Learn by doing",
+      "communauté": "Community",
+      "communautéDesc": "Personalized support"
     }
   },
   "contact": {
-    "title": "Contact",
+    "title": "Contact us",
     "name": "Name",
     "email": "Email",
     "message": "Message",
     "send": "Send",
-    "success": "Message sent successfully",
-    "faq": "Check our FAQ"
+    "sent": "Message sent!"
   },
   "legal": {
-    "mentions": "Legal notice",
+    "mentions": "Legal notices",
     "cgv": "Terms and conditions",
-    "privacy": "Privacy policy"
+    "privacy": "Privacy policy",
+    "editor": "Editor",
+    "publisher": "Publisher",
+    "hosting": "Hosting",
+    "ip": "Intellectual property",
+    "liability": "Liability",
+    "data": "Data collected",
+    "purpose": "Purpose of processing",
+    "rights": "Your rights",
+    "cookies": "Cookies"
+  },
+  "unsubscribe": {
+    "title": "Unsubscribe",
+    "message": "Received this email unexpectedly? Unsubscribe from our mailing list.",
+    "emailLabel": "Your email",
+    "submit": "Unsubscribe",
+    "note": "Unsubscription will be effective within 48 hours."
+  },
+  "admin": {
+    "login": "Admin login",
+    "email": "Admin email",
+    "password": "Password",
+    "signin": "Sign in",
+    "dashboard": "Dashboard",
+    "courses": "Course management",
+    "addCourse": "Add course",
+    "editCourse": "Edit course",
+    "deleteCourse": "Delete",
+    "save": "Save",
+    "cancel": "Cancel",
+    "title": "Title",
+    "slug": "Slug",
+    "level": "Level",
+    "price": "Price",
+    "description": "Description",
+    "image": "Image URL",
+    "modules": "Modules",
+    "addModule": "Add module",
+    "moduleTitle": "Module title",
+    "moduleContent": "Content",
+    "quiz": "Quiz",
+    "users": "Users",
+    "enrollments": "Enrollments",
+    "stats": "Statistics",
+    "totalUsers": "Total users",
+    "totalCourses": "Total courses",
+    "totalRevenue": "Total revenue"
   },
   "footer": {
-    "copyright": "All rights reserved",
-    "madeWith": "Made with passion"
+    "about": "About",
+    "contact": "Contact",
+    "legal": "Legal notices",
+    "cgv": "Terms",
+    "privacy": "Privacy",
+    "copyright": "© 2026 Level-Up Formation. All rights reserved."
   }
 }
