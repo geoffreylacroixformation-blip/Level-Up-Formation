@@ -209,8 +209,8 @@ const lang = getLangFromUrl(Astro.url);
             localStorage.setItem('sb-auth-token', data.session.access_token);
             localStorage.setItem('sb-auth-user', JSON.stringify(data.session.user));
             
-            // Check admin role
-            const profileRes = await fetch(`${supabaseUrl}/rest/v1/profiles?select=role`, {
+            // Check admin role for THIS user
+            const profileRes = await fetch(`${supabaseUrl}/rest/v1/profiles?select=role&email=eq.${encodeURIComponent(data.session.user.email)}`, {
               headers: {
                 'apikey': supabaseAnonKey,
                 'Authorization': `Bearer ${data.session.access_token}`,
