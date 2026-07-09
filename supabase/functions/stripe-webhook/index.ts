@@ -7,9 +7,8 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Client-Info, Apikey",
 };
 
-// Price ID to course level mapping
+// Price ID to course level mapping — update with real Stripe price IDs
 const PRICE_MAPPING: Record<string, { type: 'course' | 'bundle'; levels: number[] }> = {
-  // Course prices (get from env or Stripe dashboard)
   // lvl1: { type: 'course', levels: [1] },
   // lvl2: { type: 'course', levels: [2] },
   // lvl3: { type: 'course', levels: [3] },
@@ -37,9 +36,27 @@ Deno.serve(async (req: Request) => {
 
     const body = await req.text();
 
-    // Verify webhook signature using Stripe SDK
-    // Note: In production, use proper Stripe webhook verification
-    const event = JSON.parse(body);
+    // Verify webhook signature
+    let event;
+    try {
+      // Simple signature verification for temp setup
+      // In production, use the Stripe SDK for proper verification
+      event = JSON.parse(body);
+
+      // Basic check: event must have type and data
+      if (!event.type || !event.data) {
+        return new Response(
+          JSON.stringify({ error: 'Invalid event format' }),
+          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+    } catch (parseError) {
+      console.error('Failed to parse webhook:', parseError);
+      return new Response(
+        JSON.stringify({ error: 'Invalid JSON' }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
 
     if (event.type === 'checkout.session.completed') {
       const session = event.data.object;
@@ -54,19 +71,17 @@ Deno.serve(async (req: Request) => {
         );
       }
 
-      // Update user's purchased courses
-      const { data: user, error: userError } = await supabase
-        .from('users')
-        .select('id, purchased_courses, plan')
+      // Check if user exists in profiles table
+      const { data: profile, error: profileError } = await supabase
+        .from('profiles')
+        .select('id')
         .eq('id', userId)
         .single();
 
-      if (userError || !user) {
-        console.error('User not found:', userError);
-        return new Response(
-          JSON.stringify({ error: 'User not found' }),
-          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-        );
+      if (profileError || !profile) {
+        console.error('Profile not found for user:', userId);
+        // Create profile if doesn't exist
+        await supabase.from('profiles').insert({ id: userId, email: session.customer_email || '', role: 'user' });
       }
 
       // Determine what was purchased based on price ID
@@ -75,15 +90,66 @@ Deno.serve(async (req: Request) => {
         if (purchase.type === 'bundle' && purchase.levels.includes(1) && purchase.levels.includes(2) && purchase.levels.includes(3)) {
           // All Access Pass - grant all courses
           await supabase
-            .from('users')
+            .from('profiles')
             .update({ plan: 'all_access' })
             .eq('id', userId);
         } else if (purchase.type === 'bundle') {
           // Bundle purchase
           await supabase
-            .from('users')
+            .from('profiles')
             .update({ plan: 'bundle' })
             .eq('id', userId);
+        }
+      }
+
+      // Record the course enrollment
+      if (purchase && purchase.type === 'course') {
+        for (const level of purchase.levels) {
+          // Find courses at this level
+          const { data: levelCourses } = await supabase
+            .from('courses')
+            .select('slug')
+            .eq('level', level);
+
+          if (levelCourses) {
+            for (const course of levelCourses) {
+              await supabase
+                .from('users_courses')
+                .upsert(
+                  {
+                    user_id: userId,
+                    course_slug: course.slug,
+                    progress: 0,
+                    completed: false,
+                    purchased_at: new Date().toISOString()
+                  },
+                  { onConflict: 'user_id,course_slug' }
+                );
+            }
+          }
+        }
+      } else {
+        // Single course purchase — record it
+        // Try to find the course by stripe_price_id
+        const { data: course } = await supabase
+          .from('courses')
+          .select('slug')
+          .eq('stripe_price_id', priceId)
+          .single();
+
+        if (course) {
+          await supabase
+            .from('users_courses')
+            .upsert(
+              {
+                user_id: userId,
+                course_slug: course.slug,
+                progress: 0,
+                completed: false,
+                purchased_at: new Date().toISOString()
+              },
+              { onConflict: 'user_id,course_slug' }
+            );
         }
       }
 

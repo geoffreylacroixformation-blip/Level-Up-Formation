@@ -1,175 +1,148 @@
 {
-  "site": {
-    "name": "Level Up",
-    "slogan": "Montez en compétences, un niveau à la fois"
-  },
   "nav": {
     "home": "Accueil",
     "catalogue": "Catalogue",
-    "about": "A propos",
+    "about": "À propos",
     "contact": "Contact",
-    "member": "Espace membre",
     "login": "Connexion",
-    "logout": "Deconnexion",
-    "dashboard": "Tableau de bord"
+    "logout": "Déconnexion",
+    "dashboard": "Espace admin",
+    "language": "Langue"
   },
   "home": {
     "hero": {
       "title": "Montez en compétences, un niveau à la fois",
-      "subtitle": "Formations professionnelles en cybersécurité et informatique. Contenu expert, progression structurée, certifications reconnues.",
-      "cta": "Voir les formations"
+      "subtitle": "Des formations en cybersécurité et informatique conçues pour vous faire progresser concrètement",
+      "cta": "Découvrir les formations",
+      "levels": "3 niveaux de progression"
     },
-    "why": {
-      "title": "Pourquoi Level Up ?",
-      "reason1": {
-        "title": "Contenu expert",
-        "desc": "Formations conçues par des professionnels actifs dans le domaine de la cybersécurité"
-      },
-      "reason2": {
+    "features": {
+      "title": "Pourquoi Level-Up ?",
+      "progression": {
         "title": "Progression structurée",
-        "desc": "Parcours pédagogiques en 3 niveaux pour une montée en compétence progressive"
+        "desc": "Parcours en 3 niveaux adaptés à votre niveau actuel"
       },
-      "reason3": {
-        "title": "Certifications",
-        "desc": "Badges numériques et certificats à chaque étape de votre parcours"
+      "pratique": {
+        "title": "Approche pratique",
+        "desc": "Des modules concrets avec quiz et exercices"
+      },
+      "flexible": {
+        "title": "À votre rythme",
+        "desc": "Accédez aux cours quand vous voulez, où vous voulez"
       }
     },
     "levels": {
-      "title": "Nos niveaux de formation",
-      "lvl1": {
-        "name": "Niveau 1 - Initiation",
-        "price": "49EUR",
-        "desc": "Fondamentaux de la cybersécurite et premiers pas techniques"
-      },
-      "lvl2": {
-        "name": "Niveau 2 - Perfectionnement",
-        "price": "89EUR",
-        "desc": "Techniques avancees et mise en pratique sur environnements reels"
-      },
-      "lvl3": {
-        "name": "Niveau 3 - Expertise",
-        "price": "149EUR",
-        "desc": "Operations complexes, audit professionnel et spécialisation"
-      },
-      "bundles": {
-        "title": "Offres groupees",
-        "bundle1": "Pack LVL1 + LVL2 - 119EUR",
-        "bundle2": "Pass All Access - 249EUR"
-      }
+      "title": "Les niveaux de formation",
+      "lvl1": "Niveau 1 - Fondamentaux",
+      "lvl2": "Niveau 2 - Intermédiaire",
+      "lvl3": "Niveau 3 - Expert"
     },
-    "testimonials": {
-      "title": "Ce qu'ils disent de nous",
-      "t1": {
-        "quote": "Une formation complete qui m'a permis de changer de carriere vers la cybersécurité.",
-        "author": "Developpeur reconverti"
-      },
-      "t2": {
-        "quote": "Le format modulaire est parfait pour apprendre a son rythme apres le travail.",
-        "author": "Administrateur systeme"
-      },
-      "t3": {
-        "quote": "Les exercices pratiques sont tres proches des situations reelles rencontrees sur le terrain.",
-        "author": "Consultant en securite"
-      }
+    "cta": {
+      "title": "Prêt à monter en compétence ?",
+      "subtitle": "Choisissez votre formation et commencez dès maintenant",
+      "button": "Voir le catalogue"
     }
   },
   "catalogue": {
     "title": "Catalogue des formations",
-    "filter": {
-      "all": "Toutes",
-      "lvl1": "Niveau 1",
-      "lvl2": "Niveau 2",
-      "lvl3": "Niveau 3"
-    },
-    "freePreview": "Apercu gratuit disponible",
-    "buy": "Acheter"
+    "subtitle": "Trouvez la formation adaptée à votre objectif",
+    "filterAll": "Toutes",
+    "filterLvl1": "Niveau 1",
+    "filterLvl2": "Niveau 2",
+    "filterLvl3": "Niveau 3",
+    "bundle": "Offres groupées",
+    "price": "€",
+    "enroll": "S'inscrire",
+    "details": "Détails"
   },
   "course": {
+    "back": "← Retour au catalogue",
     "modules": "Modules",
-    "freeModule": "Module gratuit",
-    "lockedModule": "Module verrouille",
-    "quiz": "Quiz du module",
-    "certificate": "Certificat",
-    "badge": "Badge obtenu",
-    "startQuiz": "Commencer le quiz",
-    "submitQuiz": "Valider",
-    "downloadCert": "Telecharger le certificat"
-  },
-  "member": {
-    "title": "Espace membre",
-    "welcome": "Bienvenue",
-    "myCourses": "Mes formations",
-    "progress": "Progression",
-    "badges": "Mes badges",
-    "certificates": "Mes certificats",
-    "noCourses": "Vous n'avez pas encore achete de formation",
-    "browse": "Parcourir le catalogue"
-  },
-  "auth": {
-    "login": "Connexion",
-    "register": "Inscription",
-    "email": "Email",
-    "password": "Mot de passe",
-    "confirmPassword": "Confirmer le mot de passe",
-    "forgotPassword": "Mot de passe oublie ?",
-    "magicLink": "Envoyer un lien magique",
-    "orSeparator": "ou",
-    "loginSubmit": "Se connecter",
-    "registerSubmit": "S'inscrire",
-    "loginError": "Email ou mot de passe incorrect",
-    "registerSuccess": "Compte cree avec succes"
+    "enroll": "S'inscrire maintenant",
+    "prerequisites": "Prérequis",
+    "target": "Public cible",
+    "skills": "Compétences acquises",
+    "duration": "Durée",
+    "certificate": "Certificat inclus"
   },
   "about": {
-    "title": "A propos de Level Up",
-    "story": "Level Up est une plateforme de formation dediee a la cybersécurité et a l'informatique. Nous croyons que l'apprentissage doit etre progressif, pratique et valorisant.",
+    "title": "À propos de Level-Up",
+    "story": "Level-Up est une plateforme de formation en ligne dédiée à la cybersécurité et à l'informatique. Notre mission est de rendre l'apprentissage accessible, structuré et concret pour tous les niveaux.",
     "values": {
       "title": "Nos valeurs",
-      "excellence": "Excellence technique",
-      "excellenceDesc": "Un contenu a jour avec les dernieres technologies et methodes du secteur",
-      "accessibility": "Accessibilite",
-      "accessibilityDesc": "Des formations adaptees a tous les niveaux, du debutant a l'expert",
-      "community": "Communaute",
-      "communityDesc": "Un ecosysteme d'apprenants et de professionnels passionnes"
-    },
-    "stats": {
-      "title": "Quelques chiffres",
-      "students": "apprenants",
-      "courses": "formations",
-      "certificates": "certificats delivres"
+      "excellence": "Excellence",
+      "excellenceDesc": "Des contenus rigoureux et à jour",
+      "pratique": "Pratique",
+      "pratiqueDesc": "Apprendre en faisant",
+      "communauté": "Communauté",
+      "communautéDesc": "Un accompagnement personnalisé"
     }
   },
   "contact": {
-    "title": "Contact",
+    "title": "Contactez-nous",
     "name": "Nom",
     "email": "Email",
     "message": "Message",
     "send": "Envoyer",
-    "success": "Message envoye avec succes",
-    "faq": "Consultez notre FAQ"
+    "sent": "Message envoyé !"
   },
   "legal": {
-    "mentions": "Mentions legales",
-    "cgv": "Conditions generales de vente",
-    "privacy": "Politique de confidentialite"
+    "mentions": "Mentions légales",
+    "cgv": "Conditions générales de vente",
+    "privacy": "Politique de confidentialité",
+    "editor": "Éditeur",
+    "publisher": "Directeur de la publication",
+    "hosting": "Hébergement",
+    "ip": "Propriété intellectuelle",
+    "liability": "Responsabilité",
+    "data": "Données collectées",
+    "purpose": "Finalité du traitement",
+    "rights": "Vos droits",
+    "cookies": "Cookies"
   },
-  "footer": {
-    "copyright": "Tous droits reserves",
-    "madeWith": "Fait avec passion"
+  "unsubscribe": {
+    "title": "Se désinscrire",
+    "message": "Vous avez reçu cet email de manière indésirable ? Désinscrivez-vous de notre liste de diffusion.",
+    "emailLabel": "Votre email",
+    "submit": "Se désinscrire",
+    "note": "La désinscription sera effective sous 48h."
   },
   "admin": {
+    "login": "Connexion admin",
+    "email": "Email admin",
+    "password": "Mot de passe",
+    "signin": "Se connecter",
     "dashboard": "Tableau de bord",
-    "title": "Administration",
-    "add_course": "Ajouter une formation",
-    "course_title": "Titre",
+    "courses": "Gestion des cours",
+    "addCourse": "Ajouter un cours",
+    "editCourse": "Modifier le cours",
+    "deleteCourse": "Supprimer",
+    "save": "Sauvegarder",
+    "cancel": "Annuler",
+    "title": "Titre",
+    "slug": "Slug",
     "level": "Niveau",
     "price": "Prix",
-    "document": "Document",
-    "image": "Image",
-    "existing_courses": "Formations existantes",
-    "manage_catalog": "Gestion du catalogue",
-    "manage_desc": "Ajoutez ou modifiez les formations disponibles sur la plateforme",
-    "level_1": "Niveau 1",
-    "level_2": "Niveau 2",
-    "level_3": "Niveau 3"
+    "description": "Description",
+    "image": "URL de l'image",
+    "modules": "Modules",
+    "addModule": "Ajouter un module",
+    "moduleTitle": "Titre du module",
+    "moduleContent": "Contenu",
+    "quiz": "Quiz",
+    "users": "Utilisateurs",
+    "enrollments": "Inscriptions",
+    "stats": "Statistiques",
+    "totalUsers": "Total utilisateurs",
+    "totalCourses": "Total cours",
+    "totalRevenue": "Revenu total"
+  },
+  "footer": {
+    "about": "À propos",
+    "contact": "Contact",
+    "legal": "Mentions légales",
+    "cgv": "CGV",
+    "privacy": "Confidentialité",
+    "copyright": "© 2026 Level-Up Formation. Tous droits réservés."
   }
 }
