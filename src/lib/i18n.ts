@@ -9,6 +9,9 @@ const fr = {
     "dashboard": "Espace admin",
     "language": "Langue"
   },
+  "site": {
+    "slogan": "Montez en compétences, un niveau à la fois"
+  },
   "home": {
     "hero": {
       "title": "Montez en compétences, un niveau à la fois",
@@ -75,7 +78,17 @@ const fr = {
       "pratique": "Pratique",
       "pratiqueDesc": "Apprendre en faisant",
       "communauté": "Communauté",
-      "communautéDesc": "Un accompagnement personnalisé"
+      "communautéDesc": "Un accompagnement personnalisé",
+      "accessibility": "Accessibilité",
+      "accessibilityDesc": "Apprendre à son rythme, où l'on veut",
+      "community": "Communauté",
+      "communityDesc": "Un réseau de professionnels passionnés"
+    },
+    "stats": {
+      "title": "Nos chiffres clés",
+      "students": "Étudiants formés",
+      "courses": "Formations disponibles",
+      "certificates": "Certificats délivrés"
     }
   },
   "contact": {
@@ -158,6 +171,9 @@ const en = {
     "dashboard": "Admin Dashboard",
     "language": "Language"
   },
+  "site": {
+    "slogan": "Level up your skills, one step at a time"
+  },
   "home": {
     "hero": {
       "title": "Level up your skills, one step at a time",
@@ -224,7 +240,17 @@ const en = {
       "pratique": "Practical",
       "pratiqueDesc": "Learn by doing",
       "communauté": "Community",
-      "communautéDesc": "Personalized support"
+      "communautéDesc": "Personalized support",
+      "accessibility": "Accessibility",
+      "accessibilityDesc": "Learn at your own pace, wherever you want",
+      "community": "Community",
+      "communityDesc": "A network of passionate professionals"
+    },
+    "stats": {
+      "title": "Key figures",
+      "students": "Students trained",
+      "courses": "Available courses",
+      "certificates": "Certificates issued"
     }
   },
   "contact": {
