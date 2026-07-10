@@ -46,6 +46,10 @@ const isRegisterTab = isMember && Astro.url.search.includes('tab=register');
            class="text-sm font-medium">
           S'inscrire
         </a>
+        <a href={getLocalizedPath('admin_login', lang)}
+           class="text-xs font-medium text-text-muted/50 hover:text-text-muted transition-colors">
+          Admin
+        </a>
       </nav>
 
       <div class="flex items-center gap-4">
@@ -99,6 +103,13 @@ const isRegisterTab = isMember && Astro.url.search.includes('tab=register');
            class="flex-1 text-center btn-synthwave-nav text-sm font-medium"
            style="background: linear-gradient(180deg, #f72585, #7209b7); color: #fff; border-color: #f72585;">
           S'inscrire
+        </a>
+      </div>
+
+      <div class="pt-3 border-t border-border">
+        <a href={getLocalizedPath('admin_login', lang)}
+           class="block text-center text-sm text-text-muted/60 hover:text-text-muted transition-colors py-2">
+          Connexion admin
         </a>
       </div>
     </div>
