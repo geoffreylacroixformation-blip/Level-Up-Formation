@@ -24,40 +24,40 @@ const cybersecLvl3 = cybersecCourses.filter(c => c.level === 3);
       <h1 class="font-display text-3xl font-bold mb-8">{t.catalogue.title}</h1>
 
       <div class="flex flex-wrap gap-2 mb-8">
-        <button class="px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium">
-          {t.catalogue.filter.all}
+        <button class="filter-btn px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium" data-filter="all">
+          {t.catalogue.filterAll}
         </button>
-        <button class="px-4 py-2 bg-success text-black rounded-lg text-sm font-medium">
-          {t.catalogue.filter.lvl1}
+        <button class="filter-btn px-4 py-2 bg-surface-light text-text-muted rounded-lg text-sm font-medium hover:text-text" data-filter="1">
+          {t.catalogue.filterLvl1}
         </button>
-        <button class="px-4 py-2 bg-warning text-black rounded-lg text-sm font-medium">
-          {t.catalogue.filter.lvl2}
+        <button class="filter-btn px-4 py-2 bg-surface-light text-text-muted rounded-lg text-sm font-medium hover:text-text" data-filter="2">
+          {t.catalogue.filterLvl2}
         </button>
-        <button class="px-4 py-2 bg-error text-white rounded-lg text-sm font-medium">
-          {t.catalogue.filter.lvl3}
+        <button class="filter-btn px-4 py-2 bg-surface-light text-text-muted rounded-lg text-sm font-medium hover:text-text" data-filter="3">
+          {t.catalogue.filterLvl3}
         </button>
       </div>
 
-      <!-- ===== FORMATIONS CYBERSÉCURITÉ ===== -->
-      <div class="mb-16">
-        <div class="flex items-center gap-3 mb-2">
-          <div class="w-3 h-3 rounded-full bg-error"></div>
-          <h2 class="font-display text-2xl font-bold">Cybersécurité</h2>
-        </div>
-        <p class="text-text-muted mb-8">13 formations pour couvrir l'ensemble du spectre de la sécurité informatique</p>
+      <div id="course-catalogue">
+        <div class="mb-16">
+          <div class="flex items-center gap-3 mb-2">
+            <div class="w-3 h-3 rounded-full bg-error"></div>
+            <h2 class="font-display text-2xl font-bold">Cybersécurité</h2>
+          </div>
+          <p class="text-text-muted mb-8" id="course-count-text">Formations pour couvrir l'ensemble du spectre de la sécurité informatique</p>
 
-        <!-- LVL 1 -->
-        {cybersecLvl1.length > 0 && (
-          <div class="mb-10">
+          <div id="lvl1-section" class="mb-10">
             <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
               <span class="text-xs font-bold px-2 py-1 rounded bg-success text-black">LVL1</span>
               Fondations
             </h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="lvl1-grid">
               {cybersecLvl1.map((course) => (
                 <a
                   href={getLocalizedPath(`cours/${course.slug}`, lang)}
-                  class="gradient-border rounded-xl overflow-hidden transition-all group"
+                  class="gradient-border rounded-xl overflow-hidden transition-all group course-card"
+                  data-level={course.level}
+                  data-slug={course.slug}
                 >
                   <div class="aspect-video bg-surface-light relative">
                     <img src={course.image} alt={course.title} class="w-full h-full object-cover opacity-60" />
@@ -66,14 +66,14 @@ const cybersecLvl3 = cybersecCourses.filter(c => c.level === 3);
                     </span>
                   </div>
                   <div class="p-4">
-                    <h3 class="font-semibold mb-2 transition-colors">{course.title}</h3>
-                    <p class="text-text-muted text-sm mb-4">{course.description}</p>
+                    <h3 class="font-semibold mb-2 transition-colors course-title">{course.title}</h3>
+                    <p class="text-text-muted text-sm mb-4 course-desc">{course.description}</p>
                     <div class="flex items-center gap-3 text-xs text-text-muted mb-2">
-                      <span>⏱ {course.duree_heures}h</span>
-                      <span>� {course.modules.length} modules</span>
+                      <span class="course-duration">⏱ {course.duree_heures || '?'}h</span>
+                      <span class="course-modules">📚 {course.modules.length} modules</span>
                     </div>
                     <div class="flex items-center justify-between mt-3 pt-3 border-t border-border">
-                      <span class="text-xl font-bold text-primary">{course.price}€</span>
+                      <span class="text-xl font-bold text-primary course-price">{course.price}€</span>
                       <span class="text-xs text-success font-medium">Découvrir →</span>
                     </div>
                   </div>
@@ -81,20 +81,19 @@ const cybersecLvl3 = cybersecCourses.filter(c => c.level === 3);
               ))}
             </div>
           </div>
-        )}
 
-        <!-- LVL 2 -->
-        {cybersecLvl2.length > 0 && (
-          <div class="mb-10">
+          <div id="lvl2-section" class="mb-10">
             <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
               <span class="text-xs font-bold px-2 py-1 rounded bg-warning text-black">LVL2</span>
               Intermédiaire
             </h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="lvl2-grid">
               {cybersecLvl2.map((course) => (
                 <a
                   href={getLocalizedPath(`cours/${course.slug}`, lang)}
-                  class="gradient-border rounded-xl overflow-hidden transition-all group"
+                  class="gradient-border rounded-xl overflow-hidden transition-all group course-card"
+                  data-level={course.level}
+                  data-slug={course.slug}
                 >
                   <div class="aspect-video bg-surface-light relative">
                     <img src={course.image} alt={course.title} class="w-full h-full object-cover opacity-60" />
@@ -103,14 +102,14 @@ const cybersecLvl3 = cybersecCourses.filter(c => c.level === 3);
                     </span>
                   </div>
                   <div class="p-4">
-                    <h3 class="font-semibold mb-2 transition-colors">{course.title}</h3>
-                    <p class="text-text-muted text-sm mb-4">{course.description}</p>
+                    <h3 class="font-semibold mb-2 transition-colors course-title">{course.title}</h3>
+                    <p class="text-text-muted text-sm mb-4 course-desc">{course.description}</p>
                     <div class="flex items-center gap-3 text-xs text-text-muted mb-2">
-                      <span>� {course.duree_heures}h</span>
-                      <span>📚 {course.modules.length} modules</span>
+                      <span class="course-duration">⏱ {course.duree_heures || '?'}h</span>
+                      <span class="course-modules">📚 {course.modules.length} modules</span>
                     </div>
                     <div class="flex items-center justify-between mt-3 pt-3 border-t border-border">
-                      <span class="text-xl font-bold text-primary">{course.price}€</span>
+                      <span class="text-xl font-bold text-primary course-price">{course.price}€</span>
                       <span class="text-xs text-success font-medium">Découvrir →</span>
                     </div>
                   </div>
@@ -118,20 +117,19 @@ const cybersecLvl3 = cybersecCourses.filter(c => c.level === 3);
               ))}
             </div>
           </div>
-        )}
 
-        <!-- LVL 3 -->
-        {cybersecLvl3.length > 0 && (
-          <div class="mb-10">
+          <div id="lvl3-section" class="mb-10">
             <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
               <span class="text-xs font-bold px-2 py-1 rounded bg-error text-white">LVL3</span>
               Avancé
             </h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="lvl3-grid">
               {cybersecLvl3.map((course) => (
                 <a
                   href={getLocalizedPath(`cours/${course.slug}`, lang)}
-                  class="gradient-border rounded-xl overflow-hidden transition-all group"
+                  class="gradient-border rounded-xl overflow-hidden transition-all group course-card"
+                  data-level={course.level}
+                  data-slug={course.slug}
                 >
                   <div class="aspect-video bg-surface-light relative">
                     <img src={course.image} alt={course.title} class="w-full h-full object-cover opacity-60" />
@@ -140,14 +138,14 @@ const cybersecLvl3 = cybersecCourses.filter(c => c.level === 3);
                     </span>
                   </div>
                   <div class="p-4">
-                    <h3 class="font-semibold mb-2 transition-colors">{course.title}</h3>
-                    <p class="text-text-muted text-sm mb-4">{course.description}</p>
+                    <h3 class="font-semibold mb-2 transition-colors course-title">{course.title}</h3>
+                    <p class="text-text-muted text-sm mb-4 course-desc">{course.description}</p>
                     <div class="flex items-center gap-3 text-xs text-text-muted mb-2">
-                      <span>⏱ {course.duree_heures}h</span>
-                      <span>📚 {course.modules.length} modules</span>
+                      <span class="course-duration">⏱ {course.duree_heures || '?'}h</span>
+                      <span class="course-modules">📚 {course.modules.length} modules</span>
                     </div>
                     <div class="flex items-center justify-between mt-3 pt-3 border-t border-border">
-                      <span class="text-xl font-bold text-primary">{course.price}€</span>
+                      <span class="text-xl font-bold text-primary course-price">{course.price}€</span>
                       <span class="text-xs text-success font-medium">Découvrir →</span>
                     </div>
                   </div>
@@ -155,7 +153,7 @@ const cybersecLvl3 = cybersecCourses.filter(c => c.level === 3);
               ))}
             </div>
           </div>
-        )}
+        </div>
       </div>
 
       <!-- ===== BUNDLES ===== -->
@@ -163,98 +161,150 @@ const cybersecLvl3 = cybersecCourses.filter(c => c.level === 3);
         <h2 class="font-display text-2xl font-bold mb-2 text-center">Nos Packs & Bundles</h2>
         <p class="text-text-muted text-center mb-8">Économisez en choisissant une offre groupée</p>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <!-- Bundle: 3 Formations LVL1 = 109€ -->
-          <div class="gradient-border rounded-xl overflow-hidden transition-all hover:scale-[1.02]">
-            <div class="bg-background p-6">
-              <div class="flex items-center justify-between mb-4">
-                <div>
-                  <h3 class="font-display font-semibold text-lg">3 Formations LVL1</h3>
-                  <p class="text-text-muted text-sm">Fondations</p>
+          {bundles.map((bundle) => (
+            <div class="gradient-border rounded-xl overflow-hidden transition-all hover:scale-[1.02]">
+              <div class="bg-background p-6">
+                <div class="flex items-center justify-between mb-4">
+                  <div>
+                    <h3 class="font-display font-semibold text-lg">{bundle.name}</h3>
+                    <p class="text-text-muted text-sm">{bundle.description}</p>
+                  </div>
+                  <span class="text-2xl font-bold text-primary">{bundle.price}€</span>
                 </div>
-                <span class="text-2xl font-bold text-primary">109€</span>
-              </div>
-              <div class="flex flex-wrap gap-2 mb-4">
-                <span class="text-xs font-bold px-2 py-1 rounded bg-success text-black">LVL1</span>
-              </div>
-              <button class="w-full py-2 bg-primary text-white rounded-lg font-medium transition-colors">
-                Découvrir
-              </button>
-            </div>
-          </div>
-          <!-- Bundle: 3 Formations LVL2 = 199€ -->
-          <div class="gradient-border rounded-xl overflow-hidden transition-all hover:scale-[1.02]">
-            <div class="bg-background p-6">
-              <div class="flex items-center justify-between mb-4">
-                <div>
-                  <h3 class="font-display font-semibold text-lg">3 Formations LVL2</h3>
-                  <p class="text-text-muted text-sm">Intermédiaire</p>
+                <div class="flex flex-wrap gap-2 mb-4">
+                  {bundle.levels.map(lvl => (
+                    <span class={`text-xs font-bold px-2 py-1 rounded ${levelColors[lvl]}`}>LVL{lvl}</span>
+                  ))}
                 </div>
-                <span class="text-2xl font-bold text-primary">199€</span>
+                <button class="w-full py-2 bg-primary text-white rounded-lg font-medium transition-colors">
+                  Découvrir
+                </button>
               </div>
-              <div class="flex flex-wrap gap-2 mb-4">
-                <span class="text-xs font-bold px-2 py-1 rounded bg-warning text-black">LVL2</span>
-              </div>
-              <button class="w-full py-2 bg-primary text-white rounded-lg font-medium transition-colors">
-                Découvrir
-              </button>
             </div>
-          </div>
-          <!-- Bundle: 3 Formations LVL3 = 399€ -->
-          <div class="gradient-border rounded-xl overflow-hidden transition-all hover:scale-[1.02]">
-            <div class="bg-background p-6">
-              <div class="flex items-center justify-between mb-4">
-                <div>
-                  <h3 class="font-display font-semibold text-lg">3 Formations LVL3</h3>
-                  <p class="text-text-muted text-sm">Avancé</p>
-                </div>
-                <span class="text-2xl font-bold text-primary">399€</span>
-              </div>
-              <div class="flex flex-wrap gap-2 mb-4">
-                <span class="text-xs font-bold px-2 py-1 rounded bg-error text-white">LVL3</span>
-              </div>
-              <button class="w-full py-2 bg-primary text-white rounded-lg font-medium transition-colors">
-                Découvrir
-              </button>
-            </div>
-          </div>
-          <!-- Bundle: 1 Formation LVL1 + 1 Formation LVL2 = 119€ -->
-          <div class="gradient-border rounded-xl overflow-hidden transition-all hover:scale-[1.02]">
-            <div class="bg-background p-6">
-              <div class="flex items-center justify-between mb-4">
-                <div>
-                  <h3 class="font-display font-semibold text-lg">1 Formation LVL1 + 1 Formation LVL2</h3>
-                  <p class="text-text-muted text-sm">Combo</p>
-                </div>
-                <span class="text-2xl font-bold text-primary">119€</span>
-              </div>
-              <div class="flex flex-wrap gap-2 mb-4">
-                <span class="text-xs font-bold px-2 py-1 rounded bg-success text-black">LVL1</span>
-                <span class="text-xs font-bold px-2 py-1 rounded bg-warning text-black">LVL2</span>
-              </div>
-              <button class="w-full py-2 bg-primary text-white rounded-lg font-medium transition-colors">
-                Découvrir
-              </button>
-            </div>
-          </div>
-          <!-- Bundle: 1 Formation LVL2 + 1 Formation LVL3 = 209€ -->
-          <div class="gradient-border rounded-xl overflow-hidden transition-all hover:scale-[1.02]">
-            <div class="bg-background p-6">
-              <div class="flex items-center justify-between mb-4">
-                <div>
-                  <h3 class="font-display font-semibold text-lg">1 Formation LVL2 + 1 Formation LVL3</h3>
-                  <p class="text-text-muted text-sm">Combo</p>
-                </div>
-                <span class="text-2xl font-bold text-primary">209€</span>
-              </div>
-              <div class="flex flex-wrap gap-2 mb-4">
-                <span class="text-xs font-bold px-2 py-1 rounded bg-warning text-black">LVL2</span>
-                <span class="text-xs font-bold px-2 py-1 rounded bg-error text-white">LVL3</span>
-              </div>
-              <button class="w-full py-2 bg-primary text-white rounded-lg font-medium transition-colors">
-                Découvrir
-              </button>
-            </div>
-          </div>
+          ))}
         </div>
       </div>
+    </div>
+  </section>
+</Layout>
 
+<script>
+  const SUPABASE_URL = import.meta.env.PUBLIC_SUPABASE_URL;
+  const SUPABASE_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
+
+  const levelColors = {
+    1: 'bg-success text-black',
+    2: 'bg-warning text-black',
+    3: 'bg-error text-white',
+  };
+
+  function createCourseCard(course, level) {
+    const div = document.createElement('div');
+    div.className = 'gradient-border rounded-xl overflow-hidden transition-all group course-card';
+    div.dataset.level = level;
+    div.dataset.slug = course.slug || '';
+    const modules = course.modules || [];
+    const moduleCount = Array.isArray(modules) ? modules.length : 0;
+    const price = course.price ?? course.prix ?? 0;
+    div.innerHTML = `
+      <a href="/cours/${course.slug || course.id}" class="block">
+        <div class="aspect-video bg-surface-light relative">
+          <img src="${course.image || 'https://images.pexels.com/photos/60504/security-hacker-black-background-60504.jpeg?w=800'}" alt="${course.title || ''}" class="w-full h-full object-cover opacity-60" loading="lazy" />
+          <span class="absolute top-3 left-3 text-xs font-bold px-2 py-1 rounded ${levelColors[level]}">LVL${level}</span>
+        </div>
+        <div class="p-4">
+          <h3 class="font-semibold mb-2 transition-colors">${course.title || ''}</h3>
+          <p class="text-text-muted text-sm mb-4">${course.description || ''}</p>
+          <div class="flex items-center gap-3 text-xs text-text-muted mb-2">
+            <span>⏱ ${course.duree_heures || '?'}h</span>
+            <span>📚 ${moduleCount} modules</span>
+          </div>
+          <div class="flex items-center justify-between mt-3 pt-3 border-t border-border">
+            <span class="text-xl font-bold text-primary">${price}€</span>
+            <span class="text-xs text-success font-medium">Découvrir →</span>
+          </div>
+        </div>
+      </a>
+    `;
+    return div;
+  }
+
+  function renderDbCourses(courses) {
+    if (!courses || courses.length === 0) return;
+
+    const lvl1Grid = document.getElementById('lvl1-grid');
+    const lvl2Grid = document.getElementById('lvl2-grid');
+    const lvl3Grid = document.getElementById('lvl3-grid');
+
+    [lvl1Grid, lvl2Grid, lvl3Grid].forEach(g => { if (g) g.innerHTML = ''; });
+
+    courses.forEach(course => {
+      const level = course.level || (course.niveau === 'LVL1' ? 1 : course.niveau === 'LVL2' ? 2 : course.niveau === 'LVL3' ? 3 : 1);
+      const card = createCourseCard(course, level);
+      if (level === 1 && lvl1Grid) lvl1Grid.appendChild(card);
+      else if (level === 2 && lvl2Grid) lvl2Grid.appendChild(card);
+      else if (level === 3 && lvl3Grid) lvl3Grid.appendChild(card);
+    });
+
+    // Hide empty sections
+    [1, 2, 3].forEach(lvl => {
+      const grid = document.getElementById(`lvl${lvl}-grid`);
+      const section = document.getElementById(`lvl${lvl}-section`);
+      if (grid && section && grid.children.length === 0) {
+        section.style.display = 'none';
+      }
+    });
+  }
+
+  // Load courses from Supabase
+  (async () => {
+    if (!SUPABASE_URL || !SUPABASE_KEY) return;
+
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/courses?select=*&order=level.asc&order=created_at.asc`, {
+        headers: {
+          'apikey': SUPABASE_KEY,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!res.ok) return;
+      const courses = await res.json();
+      if (courses.length > 0) {
+        renderDbCourses(courses);
+      }
+    } catch (err) {
+      // Silent fail — static courses remain visible
+    }
+  })();
+
+  // Filter buttons
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const filter = e.currentTarget.dataset.filter;
+      document.querySelectorAll('.filter-btn').forEach(b => {
+        b.classList.remove('bg-primary', 'text-white');
+        b.classList.add('bg-surface-light', 'text-text-muted');
+      });
+      e.currentTarget.classList.add('bg-primary', 'text-white');
+      e.currentTarget.classList.remove('bg-surface-light', 'text-text-muted');
+
+      document.querySelectorAll('.course-card').forEach(card => {
+        if (filter === 'all' || card.dataset.level === filter) {
+          card.style.display = '';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+
+      // Hide section headers if all cards in that section are hidden
+      [1, 2, 3].forEach(lvl => {
+        const section = document.getElementById(`lvl${lvl}-section`);
+        if (!section) return;
+        const cards = section.querySelectorAll('.course-card');
+        const visible = Array.from(cards).filter(c => c.style.display !== 'none');
+        section.style.display = visible.length > 0 ? '' : 'none';
+      });
+    });
+  });
+</script>
