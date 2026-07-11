@@ -34,11 +34,52 @@ const fr = {
         "desc": "Accédez aux cours quand vous voulez, où vous voulez"
       }
     },
+    "why": {
+      "title": "Pourquoi Level-Up ?",
+      "reason1": {
+        "title": "Progression structurée",
+        "desc": "Parcours en 3 niveaux adaptés à votre niveau actuel"
+      },
+      "reason2": {
+        "title": "Approche pratique",
+        "desc": "Des modules concrets avec quiz et exercices"
+      },
+      "reason3": {
+        "title": "À votre rythme",
+        "desc": "Accédez aux cours quand vous voulez, où vous voulez"
+      }
+    },
     "levels": {
       "title": "Les niveaux de formation",
       "lvl1": "Niveau 1 - Fondamentaux",
       "lvl2": "Niveau 2 - Intermédiaire",
-      "lvl3": "Niveau 3 - Expert"
+      "lvl3": "Niveau 3 - Expert",
+      "lvl1Name": "Fondamentaux",
+      "lvl1Desc": "Démarrez votre parcours en cybersécurité",
+      "lvl2Name": "Intermédiaire",
+      "lvl2Desc": "Approfondissez vos compétences",
+      "lvl3Name": "Expert",
+      "lvl3Desc": "Maîtrisez les sujets avancés",
+      "bundles": {
+        "title": "Offres groupées",
+        "bundle1": "Pack 2 formations",
+        "bundle2": "Accès illimité"
+      }
+    },
+    "testimonials": {
+      "title": "Ils nous font confiance",
+      "t1": {
+        "quote": "Formation complète et très bien structurée. J'ai pu acquérir de solides compétences en cybersécurité.",
+        "author": "Marie L., Administratrice système"
+      },
+      "t2": {
+        "quote": "Les modules pratiques m'ont permis de mettre en œuvre immédiatement les concepts appris.",
+        "author": "Thomas D., Consultant sécurité"
+      },
+      "t3": {
+        "quote": "Excellente pédagogie et contenu à jour. Je recommande vivement Level Up Formation.",
+        "author": "Sophie M., Responsable IT"
+      }
     },
     "cta": {
       "title": "Prêt à monter en compétence ?",
@@ -157,6 +198,50 @@ const fr = {
     "cgv": "CGV",
     "privacy": "Confidentialité",
     "copyright": "© 2026 Level-Up Formation. Tous droits réservés."
+  },
+  "auth": {
+    "login": "Connexion",
+    "register": "Inscription",
+    "email": "Email",
+    "password": "Mot de passe",
+    "confirmPassword": "Confirmer le mot de passe",
+    "magicLink": "Lien magique",
+    "forgotPassword": "Mot de passe oublié",
+    "noAccount": "Pas de compte ?",
+    "alreadyAccount": "Déjà un compte ?",
+    "signUp": "S'inscrire",
+    "signIn": "Se connecter"
+  },
+  "member": {
+    "title": "Espace membre",
+    "welcome": "Bienvenue",
+    "myCourses": "Mes formations",
+    "progress": "Progression",
+    "badges": "Badges",
+    "noCourses": "Vous n'avez pas encore de formation. Découvrez notre catalogue !",
+    "continue": "Continuer",
+    "start": "Commencer",
+    "completed": "Terminé"
+  },
+  "admin": {
+    "title": "Tableau de bord",
+    "dashboard": "Administration"
+  },
+  "course": {
+    "modules": "Modules du cours",
+    "duration": "Durée",
+    "level": "Niveau",
+    "price": "Prix",
+    "enroll": "S'inscrire",
+    "objectives": "Objectifs",
+    "program": "Programme"
+  },
+  "catalogue": {
+    "title": "Catalogue des formations",
+    "filterAll": "Toutes",
+    "filterLvl1": "Niveau 1",
+    "filterLvl2": "Niveau 2",
+    "filterLvl3": "Niveau 3"
   }
 };
 
@@ -196,11 +281,52 @@ const en = {
         "desc": "Access courses whenever, wherever you want"
       }
     },
+    "why": {
+      "title": "Why Level-Up?",
+      "reason1": {
+        "title": "Structured progression",
+        "desc": "3-level pathways adapted to your current level"
+      },
+      "reason2": {
+        "title": "Practical approach",
+        "desc": "Concrete modules with quizzes and exercises"
+      },
+      "reason3": {
+        "title": "At your own pace",
+        "desc": "Access courses whenever, wherever you want"
+      }
+    },
     "levels": {
       "title": "Training levels",
       "lvl1": "Level 1 - Fundamentals",
       "lvl2": "Level 2 - Intermediate",
-      "lvl3": "Level 3 - Expert"
+      "lvl3": "Level 3 - Expert",
+      "lvl1Name": "Fundamentals",
+      "lvl1Desc": "Start your cybersecurity journey",
+      "lvl2Name": "Intermediate",
+      "lvl2Desc": "Deepen your skills",
+      "lvl3Name": "Expert",
+      "lvl3Desc": "Master advanced topics",
+      "bundles": {
+        "title": "Bundle Offers",
+        "bundle1": "2 Courses Bundle",
+        "bundle2": "All Access Pass"
+      }
+    },
+    "testimonials": {
+      "title": "Trusted by professionals",
+      "t1": {
+        "quote": "Comprehensive and well-structured training. I gained solid cybersecurity skills.",
+        "author": "Marie L., System Administrator"
+      },
+      "t2": {
+        "quote": "The practical modules let me immediately apply the concepts I learned.",
+        "author": "Thomas D., Security Consultant"
+      },
+      "t3": {
+        "quote": "Excellent teaching and up-to-date content. I highly recommend Level Up Formation.",
+        "author": "Sophie M., IT Manager"
+      }
     },
     "cta": {
       "title": "Ready to level up?",
@@ -319,6 +445,50 @@ const en = {
     "cgv": "Terms",
     "privacy": "Privacy",
     "copyright": "© 2026 Level-Up Formation. All rights reserved."
+  },
+  "auth": {
+    "login": "Login",
+    "register": "Register",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm password",
+    "magicLink": "Magic link",
+    "forgotPassword": "Forgot password",
+    "noAccount": "No account?",
+    "alreadyAccount": "Already have an account?",
+    "signUp": "Sign up",
+    "signIn": "Sign in"
+  },
+  "member": {
+    "title": "Member area",
+    "welcome": "Welcome",
+    "myCourses": "My courses",
+    "progress": "Progress",
+    "badges": "Badges",
+    "noCourses": "You don't have any courses yet. Check out our catalogue!",
+    "continue": "Continue",
+    "start": "Start",
+    "completed": "Completed"
+  },
+  "admin": {
+    "title": "Dashboard",
+    "dashboard": "Administration"
+  },
+  "course": {
+    "modules": "Course modules",
+    "duration": "Duration",
+    "level": "Level",
+    "price": "Price",
+    "enroll": "Enroll",
+    "objectives": "Objectives",
+    "program": "Program"
+  },
+  "catalogue": {
+    "title": "Course catalogue",
+    "filterAll": "All",
+    "filterLvl1": "Level 1",
+    "filterLvl2": "Level 2",
+    "filterLvl3": "Level 3"
   }
 };
 

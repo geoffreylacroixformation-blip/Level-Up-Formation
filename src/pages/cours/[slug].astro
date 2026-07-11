@@ -30,34 +30,32 @@ const levelColors: Record<number, string> = {
   <section class="py-12">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <nav class="text-text-muted text-sm mb-6">
-        <a href={getLocalizedPath('catalogue', lang)} class="transition-colors">{t.nav.catalogue}</a>
+        <a href={getLocalizedPath('catalogue', lang)} class="transition-colors hover:text-primary">{t.nav.catalogue}</a>
         <span class="mx-2">/</span>
-        <span>{course.title}</span>
+        <span id="breadcrumb-title">{course.title}</span>
       </nav>
 
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div class="lg:col-span-2">
           <div class="aspect-video rounded-xl overflow-hidden mb-6 relative">
-            <img src={course.image} alt={course.title} class="w-full h-full object-cover" />
-            <span class={`absolute top-4 left-4 text-xs font-bold px-2 py-1 rounded ${levelColors[course.level]}`}>
+            <img id="course-image" src={course.image} alt={course.title} class="w-full h-full object-cover" />
+            <span id="course-badge" class={`absolute top-4 left-4 text-xs font-bold px-2 py-1 rounded ${levelColors[course.level]}`}>
               LVL{course.level}
             </span>
           </div>
 
-          <h1 class="font-display text-3xl font-bold mb-4">{course.title}</h1>
-          <p class="text-text-muted mb-8">{course.longDescription}</p>
+          <h1 id="course-title" class="font-display text-3xl font-bold mb-4">{course.title}</h1>
+          <p id="course-description" class="text-text-muted mb-8">{course.longDescription}</p>
 
-          <div class="flex flex-wrap gap-2 mb-8">
+          <div id="course-tags" class="flex flex-wrap gap-2 mb-8">
             {course.tags.map((tag) => (
-              <span class="px-3 py-1 bg-surface-light text-text-muted text-sm rounded-full">
-                {tag}
-              </span>
+              <span class="px-3 py-1 bg-surface-light text-text-muted text-sm rounded-full">{tag}</span>
             ))}
           </div>
 
           <div class="bg-surface rounded-xl p-6">
             <h2 class="font-display text-xl font-semibold mb-6">{t.course.modules}</h2>
-            <div class="space-y-3">
+            <div id="modules-list" class="space-y-3">
               {course.modules.map((module) => (
                 <div class={`rounded-lg p-4 ${module.isFree ? 'bg-success/10 border border-success/30' : 'bg-surface-light'}`}>
                   <div class="flex items-center justify-between">
@@ -72,9 +70,9 @@ const levelColors: Record<number, string> = {
                     </div>
                     <div class="flex items-center gap-3">
                       {module.isFree ? (
-                        <span class="px-3 py-1 bg-success text-black text-xs font-bold rounded">{t.course.freeModule}</span>
+                        <span class="px-3 py-1 bg-success text-black text-xs font-bold rounded">Gratuit</span>
                       ) : (
-                        <span class="text-text-muted text-xs">{t.course.lockedModule}</span>
+                        <span class="text-text-muted text-xs">Premium</span>
                       )}
                       <span class="text-text-muted text-xs">{module.duration}</span>
                     </div>
@@ -88,17 +86,17 @@ const levelColors: Record<number, string> = {
         <div class="lg:col-span-1">
           <div class="bg-surface rounded-xl p-6 sticky top-24">
             <div class="text-center mb-6">
-              <span class="text-4xl font-bold text-primary">{course.price}€</span>
-              <p class="text-text-muted text-sm mt-1">{course.level === 1 ? 'Niveau 1' : course.level === 2 ? 'Niveau 2' : 'Niveau 3'}</p>
+              <span id="course-price" class="text-4xl font-bold text-primary">{course.price}€</span>
+              <p class="text-text-muted text-sm mt-1">Niveau {course.level}</p>
             </div>
 
             <button class="w-full py-3 bg-primary text-white rounded-lg font-semibold mb-4 transition-colors glow-primary">
-              {t.catalogue.buy}
+              S'inscrire maintenant
             </button>
 
             <div class="text-center text-text-muted text-sm mb-6">
-              <p>Acces a vie aux modules</p>
-              <p>Certificat a la completion</p>
+              <p>Accès à vie aux modules</p>
+              <p>Certificat à la completion</p>
             </div>
 
             <div class="border-t border-border pt-6">
@@ -108,7 +106,7 @@ const levelColors: Record<number, string> = {
                   <svg class="w-4 h-4 text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                   </svg>
-                  {course.modules.length} modules
+                  <span id="module-count">{course.modules.length} modules</span>
                 </li>
                 <li class="flex items-center gap-2">
                   <svg class="w-4 h-4 text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -120,7 +118,7 @@ const levelColors: Record<number, string> = {
                   <svg class="w-4 h-4 text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                   </svg>
-                  Badges numeriques
+                  Badges numériques
                 </li>
                 <li class="flex items-center gap-2">
                   <svg class="w-4 h-4 text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -130,9 +128,133 @@ const levelColors: Record<number, string> = {
                 </li>
               </ul>
             </div>
+
+            {course.competences && course.competences.length > 0 && (
+              <div class="border-t border-border pt-6 mt-6">
+                <h4 class="font-semibold mb-3">Compétences acquises :</h4>
+                <ul class="space-y-2 text-sm text-text-muted">
+                  {course.competences.map((skill) => (
+                    <li class="flex items-start gap-2">
+                      <svg class="w-4 h-4 text-success mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                      </svg>
+                      {skill}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {course.prerequis && (
+              <div class="border-t border-border pt-6 mt-6">
+                <h4 class="font-semibold mb-2">Prérequis :</h4>
+                <p class="text-sm text-text-muted">{course.prerequis}</p>
+              </div>
+            )}
+
+            {course.public_cible && (
+              <div class="border-t border-border pt-6 mt-6">
+                <h4 class="font-semibold mb-2">Public cible :</h4>
+                <p class="text-sm text-text-muted">{course.public_cible}</p>
+              </div>
+            )}
           </div>
         </div>
       </div>
     </div>
   </section>
 </Layout>
+
+<script>
+  const SUPABASE_URL = import.meta.env.PUBLIC_SUPABASE_URL;
+  const SUPABASE_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
+  const slug = document.body.dataset.slug || (() => {
+    const parts = window.location.pathname.split('/');
+    return parts[parts.length - 1] || parts[parts.length - 2];
+  })();
+
+  (async () => {
+    if (!SUPABASE_URL || !SUPABASE_KEY) return;
+
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/courses?slug=eq.${encodeURIComponent(slug)}&select=*`, {
+        headers: {
+          'apikey': SUPABASE_KEY,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!res.ok) return;
+      const data = await res.json();
+      if (data.length === 0) return;
+
+      const course = data[0];
+      const level = course.level || (course.niveau === 'LVL1' ? 1 : course.niveau === 'LVL2' ? 2 : 3);
+      const price = course.price ?? course.prix;
+
+      // Update page with DB data
+      const titleEl = document.getElementById('course-title');
+      const descEl = document.getElementById('course-description');
+      const imgEl = document.getElementById('course-image');
+      const priceEl = document.getElementById('course-price');
+      const moduleCountEl = document.getElementById('module-count');
+      const breadcrumbEl = document.getElementById('breadcrumb-title');
+
+      if (titleEl && course.title) { titleEl.textContent = course.title; document.title = course.title + ' | Level Up'; }
+      if (breadcrumbEl && course.title) breadcrumbEl.textContent = course.title;
+      if (descEl && course.long_description) descEl.textContent = course.long_description;
+      else if (descEl && course.description) descEl.textContent = course.description;
+      if (imgEl && course.image) imgEl.src = course.image;
+      if (priceEl && price) priceEl.textContent = price + '€';
+
+      // Update modules
+      if (course.modules && Array.isArray(course.modules) && course.modules.length > 0) {
+        const modulesList = document.getElementById('modules-list');
+        if (modulesList) {
+          modulesList.innerHTML = '';
+          course.modules.forEach((module) => {
+            const div = document.createElement('div');
+            div.className = `rounded-lg p-4 ${module.isFree ? 'bg-success/10 border border-success/30' : 'bg-surface-light'}`;
+            div.innerHTML = `
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <span class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${module.isFree ? 'bg-success text-black' : 'bg-surface text-text-muted'}">
+                    ${module.order}
+                  </span>
+                  <div>
+                    <h3 class="font-medium">${module.title}</h3>
+                    <p class="text-text-muted text-sm">${module.description || ''}</p>
+                  </div>
+                </div>
+                <div class="flex items-center gap-3">
+                  ${module.isFree
+                    ? '<span class="px-3 py-1 bg-success text-black text-xs font-bold rounded">Gratuit</span>'
+                    : '<span class="text-text-muted text-xs">Premium</span>'}
+                  <span class="text-text-muted text-xs">${module.duration || ''}</span>
+                </div>
+              </div>
+            `;
+            modulesList.appendChild(div);
+          });
+        }
+        if (moduleCountEl) moduleCountEl.textContent = course.modules.length + ' modules';
+      }
+
+      // Update tags
+      if (course.tags && Array.isArray(course.tags) && course.tags.length > 0) {
+        const tagsContainer = document.getElementById('course-tags');
+        if (tagsContainer) {
+          tagsContainer.innerHTML = '';
+          course.tags.forEach(tag => {
+            const span = document.createElement('span');
+            span.className = 'px-3 py-1 bg-surface-light text-text-muted text-sm rounded-full';
+            span.textContent = tag;
+            tagsContainer.appendChild(span);
+          });
+        }
+      }
+    } catch (err) {
+      // Silent fail — static content remains
+    }
+  })();
+</script>

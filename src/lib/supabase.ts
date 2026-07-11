@@ -16,7 +16,8 @@ export const supabase = _supabase;
 export type Profile = {
   id: string;
   email: string;
-  role: 'user' | 'admin';
+  plan: 'free' | 'premium' | 'all-access';
+  is_admin: boolean;
   created_at: string;
   updated_at: string;
 };

@@ -6,7 +6,6 @@ import { getLangFromUrl } from '../../lib/i18n';
 
 const lang = getLangFromUrl(Astro.url);
 ---
-
 <!doctype html>
 <html lang={lang}>
   <head>
@@ -17,7 +16,7 @@ const lang = getLangFromUrl(Astro.url);
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Orbitron:wght@500;600;700&display=swap" rel="stylesheet">
-    <title>Admin | Level Up</title>
+    <title>Admin Login | Level Up</title>
     <style>
       .admin-login {
         min-height: calc(100vh - 120px);
@@ -48,9 +47,7 @@ const lang = getLangFromUrl(Astro.url);
         margin-bottom: 32px;
         font-size: 0.9rem;
       }
-      .form-group {
-        margin-bottom: 20px;
-      }
+      .form-group { margin-bottom: 20px; }
       .form-group label {
         display: block;
         color: #ccc;
@@ -67,10 +64,7 @@ const lang = getLangFromUrl(Astro.url);
         font-size: 1rem;
         transition: border-color 0.3s;
       }
-      .form-group input:focus {
-        outline: none;
-        border-color: #00ff88;
-      }
+      .form-group input:focus { outline: none; border-color: #00ff88; }
       .login-btn {
         width: 100%;
         padding: 14px;
@@ -87,11 +81,7 @@ const lang = getLangFromUrl(Astro.url);
         transform: translateY(-2px);
         box-shadow: 0 8px 25px rgba(0, 255, 136, 0.3);
       }
-      .login-btn:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-        transform: none;
-      }
+      .login-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
       .error-msg {
         color: #ff4444;
         text-align: center;
@@ -114,9 +104,7 @@ const lang = getLangFromUrl(Astro.url);
         text-decoration: none;
         font-size: 0.9rem;
       }
-      .back-link:hover {
-        color: #00ff88;
-      }
+      .back-link:hover { color: #00ff88; }
       .config-warning {
         color: #f59e0b;
         text-align: center;
@@ -135,9 +123,9 @@ const lang = getLangFromUrl(Astro.url);
     <main class="flex-1">
       <div class="admin-login">
         <div class="login-card">
-          <h1>🔐 ADMIN</h1>
-          <p>Accès réservé au propriétaire</p>
-          
+          <h1>Admin</h1>
+          <p>Accès réservé aux administrateurs</p>
+
           <form id="loginForm">
             <div class="form-group">
               <label for="email">Email</label>
@@ -151,28 +139,27 @@ const lang = getLangFromUrl(Astro.url);
               Se connecter
             </button>
           </form>
-          
+
           <div class="error-msg" id="errorMsg"></div>
           <div class="success-msg" id="successMsg"></div>
           <div class="config-warning" id="configWarning">Configuration Supabase manquante. Impossible de se connecter.</div>
-          
+
           <a href="/" class="back-link">← Retour au site</a>
         </div>
       </div>
     </main>
     <Footer lang={lang} />
-    
+
     <script>
       const loginForm = document.getElementById('loginForm');
       const errorMsg = document.getElementById('errorMsg');
       const successMsg = document.getElementById('successMsg');
       const configWarning = document.getElementById('configWarning');
       const submitBtn = document.getElementById('submitBtn');
-      
+
       const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL || '';
       const supabaseAnonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY || '';
 
-      // Check if Supabase is configured
       if (!supabaseUrl || !supabaseAnonKey) {
         configWarning.style.display = 'block';
         loginForm.style.display = 'none';
@@ -186,50 +173,49 @@ const lang = getLangFromUrl(Astro.url);
         successMsg.style.display = 'none';
         submitBtn.disabled = true;
         submitBtn.textContent = 'Connexion...';
-        
+
         const email = document.getElementById('email').value;
         const password = document.getElementById('password').value;
-        
+
         try {
-          // Use the Supabase JS client for proper auth handling
           const { createClient } = await import('https://esm.sh/@supabase/supabase-js@2');
           const supabase = createClient(supabaseUrl, supabaseAnonKey);
-          
+
           const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-          
+
           if (error) {
             errorMsg.textContent = error.message;
             errorMsg.style.display = 'block';
             return;
           }
-          
+
           if (data?.session?.access_token) {
-            // Store token in cookie (server-readable) AND localStorage (client-readable)
             document.cookie = `sb-auth-token=${data.session.access_token}; path=/; max-age=86400; SameSite=Lax`;
             localStorage.setItem('sb-auth-token', data.session.access_token);
             localStorage.setItem('sb-auth-user', JSON.stringify(data.session.user));
-            
-            // Check admin role for THIS user
-            const profileRes = await fetch(`${supabaseUrl}/rest/v1/profiles?select=role&email=eq.${encodeURIComponent(data.session.user.email)}`, {
+
+            // Check is_admin for THIS user
+            const profileRes = await fetch(`${supabaseUrl}/rest/v1/profiles?id=eq.${data.session.user.id}&select=is_admin`, {
               headers: {
                 'apikey': supabaseAnonKey,
                 'Authorization': `Bearer ${data.session.access_token}`,
                 'Content-Type': 'application/json'
               }
             });
-            
+
             const profileData = await profileRes.json();
-            
-            if (profileData.length === 0 || profileData[0].role !== 'admin') {
-              errorMsg.textContent = 'Accès réservé au propriétaire uniquement.';
+
+            if (profileData.length === 0 || !profileData[0].is_admin) {
+              errorMsg.textContent = 'Accès réservé aux administrateurs uniquement.';
               errorMsg.style.display = 'block';
+              await supabase.auth.signOut();
               return;
             }
-            
+
             successMsg.textContent = 'Connexion réussie ! Redirection...';
             successMsg.style.display = 'block';
             setTimeout(() => {
-              window.location.href = '/Level-Up-Formation/admin/';
+              window.location.href = '/admin/';
             }, 500);
           }
         } catch (err) {
