@@ -1,10 +1,12 @@
-import "jsr:@supabase/functions-js/edge-runtime.d.ts";
+// supabase/functions/stripe-checkout/index.ts
+// Crée une session de paiement Stripe — mode TEST uniquement
+import { serve } from 'jsr:@supabase/functions-js/edge-runtime@2';
 import { createClient } from 'npm:@supabase/supabase-js@2';
 
 const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Client-Info, Apikey",
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Client-Info, Apikey',
 };
 
 interface CheckoutRequest {
@@ -14,24 +16,33 @@ interface CheckoutRequest {
   cancelUrl?: string;
 }
 
-Deno.serve(async (req: Request) => {
-  if (req.method === "OPTIONS") {
+serve(async (req: Request): Promise<Response> => {
+  // CORS preflight
+  if (req.method === 'OPTIONS') {
     return new Response(null, { status: 200, headers: corsHeaders });
   }
 
   try {
-    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
-    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
-    const stripeSecretKey = Deno.env.get('STRIPE_SECRET_KEY')!;
+    const supabaseUrl = Deno.env.get('SUPABASE_URL') || '';
+    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || '';
+    const stripeSecretKey = Deno.env.get('STRIPE_SECRET_KEY') || '';
+    const siteUrl = Deno.env.get('SITE_URL') || '';
+
+    if (!supabaseUrl || !supabaseServiceKey) {
+      return new Response(
+        JSON.stringify({ error: 'Configuration manquante' }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
 
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    // Get user from auth header
+    // Auth: vérifier le token utilisateur
     const authHeader = req.headers.get('Authorization');
     if (!authHeader) {
       return new Response(
-        JSON.stringify({ error: 'Unauthorized' }),
-        { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        JSON.stringify({ error: 'Non autorisé' }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
@@ -40,8 +51,8 @@ Deno.serve(async (req: Request) => {
 
     if (userError || !user) {
       return new Response(
-        JSON.stringify({ error: 'Invalid token' }),
-        { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        JSON.stringify({ error: 'Token invalide' }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
@@ -50,13 +61,18 @@ Deno.serve(async (req: Request) => {
 
     if (!priceId) {
       return new Response(
-        JSON.stringify({ error: 'Missing priceId' }),
-        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        JSON.stringify({ error: 'priceId manquant' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
-    // Create Stripe checkout session
-    const response = await fetch('https://api.stripe.com/v1/checkout/sessions', {
+    // URLs de redirection (fallback)
+    const baseUrl = siteUrl || 'https://geoffreylacroixformation-blip.github.io/Level-Up-Formation';
+    const successRedirect = successUrl || `${baseUrl}/membre?session_id={CHECKOUT_SESSION_ID}`;
+    const cancelRedirect = cancelUrl || `${baseUrl}/catalogue`;
+
+    // Créer la session Stripe (mode TEST)
+    const stripeResponse = await fetch('https://api.stripe.com/v1/checkout/sessions', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${stripeSecretKey}`,
@@ -67,35 +83,36 @@ Deno.serve(async (req: Request) => {
         'line_items[0][price]': priceId,
         'line_items[0][quantity]': '1',
         'mode': 'payment',
-        'success_url': successUrl || `${Deno.env.get('SITE_URL')}/membre?session_id={CHECKOUT_SESSION_ID}`,
-        'cancel_url': cancelUrl || `${Deno.env.get('SITE_URL')}/catalogue`,
-        'customer_email': user.email!,
+        'success_url': successRedirect,
+        'cancel_url': cancelRedirect,
+        'customer_email': user.email || '',
         'metadata[user_id]': user.id,
         'metadata[price_id]': priceId,
+        'metadata[email]': user.email || '',
       }),
     });
 
-    if (!response.ok) {
-      const error = await response.text();
-      console.error('Stripe error:', error);
+    if (!stripeResponse.ok) {
+      const errorBody = await stripeResponse.text();
+      console.error('❌ Stripe error:', errorBody);
       return new Response(
-        JSON.stringify({ error: 'Failed to create checkout session' }),
-        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        JSON.stringify({ error: 'Échec de la création de la session Stripe', details: errorBody }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
-    const session = await response.json();
+    const session = await stripeResponse.json();
 
     return new Response(
       JSON.stringify({ sessionId: session.id, url: session.url }),
-      { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
-
-  } catch (error) {
-    console.error('Error:', error);
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : 'Erreur inconnue';
+    console.error('❌ Erreur checkout:', message);
     return new Response(
-      JSON.stringify({ error: error.message }),
-      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      JSON.stringify({ error: 'Erreur interne', details: message }),
+      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }
 });

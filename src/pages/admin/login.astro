@@ -194,8 +194,8 @@ const lang = getLangFromUrl(Astro.url);
             localStorage.setItem('sb-auth-token', data.session.access_token);
             localStorage.setItem('sb-auth-user', JSON.stringify(data.session.user));
 
-            // Check is_admin for THIS user
-            const profileRes = await fetch(`${supabaseUrl}/rest/v1/profiles?id=eq.${data.session.user.id}&select=is_admin`, {
+            // Vérifier le rôle admin pour CET utilisateur
+            const profileRes = await fetch(`${supabaseUrl}/rest/v1/profiles?id=eq.${data.session.user.id}&select=role`, {
               headers: {
                 'apikey': supabaseAnonKey,
                 'Authorization': `Bearer ${data.session.access_token}`,
@@ -205,7 +205,7 @@ const lang = getLangFromUrl(Astro.url);
 
             const profileData = await profileRes.json();
 
-            if (profileData.length === 0 || !profileData[0].is_admin) {
+            if (profileData.length === 0 || profileData[0].role !== 'admin') {
               errorMsg.textContent = 'Accès réservé aux administrateurs uniquement.';
               errorMsg.style.display = 'block';
               await supabase.auth.signOut();

@@ -1,172 +1,200 @@
-import "jsr:@supabase/functions-js/edge-runtime.d.ts";
+// supabase/functions/stripe-webhook/index.ts
+// Webhook Stripe — sécurisé avec vérification de signature
+import { serve } from 'jsr:@supabase/functions-js/edge-runtime@2';
+import Stripe from 'npm:stripe@14.25.0';
 import { createClient } from 'npm:@supabase/supabase-js@2';
 
+const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY') || '', {
+  apiVersion: '2023-10-16' as Stripe.LatestApiVersion,
+  typescript: true,
+});
+
 const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Client-Info, Apikey",
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type, stripe-signature, Authorization',
 };
 
-// Price ID to course level mapping — update with real Stripe price IDs
-const PRICE_MAPPING: Record<string, { type: 'course' | 'bundle'; levels: number[] }> = {
-  // lvl1: { type: 'course', levels: [1] },
-  // lvl2: { type: 'course', levels: [2] },
-  // lvl3: { type: 'course', levels: [3] },
+/**
+ * Mapping price_id Stripe → cours.
+ * À remplir avec les price_ids réels (mode test) quand les produits Stripe seront créés.
+ */
+const PRICE_MAPPING: Record<string, { course_slug: string; level: number }> = {
+  // Exemple (à remplacer par les vrais price_id Stripe) :
+  // 'price_test_abc123': { course_slug: 'systèmes', level: 1 },
+  // 'price_test_def456': { course_slug: 'réseaux', level: 2 },
 };
 
-Deno.serve(async (req: Request) => {
-  if (req.method === "OPTIONS") {
+function log(level: string, message: string, data?: unknown) {
+  const prefix = '[stripe-webhook]';
+  if (data) {
+    console[level](`${prefix} ${level.toUpperCase()}: ${message}`, data);
+  } else {
+    console[level](`${prefix} ${level.toUpperCase()}: ${message}`);
+  }
+}
+
+serve(async (req: Request): Promise<Response> => {
+  // CORS preflight
+  if (req.method === 'OPTIONS') {
     return new Response(null, { status: 200, headers: corsHeaders });
   }
 
   try {
-    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
-    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
-    const webhookSecret = Deno.env.get('STRIPE_WEBHOOK_SECRET')!;
+    const supabaseUrl = Deno.env.get('SUPABASE_URL') || '';
+    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || '';
+    const webhookSecret = Deno.env.get('STRIPE_WEBHOOK_SECRET') || '';
+
+    if (!supabaseUrl || !supabaseServiceKey) {
+      log('error', 'SUPABASE_URL ou SUPABASE_SERVICE_ROLE_KEY manquant');
+      return new Response(
+        JSON.stringify({ error: 'Configuration manquante' }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
 
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    const signature = req.headers.get('stripe-signature');
+    // Vérifier la signature Stripe (sécurisé)
+    const signature = req.headers.get('stripe-signature') || '';
     if (!signature) {
+      log('warn', 'En-tête stripe-signature manquant');
       return new Response(
-        JSON.stringify({ error: 'Missing stripe signature' }),
-        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        JSON.stringify({ error: 'Manque stripe-signature' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
     const body = await req.text();
 
-    // Verify webhook signature
-    let event;
+    let event: Stripe.Event;
     try {
-      // Simple signature verification for temp setup
-      // In production, use the Stripe SDK for proper verification
-      event = JSON.parse(body);
-
-      // Basic check: event must have type and data
-      if (!event.type || !event.data) {
-        return new Response(
-          JSON.stringify({ error: 'Invalid event format' }),
-          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-        );
-      }
-    } catch (parseError) {
-      console.error('Failed to parse webhook:', parseError);
+      event = await stripe.webhooks.constructEventAsync(body, signature, webhookSecret);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Erreur inconnue';
+      log('error', `Signature Stripe invalide: ${message}`);
       return new Response(
-        JSON.stringify({ error: 'Invalid JSON' }),
-        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        JSON.stringify({ error: 'Signature invalide', details: message }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
-    if (event.type === 'checkout.session.completed') {
-      const session = event.data.object;
-      const userId = session.metadata?.user_id;
-      const priceId = session.metadata?.price_id;
+    log('info', `Événement reçu: ${event.type}`);
 
-      if (!userId) {
-        console.error('Missing user_id in session metadata');
-        return new Response(
-          JSON.stringify({ error: 'Missing user_id' }),
-          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-        );
-      }
+    // Gestion des événements Stripe
+    switch (event.type) {
+      case 'checkout.session.completed': {
+        const session = event.data.object as Stripe.Checkout.Session;
+        const priceId = session.line_items?.data[0]?.price?.id;
+        const customerEmail = session.customer_email || '';
+        const userId = session.metadata?.user_id;
 
-      // Check if user exists in profiles table
-      const { data: profile, error: profileError } = await supabase
-        .from('profiles')
-        .select('id')
-        .eq('id', userId)
-        .single();
+        log('info', `checkout.session.completed`, {
+          priceId,
+          customer_email: customerEmail,
+          user_id: userId,
+          mode: session.mode,
+        });
 
-      if (profileError || !profile) {
-        console.error('Profile not found for user:', userId);
-        // Create profile if doesn't exist
-        await supabase.from('profiles').insert({ id: userId, email: session.customer_email || '', role: 'user' });
-      }
+        // Récupérer le mapping du prix
+        const mapping = PRICE_MAPPING[priceId || ''];
 
-      // Determine what was purchased based on price ID
-      const purchase = PRICE_MAPPING[priceId!];
-      if (purchase) {
-        if (purchase.type === 'bundle' && purchase.levels.includes(1) && purchase.levels.includes(2) && purchase.levels.includes(3)) {
-          // All Access Pass - grant all courses
-          await supabase
-            .from('profiles')
-            .update({ plan: 'all_access' })
-            .eq('id', userId);
-        } else if (purchase.type === 'bundle') {
-          // Bundle purchase
-          await supabase
-            .from('profiles')
-            .update({ plan: 'bundle' })
-            .eq('id', userId);
+        if (!mapping) {
+          log('warn', `Prix Stripe inconnu: ${priceId}. Ajoutez-le dans PRICE_MAPPING.`);
+          break;
         }
-      }
 
-      // Record the course enrollment
-      if (purchase && purchase.type === 'course') {
-        for (const level of purchase.levels) {
-          // Find courses at this level
-          const { data: levelCourses } = await supabase
-            .from('courses')
-            .select('slug')
-            .eq('level', level);
+        // Trouver ou créer le profil
+        const { data: profile, error: profileError } = await supabase
+          .from('profiles')
+          .select('id, email')
+          .eq('email', customerEmail)
+          .maybeSingle();
 
-          if (levelCourses) {
-            for (const course of levelCourses) {
-              await supabase
-                .from('users_courses')
-                .upsert(
-                  {
-                    user_id: userId,
-                    course_slug: course.slug,
-                    progress: 0,
-                    completed: false,
-                    purchased_at: new Date().toISOString()
-                  },
-                  { onConflict: 'user_id,course_slug' }
-                );
-            }
+        if (profileError) {
+          log('error', `Erreur lors de la recherche du profil: ${profileError.message}`);
+          break;
+        }
+
+        if (!profile) {
+          // Créer le profil automatiquement
+          log('info', `Création du profil pour: ${customerEmail}`);
+          const { data: newProfile, error: insertError } = await supabase
+            .from('profiles')
+            .insert({
+              id: userId,
+              email: customerEmail,
+              role: 'user',
+            })
+            .select()
+            .single();
+
+          if (insertError) {
+            log('error', `Erreur création profil: ${insertError.message}`);
+            break;
           }
-        }
-      } else {
-        // Single course purchase — record it
-        // Try to find the course by stripe_price_id
-        const { data: course } = await supabase
-          .from('courses')
-          .select('slug')
-          .eq('stripe_price_id', priceId)
-          .single();
 
-        if (course) {
-          await supabase
-            .from('users_courses')
-            .upsert(
-              {
-                user_id: userId,
-                course_slug: course.slug,
-                progress: 0,
-                completed: false,
-                purchased_at: new Date().toISOString()
-              },
-              { onConflict: 'user_id,course_slug' }
-            );
+          // Enregistrer l'achat
+          await supabase.from('users_courses').upsert(
+            {
+              user_id: newProfile.id,
+              course_slug: mapping.course_slug,
+              progress: 0,
+              completed: false,
+              purchased_at: new Date().toISOString(),
+            },
+            { onConflict: 'user_id,course_slug' }
+          );
+          log('info', `Cours "${mapping.course_slug}" attribué à ${customerEmail}`);
+        } else {
+          // Enregistrer l'achat
+          await supabase.from('users_courses').upsert(
+            {
+              user_id: profile.id,
+              course_slug: mapping.course_slug,
+              progress: 0,
+              completed: false,
+              purchased_at: new Date().toISOString(),
+            },
+            { onConflict: 'user_id,course_slug' }
+          );
+          log('info', `Cours "${mapping.course_slug}" attribué à ${customerEmail}`);
         }
+        break;
       }
 
-      // Log successful payment
-      console.log(`Payment completed for user ${userId}`);
+      case 'invoice.payment_succeeded': {
+        const invoice = event.data.object as Stripe.Invoice;
+        log('info', `Paiement facture réussi: ${invoice.id}`);
+        break;
+      }
+
+      case 'payment_intent.payment_failed': {
+        const pi = event.data.object as Stripe.PaymentIntent;
+        log('error', `Paiement échoué: ${pi.id} — ${pi.last_payment_error?.message || 'raison inconnue'}`);
+        break;
+      }
+
+      case 'payment_intent.succeeded': {
+        const pi = event.data.object as Stripe.PaymentIntent;
+        log('info', `Paiement réussi: ${pi.id} — ${pi.amount} ${pi.currency}`);
+        break;
+      }
+
+      default:
+        log('info', `Événement non géré: ${event.type}`);
     }
 
     return new Response(
-      JSON.stringify({ received: true }),
-      { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      JSON.stringify({ received: true, event_type: event.type }),
+      { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
-
-  } catch (error) {
-    console.error('Webhook error:', error);
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : 'Erreur inconnue';
+    log('error', `Erreur interne: ${message}`);
     return new Response(
-      JSON.stringify({ error: error.message }),
-      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      JSON.stringify({ error: 'Erreur interne', details: message }),
+      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }
 });

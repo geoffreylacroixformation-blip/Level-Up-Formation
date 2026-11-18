@@ -1,0 +1,240 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { useTranslations, defaultLang } from '../../lib/i18n';
+const t = useTranslations('fr');
+const lang = defaultLang;
+---
+<Layout title="Commandes | Admin" lang={lang}>
+  <section class="py-12" id="orders-admin" style="display: none;">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between mb-8">
+        <div>
+          <a href="/admin/" class="text-primary hover:text-primary/80 text-sm mb-2 inline-block">&larr; Retour au dashboard</a>
+          <h1 class="font-display text-3xl font-bold">Commandes & Paiements</h1>
+        </div>
+        <button id="logout-btn" class="px-4 py-2 bg-surface border border-border text-text-muted rounded-lg hover:text-text transition-colors">
+          Déconnexion
+        </button>
+      </div>
+
+      <!-- Stats -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+        <div class="bg-surface rounded-xl p-6 border border-border">
+          <p class="text-text-muted text-sm">Total revenus</p>
+          <p class="text-2xl font-bold text-primary" id="total-revenue">--€</p>
+        </div>
+        <div class="bg-surface rounded-xl p-6 border border-border">
+          <p class="text-text-muted text-sm">Commandes ce mois</p>
+          <p class="text-2xl font-bold" id="month-orders">0</p>
+        </div>
+        <div class="bg-surface rounded-xl p-6 border border-border">
+          <p class="text-text-muted text-sm">Commandes totales</p>
+          <p class="text-2xl font-bold" id="total-orders">0</p>
+        </div>
+        <div class="bg-surface rounded-xl p-6 border border-border">
+          <p class="text-text-muted text-sm">Apprenants actifs</p>
+          <p class="text-2xl font-bold" id="active-learners">0</p>
+        </div>
+      </div>
+
+      <!-- Filters -->
+      <div class="flex gap-4 mb-6">
+        <input type="text" id="search-input" placeholder="Rechercher par email..." class="flex-1 rounded-md bg-background border border-border text-text p-2.5" />
+        <select id="status-filter" class="rounded-md bg-background border border-border text-text p-2.5">
+          <option value="all">Tous les statuts</option>
+          <option value="paid">Payé</option>
+          <option value="pending">En attente</option>
+          <option value="refunded">Remboursé</option>
+        </select>
+      </div>
+
+      <!-- Orders table -->
+      <div class="bg-surface rounded-xl border border-border overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="w-full">
+            <thead>
+              <tr class="bg-background border-b border-border">
+                <th class="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">ID</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">Email</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">Cours</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">Montant</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">Statut</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">Date</th>
+              </tr>
+            </thead>
+            <tbody id="orders-body" class="divide-y divide-border">
+              <tr>
+                <td class="px-6 py-4 text-text-muted text-center" colspan="6">Chargement des commandes...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<script>
+  const SUPABASE_URL = import.meta.env.PUBLIC_SUPABASE_URL;
+  const SUPABASE_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
+
+  function getCookie(name) {
+    const match = document.cookie.match(new RegExp('(?:^|;)\\s*' + name + '=([^;]*)'));
+    return match ? decodeURIComponent(match[1]) : null;
+  }
+
+  function getToken() {
+    return getCookie('sb-auth-token') || localStorage.getItem('sb-auth-token');
+  }
+
+  function logout() {
+    localStorage.removeItem('sb-auth-token');
+    localStorage.removeItem('sb-auth-user');
+    document.cookie = 'sb-auth-token=; path=/; max-age=0';
+    window.location.href = '/admin/login';
+  }
+
+  // Auth gate
+  (async () => {
+    const content = document.getElementById('orders-admin');
+    if (!content) return;
+
+    const token = getToken();
+    if (!token) { logout(); return; }
+
+    if (!SUPABASE_URL || !SUPABASE_KEY) {
+      content.innerHTML = '<div class="max-w-4xl mx-auto px-4"><p class="text-red-500">Configuration Supabase manquante.</p></div>';
+      content.style.display = 'block';
+      return;
+    }
+
+    try {
+      const userStr = localStorage.getItem('sb-auth-user');
+      if (!userStr) { logout(); return; }
+      const userObj = JSON.parse(userStr);
+
+      const profileRes = await fetch(
+        `${SUPABASE_URL}/rest/v1/profiles?id=eq.${userObj.id}&select=role`,
+        {
+          headers: {
+            'apikey': SUPABASE_KEY,
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+
+      if (!profileRes.ok) { logout(); return; }
+      const profileData = await profileRes.json();
+      if (profileData.length === 0 || profileData[0].role !== 'admin') { logout(); return; }
+
+      content.style.display = 'block';
+      loadOrders();
+    } catch (err) {
+      console.error('[orders-admin] auth error:', err);
+      logout();
+    }
+  })();
+
+  // Load orders
+  async function loadOrders() {
+    const token = getToken();
+    if (!token) return;
+
+    const tbody = document.getElementById('orders-body');
+    const search = document.getElementById('search-input')?.value || '';
+    const status = document.getElementById('status-filter')?.value || 'all';
+
+    let query = 'select=*,courses!inner(id,title,slug)';
+    if (status !== 'all') {
+      query += `&payment_status=eq.${status}`;
+    }
+    if (search) {
+      query += `&email=ilike.*${search}*`;
+    }
+    query += '&order=created_at.desc';
+
+    try {
+      const res = await fetch(
+        `${SUPABASE_URL}/rest/v1/orders?${query}`,
+        {
+          headers: {
+            'apikey': SUPABASE_KEY,
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+
+      if (!res.ok) {
+        tbody.innerHTML = '<tr><td class="px-6 py-4 text-error text-center" colspan="6">Erreur lors du chargement des commandes.</td></tr>';
+        return;
+      }
+
+      const orders = await res.json();
+      renderOrders(orders);
+      updateStats(orders);
+    } catch (err) {
+      tbody.innerHTML = '<tr><td class="px-6 py-4 text-error text-center" colspan="6">Erreur: ' + err.message + '</td></tr>';
+    }
+  }
+
+  function renderOrders(orders) {
+    const tbody = document.getElementById('orders-body');
+    if (!tbody) return;
+
+    if (orders.length === 0) {
+      tbody.innerHTML = '<tr><td class="px-6 py-4 text-text-muted text-center" colspan="6">Aucune commande trouvée.</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = '';
+    orders.forEach(order => {
+      const tr = document.createElement('tr');
+      const course = order.courses;
+      const statusClass = {
+        'paid': 'bg-success/20 text-success',
+        'pending': 'bg-warning/20 text-warning',
+        'refunded': 'bg-error/20 text-error',
+        'complete': 'bg-success/20 text-success'
+      }[order.payment_status] || 'bg-surface text-text-muted';
+
+      tr.innerHTML = `
+        <td class="px-6 py-4 whitespace-nowrap text-sm text-text-muted">${order.id.substring(0, 8)}...</td>
+        <td class="px-6 py-4 whitespace-nowrap text-sm">${order.email || 'N/A'}</td>
+        <td class="px-6 py-4 whitespace-nowrap text-sm">${course?.title || 'N/A'}</td>
+        <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold">${order.amount / 100}€</td>
+        <td class="px-6 py-4 whitespace-nowrap">
+          <span class="px-2 py-1 text-xs rounded ${statusClass}">${order.payment_status || 'unknown'}</span>
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap text-sm text-text-muted">${new Date(order.created_at).toLocaleDateString('fr-FR')}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  function updateStats(orders) {
+    const totalRevenue = orders.reduce((sum, o) => sum + (o.amount || 0), 0);
+    document.getElementById('total-revenue').textContent = (totalRevenue / 100).toFixed(2) + '€';
+    document.getElementById('total-orders').textContent = orders.length;
+
+    // This month
+    const now = new Date();
+    const thisMonth = orders.filter(o => {
+      const d = new Date(o.created_at);
+      return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+    });
+    document.getElementById('month-orders').textContent = thisMonth.length;
+
+    // Active learners (unique emails)
+    const uniqueEmails = new Set(orders.map(o => o.email).filter(Boolean));
+    document.getElementById('active-learners').textContent = uniqueEmails.size;
+  }
+
+  // Filters
+  document.getElementById('search-input')?.addEventListener('input', loadOrders);
+  document.getElementById('status-filter')?.addEventListener('change', loadOrders);
+
+  // Logout
+  document.getElementById('logout-btn')?.addEventListener('click', logout);
+</script>

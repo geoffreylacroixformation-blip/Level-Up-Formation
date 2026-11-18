@@ -19,6 +19,15 @@ const lang = defaultLang;
         <button class="tab-btn px-4 py-2 text-sm font-medium border-b-2 border-primary text-text" data-tab="manage">Gérer le catalogue</button>
         <button class="tab-btn px-4 py-2 text-sm font-medium border-b-2 border-transparent text-text-muted hover:text-text" data-tab="create">Créer un cours</button>
       </div>
+      <!-- Quick links -->
+      <div class="flex gap-3 mb-8">
+        <a href="/admin/commandes" class="px-4 py-2 bg-surface border border-border text-text-muted rounded-lg hover:text-text hover:border-primary transition-colors text-sm">
+          📊 Commandes & Paiements
+        </a>
+        <a href="/admin/apprenants" class="px-4 py-2 bg-surface border border-border text-text-muted rounded-lg hover:text-text hover:border-primary transition-colors text-sm">
+          👥 Apprenants
+        </a>
+      </div>
 
       <!-- Manage tab -->
       <div class="tab-content" id="tab-manage">
@@ -262,7 +271,7 @@ const lang = defaultLang;
       const userObj = JSON.parse(userStr);
 
       const profileRes = await fetch(
-        `${SUPABASE_URL}/rest/v1/profiles?id=eq.${userObj.id}&select=is_admin`,
+        `${SUPABASE_URL}/rest/v1/profiles?id=eq.${userObj.id}&select=role`,
         {
           headers: {
             'apikey': SUPABASE_KEY,
@@ -274,7 +283,7 @@ const lang = defaultLang;
 
       if (!profileRes.ok) { logout(); return; }
       const profileData = await profileRes.json();
-      if (profileData.length === 0 || !profileData[0].is_admin) { logout(); return; }
+      if (profileData.length === 0 || profileData[0].role !== 'admin') { logout(); return; }
 
       content.style.display = 'block';
       loadCourses();
