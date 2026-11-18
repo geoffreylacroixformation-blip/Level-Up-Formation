@@ -25,13 +25,15 @@ const isRegisterTab = isMember && Astro.url.search.includes('tab=register');
 
       <nav class="hidden md:flex items-center gap-4">
         <a href={lang === defaultLang ? getLocalizedPath('', lang) : `/${lang}/`}
-           class:list={["nav-link", isHome && "active"]}
-           class="text-sm font-medium transition-colors">
+           class:list={["btn-synthwave-nav", isHome && "active"]}
+           style={isHome ? "background: linear-gradient(180deg, #1a1a2e, #0f0f1a); color: #f72585; border-color: #f72585;" : ""}
+           class="text-sm font-medium">
           {t.nav.home}
         </a>
         <a href={getLocalizedPath('catalogue', lang)}
-           class:list={["nav-link", isCatalogue && "active"]}
-           class="text-sm font-medium transition-colors">
+           class:list={["btn-synthwave-nav", isCatalogue && "active"]}
+           style={isCatalogue ? "background: linear-gradient(180deg, #1a1a2e, #0f0f1a); color: #f72585; border-color: #f72585;" : ""}
+           class="text-sm font-medium">
           {t.nav.catalogue}
         </a>
         <a href={getLocalizedPath('membre', lang)}
@@ -83,11 +85,11 @@ const isRegisterTab = isMember && Astro.url.search.includes('tab=register');
   <div id="mobile-menu" class="hidden md:hidden bg-surface border-t border-border">
     <div class="max-w-7xl mx-auto px-4 py-4 space-y-3">
       <a href={lang === defaultLang ? getLocalizedPath('', lang) : `/${lang}/`}
-         class="block py-2 px-3 rounded-lg text-text hover:bg-surface-light transition-colors">
+         class="btn-synthwave-nav block py-2 px-3 rounded-lg text-sm font-medium">
         {t.nav.home}
       </a>
       <a href={getLocalizedPath('catalogue', lang)}
-         class="block py-2 px-3 rounded-lg text-text hover:bg-surface-light transition-colors">
+         class="btn-synthwave-nav block py-2 px-3 rounded-lg text-sm font-medium">
         {t.nav.catalogue}
       </a>
       <div class="flex gap-3 pt-3 border-t border-border">
