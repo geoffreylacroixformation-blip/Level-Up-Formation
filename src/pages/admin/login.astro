@@ -5,6 +5,10 @@ import Footer from '../../components/Footer.astro';
 import { getLangFromUrl } from '../../lib/i18n';
 
 const lang = getLangFromUrl(Astro.url);
+
+export const headers = {
+  'Content-Security-Policy': "script-src 'self' 'unsafe-inline' https://esm.sh;"
+};
 ---
 <!doctype html>
 <html lang={lang}>
@@ -150,89 +154,6 @@ const lang = getLangFromUrl(Astro.url);
     </main>
     <Footer lang={lang} />
 
-    <script>
-      window.__SUPABASE__ = {
-        url: import.meta.env.PUBLIC_SUPABASE_URL,
-        anonKey: import.meta.env.PUBLIC_SUPABASE_ANON_KEY
-      };
-    </script>
-    <script type="module" src="/Level-Up-Formation/assets/login.astro_astro_type_script_index_0_lang.js"></script>
-    <script>
-      const loginForm = document.getElementById('loginForm');
-      const errorMsg = document.getElementById('errorMsg');
-      const successMsg = document.getElementById('successMsg');
-      const configWarning = document.getElementById('configWarning');
-      const submitBtn = document.getElementById('submitBtn');
-
-      const supabaseUrl = window.__SUPABASE__?.url || '';
-      const supabaseAnonKey = window.__SUPABASE__?.anonKey || '';
-
-      if (!supabaseUrl || !supabaseAnonKey) {
-        configWarning.style.display = 'block';
-        loginForm.style.display = 'none';
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'Configuration manquante';
-      }
-
-      loginForm?.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        errorMsg.style.display = 'none';
-        successMsg.style.display = 'none';
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'Connexion...';
-
-        const email = document.getElementById('email').value;
-        const password = document.getElementById('password').value;
-
-        try {
-          const { createClient } = await import('https://esm.sh/@supabase/supabase-js@2');
-          const supabase = createClient(supabaseUrl, supabaseAnonKey);
-
-          const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-
-          if (error) {
-            errorMsg.textContent = error.message;
-            errorMsg.style.display = 'block';
-            return;
-          }
-
-          if (data?.session?.access_token) {
-            document.cookie = `sb-auth-token=${data.session.access_token}; path=/; max-age=86400; SameSite=Lax`;
-            localStorage.setItem('sb-auth-token', data.session.access_token);
-            localStorage.setItem('sb-auth-user', JSON.stringify(data.session.user));
-
-            // Vérifier le rôle admin pour CET utilisateur
-            const profileRes = await fetch(`${supabaseUrl}/rest/v1/profiles?id=eq.${data.session.user.id}&select=role`, {
-              headers: {
-                'apikey': supabaseAnonKey,
-                'Authorization': `Bearer ${data.session.access_token}`,
-                'Content-Type': 'application/json'
-              }
-            });
-
-            const profileData = await profileRes.json();
-
-            if (profileData.length === 0 || profileData[0].role !== 'admin') {
-              errorMsg.textContent = 'Accès réservé aux administrateurs uniquement.';
-              errorMsg.style.display = 'block';
-              await supabase.auth.signOut();
-              return;
-            }
-
-            successMsg.textContent = 'Connexion réussie ! Redirection...';
-            successMsg.style.display = 'block';
-            setTimeout(() => {
-              window.location.href = '/admin/';
-            }, 500);
-          }
-        } catch (err) {
-          errorMsg.textContent = 'Erreur de connexion. Vérifiez vos identifiants.';
-          errorMsg.style.display = 'block';
-        } finally {
-          submitBtn.disabled = false;
-          submitBtn.textContent = 'Se connecter';
-        }
-      });
-    </script>
+    <script type="module" src="/assets/admin-login.js"></script>
   </body>
 </html>

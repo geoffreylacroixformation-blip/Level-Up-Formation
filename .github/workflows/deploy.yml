@@ -38,6 +38,13 @@ jobs:
           PUBLIC_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
 
+      - name: Inject Supabase credentials into admin-login.js
+        run: |
+          sed -i "s|import.meta.env.PUBLIC_SUPABASE_URL|'${{ secrets.SUPABASE_URL }}'|g" dist/assets/admin-login.js
+          sed -i "s|import.meta.env.PUBLIC_SUPABASE_ANON_KEY|'${{ secrets.SUPABASE_ANON_KEY }}'|g" dist/assets/admin-login.js
+          echo "Injected credentials into admin-login.js"
+          grep -c "supabase.co" dist/assets/admin-login.js && echo "OK" || echo "FAIL"
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
