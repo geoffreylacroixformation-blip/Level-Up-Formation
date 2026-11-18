@@ -152,8 +152,8 @@ const lang = getLangFromUrl(Astro.url);
 
     <script is:inline>
       window.__SUPABASE__ = {
-        url: '{SUPABASE_URL}',
-        anonKey: '{SUPABASE_ANON_KEY}'
+        url: {SUPABASE_URL},
+        anonKey: {SUPABASE_ANON_KEY}
       };
     </script>
     <script>
