@@ -9,12 +9,18 @@ port = 54323
 
 [auth]
 site_url = "https://geoffreylacroixformation-blip.github.io/Level-Up-Formation"
+external_url = "http://localhost:54321"
 
 [auth.email]
 enable_signup = true
 
+[auth.jwt]
+exp = 86400
+
 [functions.stripe-checkout]
+enabled = true
 verify_jwt = false
 
 [functions.stripe-webhook]
+enabled = true
 verify_jwt = false

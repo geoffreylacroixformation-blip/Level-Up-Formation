@@ -1,0 +1,556 @@
+---
+const { slug } = Astro.params;
+import Layout from '../../../layouts/Layout.astro';
+import { useTranslations, defaultLang } from '../../../lib/i18n';
+const t = useTranslations('fr');
+const lang = defaultLang;
+export async function getStaticPaths() {
+  // Will be populated at runtime via fetch
+  return [];
+}
+---
+<Layout title={`Cours - ${slug} | Admin`} lang={lang}>
+  <section class="py-12" id="course-admin" style="display: none;">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between mb-8">
+        <div>
+          <a href="/admin/" class="text-primary hover:text-primary/80 text-sm mb-2 inline-block">&larr; Retour au dashboard</a>
+          <h1 class="font-display text-3xl font-bold" id="course-title">Chargement...</h1>
+        </div>
+        <button id="logout-btn" class="px-4 py-2 bg-surface border border-border text-text-muted rounded-lg hover:text-text transition-colors">
+          Déconnexion
+        </button>
+      </div>
+
+      <!-- Tabs -->
+      <div class="flex gap-2 mb-8 border-b border-border">
+        <button class="tab-btn px-4 py-2 text-sm font-medium border-b-2 border-primary text-text" data-tab="modules">Modules & Leçons</button>
+        <button class="tab-btn px-4 py-2 text-sm font-medium border-b-2 border-transparent text-text-muted hover:text-text" data-tab="settings">Paramètres</button>
+        <button class="tab-btn px-4 py-2 text-sm font-medium border-b-2 border-transparent text-text-muted hover:text-text" data-tab="students">Apprenants</button>
+        <button class="tab-btn px-4 py-2 text-sm font-medium border-b-2 border-transparent text-text-muted hover:text-text" data-tab="preview">Aperçu</button>
+      </div>
+
+      <!-- Modules tab -->
+      <div class="tab-content" id="tab-modules">
+        <div class="bg-surface rounded-xl p-8 border border-border">
+          <div class="flex items-center justify-between mb-6">
+            <h2 class="text-xl font-semibold">Modules du cours</h2>
+            <button id="add-module-btn" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors text-sm font-medium">
+              + Ajouter un module
+            </button>
+          </div>
+          <div id="modules-list" class="space-y-4">
+            <p class="text-text-muted text-center py-8">Chargement des modules...</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Settings tab -->
+      <div class="tab-content" id="tab-settings" style="display: none;">
+        <div class="bg-surface rounded-xl p-8 border border-border">
+          <h2 class="text-xl font-semibold mb-6">Paramètres du cours</h2>
+          <form id="settings-form" class="space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label class="block text-sm font-medium text-text mb-2">Titre (FR)</label>
+                <input type="text" name="title" required class="block w-full rounded-md bg-background border border-border text-text p-2.5" />
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-text mb-2">Title (EN)</label>
+                <input type="text" name="titleEn" class="block w-full rounded-md bg-background border border-border text-text p-2.5" />
+              </div>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-text mb-2">Description courte (FR)</label>
+              <textarea name="description" rows="3" class="block w-full rounded-md bg-background border border-border text-text p-2.5" />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-text mb-2">Description longue (FR)</label>
+              <textarea name="longDescription" rows="5" class="block w-full rounded-md bg-background border border-border text-text p-2.5" />
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div>
+                <label class="block text-sm font-medium text-text mb-2">Niveau</label>
+                <select name="level" class="block w-full rounded-md bg-background border border-border text-text p-2.5">
+                  <option value="1">Niveau 1 — Débutant</option>
+                  <option value="2">Niveau 2 — Intermédiaire</option>
+                  <option value="3">Niveau 3 — Avancé</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-text mb-2">Prix (€)</label>
+                <input type="number" name="price" step="0.01" min="0" class="block w-full rounded-md bg-background border border-border text-text p-2.5" />
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-text mb-2">Catégorie</label>
+                <select name="category" class="block w-full rounded-md bg-background border border-border text-text p-2.5">
+                  <option value="cybersecurite">Cybersécurité</option>
+                  <option value="reseaux">Réseaux</option>
+                  <option value="cloud">Cloud</option>
+                  <option value="conformite">Conformité</option>
+                  <option value="forensique">Forensique</option>
+                  <option value="devops">DevOps</option>
+                  <option value="autre">Autre</option>
+                </select>
+              </div>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-text mb-2">Image URL</label>
+              <input type="text" name="imageUrl" class="block w-full rounded-md bg-background border border-border text-text p-2.5" />
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label class="block text-sm font-medium text-text mb-2">Tags (séparés par virgules)</label>
+                <input type="text" name="tags" class="block w-full rounded-md bg-background border border-border text-text p-2.5" placeholder="securite, reseaux, firewall" />
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-text mb-2">Compétences (séparées par virgules)</label>
+                <input type="text" name="competences" class="block w-full rounded-md bg-background border border-border text-text p-2.5" placeholder="Configurer un firewall, Analyser des logs" />
+              </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label class="block text-sm font-medium text-text mb-2">Public cible</label>
+                <input type="text" name="public_cible" class="block w-full rounded-md bg-background border border-border text-text p-2.5" />
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-text mb-2">Prérequis</label>
+                <textarea name="prerequis" rows="2" class="block w-full rounded-md bg-background border border-border text-text p-2.5" />
+              </div>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-text mb-2">Durée totale (heures)</label>
+              <input type="number" name="duree_heures" min="1" class="block w-full rounded-md bg-background border border-border text-text p-2.5" />
+            </div>
+            <button type="submit" class="w-full py-3 px-4 bg-gradient-to-r from-primary to-primary/80 text-background font-semibold rounded-lg hover:from-primary/90 hover:to-primary/70 transition-all shadow-lg">
+              Sauvegarder les paramètres
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Students tab -->
+      <div class="tab-content" id="tab-students" style="display: none;">
+        <div class="bg-surface rounded-xl p-8 border border-border">
+          <h2 class="text-xl font-semibold mb-6">Apprenants inscrits</h2>
+          <div id="students-list" class="space-y-3">
+            <p class="text-text-muted text-center py-8">Chargement des apprenants...</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Preview tab -->
+      <div class="tab-content" id="tab-preview" style="display: none;">
+        <div class="bg-surface rounded-xl p-8 border border-border">
+          <h2 class="text-xl font-semibold mb-6">Aperçu du cours</h2>
+          <div id="preview-content" class="prose prose-invert max-w-none">
+            <p class="text-text-muted text-center py-8">Chargement de l'aperçu...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<script>
+  const SUPABASE_URL = import.meta.env.PUBLIC_SUPABASE_URL;
+  const SUPABASE_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
+  const slug = "${slug}";
+
+  function getCookie(name) {
+    const match = document.cookie.match(new RegExp('(?:^|;)\\s*' + name + '=([^;]*)'));
+    return match ? decodeURIComponent(match[1]) : null;
+  }
+
+  function getToken() {
+    return getCookie('sb-auth-token') || localStorage.getItem('sb-auth-token');
+  }
+
+  function logout() {
+    localStorage.removeItem('sb-auth-token');
+    localStorage.removeItem('sb-auth-user');
+    document.cookie = 'sb-auth-token=; path=/; max-age=0';
+    window.location.href = '/admin/login';
+  }
+
+  // Auth gate
+  (async () => {
+    const content = document.getElementById('course-admin');
+    if (!content) return;
+
+    const token = getToken();
+    if (!token) { logout(); return; }
+
+    if (!SUPABASE_URL || !SUPABASE_KEY) {
+      content.innerHTML = '<div class="max-w-4xl mx-auto px-4"><p class="text-red-500">Configuration Supabase manquante.</p></div>';
+      content.style.display = 'block';
+      return;
+    }
+
+    try {
+      const userStr = localStorage.getItem('sb-auth-user');
+      if (!userStr) { logout(); return; }
+      const userObj = JSON.parse(userStr);
+
+      const profileRes = await fetch(
+        `${SUPABASE_URL}/rest/v1/profiles?id=eq.${userObj.id}&select=role`,
+        {
+          headers: {
+            'apikey': SUPABASE_KEY,
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+
+      if (!profileRes.ok) { logout(); return; }
+      const profileData = await profileRes.json();
+      if (profileData.length === 0 || profileData[0].role !== 'admin') { logout(); return; }
+
+      content.style.display = 'block';
+      loadCourse();
+    } catch (err) {
+      console.error('[course-admin] auth error:', err);
+      logout();
+    }
+  })();
+
+  // Tab switching
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const tab = e.currentTarget.dataset.tab;
+      document.querySelectorAll('.tab-btn').forEach(b => {
+        b.classList.remove('border-primary', 'text-text');
+        b.classList.add('border-transparent', 'text-text-muted');
+      });
+      e.currentTarget.classList.remove('border-transparent', 'text-text-muted');
+      e.currentTarget.classList.add('border-primary', 'text-text');
+      document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
+      document.getElementById(`tab-${tab}`).style.display = 'block';
+    });
+  });
+
+  // Load course data
+  let currentCourse = null;
+
+  async function loadCourse() {
+    const token = getToken();
+    if (!token) return;
+
+    try {
+      const res = await fetch(
+        `${SUPABASE_URL}/rest/v1/courses?slug=eq.${encodeURIComponent(slug)}&select=*`,
+        {
+          headers: {
+            'apikey': SUPABASE_KEY,
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+
+      if (!res.ok) {
+        document.getElementById('course-title').textContent = 'Cours non trouvé';
+        return;
+      }
+
+      const courses = await res.json();
+      if (courses.length === 0) {
+        document.getElementById('course-title').textContent = 'Cours non trouvé';
+        return;
+      }
+
+      currentCourse = courses[0];
+      document.getElementById('course-title').textContent = currentCourse.title;
+
+      // Load modules
+      loadModules();
+
+      // Load settings
+      loadSettings();
+
+      // Load students
+      loadStudents();
+
+      // Load preview
+      loadPreview();
+    } catch (err) {
+      console.error('[course-admin] load error:', err);
+    }
+  }
+
+  // Module management
+  function loadModules() {
+    const container = document.getElementById('modules-list');
+    if (!container || !currentCourse) return;
+
+    const modules = currentCourse.modules || [];
+    if (modules.length === 0) {
+      container.innerHTML = '<p class="text-text-muted text-center py-8">Aucun module. Cliquez sur "Ajouter un module" pour commencer.</p>';
+      return;
+    }
+
+    container.innerHTML = '';
+    modules.forEach((mod, idx) => {
+      const div = document.createElement('div');
+      div.className = 'module-item bg-background border border-border rounded-lg p-6';
+      div.innerHTML = `
+        <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center gap-3">
+            <span class="text-sm font-medium text-text-muted bg-surface px-3 py-1 rounded">Module ${idx + 1}</span>
+            <h3 class="font-semibold text-lg">${mod.title || 'Sans titre'}</h3>
+            ${mod.isFree ? '<span class="text-xs bg-success/20 text-success px-2 py-0.5 rounded">Gratuit</span>' : ''}
+          </div>
+          <div class="flex gap-2">
+            <button class="edit-module-btn px-3 py-1 bg-surface border border-border text-text-muted rounded hover:text-text text-sm" data-idx="${idx}">Modifier</button>
+            <button class="delete-module-btn px-3 py-1 bg-error text-white rounded hover:bg-error/80 text-sm" data-idx="${idx}">Supprimer</button>
+          </div>
+        </div>
+        <p class="text-text-muted text-sm mb-3">${mod.description || 'Pas de description'}</p>
+        <div class="flex gap-4 text-sm text-text-muted">
+          <span>Durée: ${mod.duration || 'Non définie'}</span>
+          <span>Ordre: ${mod.order ?? idx}</span>
+        </div>
+      `;
+      container.appendChild(div);
+
+      div.querySelector('.delete-module-btn').addEventListener('click', () => deleteModule(idx));
+      div.querySelector('.edit-module-btn').addEventListener('click', () => editModule(idx));
+    });
+  }
+
+  document.getElementById('add-module-btn')?.addEventListener('click', () => {
+    if (!currentCourse) return;
+    const modules = currentCourse.modules || [];
+    modules.push({
+      id: `mod-${Date.now()}`,
+      title: 'Nouveau module',
+      titleEn: 'New Module',
+      description: '',
+      descriptionEn: '',
+      isFree: false,
+      order: modules.length,
+      duration: '1h',
+      lessons: []
+    });
+    currentCourse.modules = modules;
+
+    // Save to Supabase
+    saveModules();
+  });
+
+  async function saveModules() {
+    const token = getToken();
+    if (!token || !currentCourse) return;
+
+    try {
+      const res = await fetch(
+        `${SUPABASE_URL}/rest/v1/courses?id=eq.${currentCourse.id}`,
+        {
+          method: 'PATCH',
+          headers: {
+            'apikey': SUPABASE_KEY,
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+            'Prefer': 'return=representation'
+          },
+          body: JSON.stringify({ modules: currentCourse.modules })
+        }
+      );
+
+      if (!res.ok) throw new Error('Échec de la sauvegarde');
+      loadModules();
+    } catch (err) {
+      alert(`Erreur: ${err.message}`);
+    }
+  }
+
+  function editModule(idx) {
+    if (!currentCourse || !currentCourse.modules[idx]) return;
+    const mod = currentCourse.modules[idx];
+
+    const newTitle = prompt('Titre du module:', mod.title);
+    if (newTitle === null) return;
+    mod.title = newTitle;
+
+    const newDesc = prompt('Description:', mod.description || '');
+    if (newDesc === null) return;
+    mod.description = newDesc;
+
+    const newDuration = prompt('Durée (ex: 1h30):', mod.duration || '1h');
+    if (newDuration === null) return;
+    mod.duration = newDuration;
+
+    const isFree = confirm('Ce module est-il gratuit ?');
+    mod.isFree = isFree;
+
+    currentCourse.modules[idx] = mod;
+    saveModules();
+  }
+
+  async function deleteModule(idx) {
+    if (!confirm('Supprimer ce module ?')) return;
+    currentCourse.modules.splice(idx, 1);
+    // Renumber
+    currentCourse.modules.forEach((m, i) => m.order = i);
+    saveModules();
+  }
+
+  // Settings
+  function loadSettings() {
+    if (!currentCourse) return;
+    const form = document.getElementById('settings-form');
+    if (!form) return;
+
+    form.querySelector('[name="title"]').value = currentCourse.title || '';
+    form.querySelector('[name="titleEn"]').value = currentCourse.title_en || '';
+    form.querySelector('[name="description"]').value = currentCourse.description || '';
+    form.querySelector('[name="longDescription"]').value = currentCourse.long_description || '';
+    form.querySelector('[name="level"]').value = currentCourse.level || 1;
+    form.querySelector('[name="price"]').value = currentCourse.price ?? 0;
+    form.querySelector('[name="category"]').value = currentCourse.category || 'cybersecurite';
+    form.querySelector('[name="imageUrl"]').value = currentCourse.image || '';
+    form.querySelector('[name="tags"]').value = (currentCourse.tags || []).join(', ');
+    form.querySelector('[name="competences"]').value = (currentCourse.competences || []).join(', ');
+    form.querySelector('[name="public_cible"]').value = currentCourse.public_cible || '';
+    form.querySelector('[name="prerequis"]').value = currentCourse.prerequis || '';
+    form.querySelector('[name="duree_heures"]').value = currentCourse.duree_heures || '';
+  }
+
+  document.getElementById('settings-form')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!currentCourse) return;
+
+    const formData = new FormData(e.target);
+    const level = parseInt(formData.get('level'));
+    const niveauMap = { 1: 'LVL1', 2: 'LVL2', 3: 'LVL3' };
+
+    const updateData = {
+      title: formData.get('title'),
+      title_en: formData.get('titleEn') || null,
+      description: formData.get('description'),
+      long_description: formData.get('longDescription') || null,
+      level: level,
+      niveau: niveauMap[level],
+      price: parseFloat(formData.get('price')),
+      modules: currentCourse.modules,
+      image: formData.get('imageUrl') || null,
+      tags: formData.get('tags')?.split(',').map(t => t.trim()).filter(Boolean) || [],
+      category: formData.get('category') || 'cybersecurite',
+      competences: formData.get('competences')?.split(',').map(c => c.trim()).filter(Boolean) || [],
+      public_cible: formData.get('public_cible') || null,
+      prerequis: formData.get('prerequis') || null,
+      duree_heures: parseInt(formData.get('duree_heures')) || null
+    };
+
+    const token = getToken();
+    if (!token) return;
+
+    try {
+      const res = await fetch(
+        `${SUPABASE_URL}/rest/v1/courses?id=eq.${currentCourse.id}`,
+        {
+          method: 'PATCH',
+          headers: {
+            'apikey': SUPABASE_KEY,
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+            'Prefer': 'return=representation'
+          },
+          body: JSON.stringify(updateData)
+        }
+      );
+
+      if (!res.ok) throw new Error('Échec de la sauvegarde');
+
+      alert('Paramètres sauvegardés avec succès !');
+      loadCourse();
+    } catch (err) {
+      alert(`Erreur: ${err.message}`);
+    }
+  });
+
+  // Students
+  async function loadStudents() {
+    const container = document.getElementById('students-list');
+    if (!container) return;
+
+    const token = getToken();
+    if (!token) return;
+
+    try {
+      const res = await fetch(
+        `${SUPABASE_URL}/rest/v1/users_courses?course_id=eq.${currentCourse.id}&select=*,profiles!users_courses_user_id_fkey(email,role)`,
+        {
+          headers: {
+            'apikey': SUPABASE_KEY,
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+
+      if (!res.ok) {
+        container.innerHTML = '<p class="text-text-muted text-center py-8">Aucun apprenant inscrit.</p>';
+        return;
+      }
+
+      const students = await res.json();
+      if (students.length === 0) {
+        container.innerHTML = '<p class="text-text-muted text-center py-8">Aucun apprenant inscrit.</p>';
+        return;
+      }
+
+      container.innerHTML = '';
+      students.forEach(student => {
+        const div = document.createElement('div');
+        div.className = 'flex items-center justify-between bg-background border border-border rounded-lg p-4';
+        const email = student.profiles?.email || 'Inconnu';
+        const progress = student.progress || 0;
+        div.innerHTML = `
+          <div>
+            <h3 class="font-semibold">${email}</h3>
+            <p class="text-text-muted text-sm">Progression: ${progress}%</p>
+          </div>
+          <div class="text-right">
+            <span class="text-xs bg-success/20 text-success px-2 py-0.5 rounded">${progress}% complété</span>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    } catch (err) {
+      container.innerHTML = '<p class="text-error text-center py-8">Erreur lors du chargement.</p>';
+    }
+  }
+
+  // Preview
+  function loadPreview() {
+    const container = document.getElementById('preview-content');
+    if (!container || !currentCourse) return;
+
+    container.innerHTML = `
+      <h3>${currentCourse.title}</h3>
+      <p>${currentCourse.description || ''}</p>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+        <div>
+          <h4>Modules:</h4>
+          <ul>
+            ${(currentCourse.modules || []).map((m, i) => `<li>Module ${i + 1}: ${m.title} (${m.duration})</li>`).join('')}
+          </ul>
+        </div>
+        <div>
+          <h4>Informations:</h4>
+          <ul>
+            <li><strong>Niveau:</strong> ${currentCourse.level || 'Non défini'}</li>
+            <li><strong>Prix:</strong> ${currentCourse.price || 0}€</li>
+            <li><strong>Catégorie:</strong> ${currentCourse.category || 'Non définie'}</li>
+            <li><strong>Durée:</strong> ${currentCourse.duree_heures || 'Non définie'}h</li>
+          </ul>
+        </div>
+      </div>
+    `;
+  }
+
+  // Logout
+  document.getElementById('logout-btn')?.addEventListener('click', logout);
+</script>

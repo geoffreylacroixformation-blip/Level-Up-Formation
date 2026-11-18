@@ -7,20 +7,63 @@ import { getLangFromUrl } from '../lib/i18n';
 interface Props {
   title: string;
   description?: string;
+  keywords?: string;
+  ogImage?: string;
+  noIndex?: boolean;
 }
 
-const { title, description = 'Level Up - Formations professionnelles en cybersécurité et informatique' } = Astro.props;
+const { title, description = 'Level Up - Formations professionnelles en cybersécurité et informatique', keywords = 'formation, cybersécurité, réseaux, systèmes, IA, informatique, Level Up', ogImage = '/banner.jpg', noIndex = false } = Astro.props;
 const lang = getLangFromUrl(Astro.url);
+const siteUrl = 'https://geoffreylacroixformation-blip.github.io/Level-Up-Formation';
 ---
 
 <!doctype html>
-<html lang={lang}>
+<html lang={lang} class="scroll-smooth">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href={`${import.meta.env.BASE_URL}favicon.svg`} />
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
+    {keywords && <meta name="keywords" content={keywords} />}
+    {noIndex && <meta name="robots" content="noindex, nofollow" />}
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={siteUrl + Astro.url.pathname} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage.startsWith('http') ? ogImage : `${siteUrl}${ogImage}`} />
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content={siteUrl + Astro.url.pathname} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage.startsWith('http') ? ogImage : `${siteUrl}${ogImage}`} />
+    
+    <!-- Schema.org -->
+    <script type="application/ld+json">
+      {JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "Level Up",
+        "url": siteUrl,
+        "description": description,
+        "logo": `${siteUrl}/logo.jpg`,
+        "sameAs": [],
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": `${siteUrl}/catalogue?q={search_term_string}`,
+          "query-input": "required name=search_term_string"
+        }
+      })}
+    </script>
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href={siteUrl + Astro.url.pathname} />
+    
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Orbitron:wght@500;600;700&display=swap" rel="stylesheet">
