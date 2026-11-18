@@ -150,12 +150,13 @@ const lang = getLangFromUrl(Astro.url);
     </main>
     <Footer lang={lang} />
 
-    <script is:inline>
+    <script>
       window.__SUPABASE__ = {
-        url: {SUPABASE_URL},
-        anonKey: {SUPABASE_ANON_KEY}
+        url: import.meta.env.PUBLIC_SUPABASE_URL,
+        anonKey: import.meta.env.PUBLIC_SUPABASE_ANON_KEY
       };
     </script>
+    <script type="module" src="/Level-Up-Formation/assets/login.astro_astro_type_script_index_0_lang.js"></script>
     <script>
       const loginForm = document.getElementById('loginForm');
       const errorMsg = document.getElementById('errorMsg');
@@ -163,8 +164,8 @@ const lang = getLangFromUrl(Astro.url);
       const configWarning = document.getElementById('configWarning');
       const submitBtn = document.getElementById('submitBtn');
 
-      const supabaseUrl = window.__SUPABASE__?.url || import.meta.env.PUBLIC_SUPABASE_URL || '';
-      const supabaseAnonKey = window.__SUPABASE__?.anonKey || import.meta.env.PUBLIC_SUPABASE_ANON_KEY || '';
+      const supabaseUrl = window.__SUPABASE__?.url || '';
+      const supabaseAnonKey = window.__SUPABASE__?.anonKey || '';
 
       if (!supabaseUrl || !supabaseAnonKey) {
         configWarning.style.display = 'block';
