@@ -222,26 +222,6 @@ const fr = {
     "continue": "Continuer",
     "start": "Commencer",
     "completed": "Terminé"
-  },
-  "admin": {
-    "title": "Tableau de bord",
-    "dashboard": "Administration"
-  },
-  "course": {
-    "modules": "Modules du cours",
-    "duration": "Durée",
-    "level": "Niveau",
-    "price": "Prix",
-    "enroll": "S'inscrire",
-    "objectives": "Objectifs",
-    "program": "Programme"
-  },
-  "catalogue": {
-    "title": "Catalogue des formations",
-    "filterAll": "Toutes",
-    "filterLvl1": "Niveau 1",
-    "filterLvl2": "Niveau 2",
-    "filterLvl3": "Niveau 3"
   }
 };
 
@@ -408,36 +388,6 @@ const en = {
     "submit": "Unsubscribe",
     "note": "Unsubscription will be effective within 48 hours."
   },
-  "admin": {
-    "login": "Admin login",
-    "email": "Admin email",
-    "password": "Password",
-    "signin": "Sign in",
-    "dashboard": "Dashboard",
-    "courses": "Course management",
-    "addCourse": "Add course",
-    "editCourse": "Edit course",
-    "deleteCourse": "Delete",
-    "save": "Save",
-    "cancel": "Cancel",
-    "title": "Title",
-    "slug": "Slug",
-    "level": "Level",
-    "price": "Price",
-    "description": "Description",
-    "image": "Image URL",
-    "modules": "Modules",
-    "addModule": "Add module",
-    "moduleTitle": "Module title",
-    "moduleContent": "Content",
-    "quiz": "Quiz",
-    "users": "Users",
-    "enrollments": "Enrollments",
-    "stats": "Statistics",
-    "totalUsers": "Total users",
-    "totalCourses": "Total courses",
-    "totalRevenue": "Total revenue"
-  },
   "footer": {
     "about": "About",
     "contact": "Contact",
@@ -469,26 +419,6 @@ const en = {
     "continue": "Continue",
     "start": "Start",
     "completed": "Completed"
-  },
-  "admin": {
-    "title": "Dashboard",
-    "dashboard": "Administration"
-  },
-  "course": {
-    "modules": "Course modules",
-    "duration": "Duration",
-    "level": "Level",
-    "price": "Price",
-    "enroll": "Enroll",
-    "objectives": "Objectives",
-    "program": "Program"
-  },
-  "catalogue": {
-    "title": "Course catalogue",
-    "filterAll": "All",
-    "filterLvl1": "Level 1",
-    "filterLvl2": "Level 2",
-    "filterLvl3": "Level 3"
   }
 };
 
@@ -526,6 +456,9 @@ export function getLocalizedPath(path: string, lang: string): string {
   const cleanPath = path.startsWith('/') ? path.slice(1) : path;
   const base = import.meta.env.BASE_URL || '';
   const normalizedBase = base.endsWith('/') ? base.slice(0, -1) : base;
+  // Astro injects `base` into hrefs but may insert it mid-path when the path
+  // starts with a language segment (e.g. /fr/...).  Put `base` first to avoid
+  // the framework mangling the URL.
   return lang === defaultLang 
     ? `${normalizedBase}/${cleanPath}` 
     : `${normalizedBase}/${lang}/${cleanPath}`;

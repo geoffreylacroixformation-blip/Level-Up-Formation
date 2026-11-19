@@ -59,14 +59,18 @@ const isRegisterTab = isMember && Astro.url.search.includes('tab=register');
             {languages[lang as keyof typeof languages] || 'FR'}
           </button>
           <div class="absolute right-0 mt-2 w-32 bg-surface border border-border rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
-            {Object.entries(languages).map(([code, name]) => (
-              <a
-                href={lang === defaultLang ? `/${code}${Astro.url.pathname}` : `/${code}${Astro.url.pathname.replace(`/${lang}`, '')}`}
-                class:list={["block px-4 py-2 text-sm hover:bg-surface-light transition-colors", lang === code && "text-primary"]}
-              >
-                {name}
-              </a>
-            ))}
+            <a
+              href={getLocalizedPath('', lang)}
+              class:list={["block px-4 py-2 text-sm hover:bg-surface-light transition-colors", lang === defaultLang && "text-primary"]}
+            >
+              {languages[defaultLang as keyof typeof languages] || 'FR'}
+            </a>
+            <a
+              href={getLocalizedPath('', 'en')}
+              class:list={["block px-4 py-2 text-sm hover:bg-surface-light transition-colors", lang === 'en' && "text-primary"]}
+            >
+              English
+            </a>
           </div>
         </div>
 
