@@ -27,6 +27,7 @@ export async function getStaticPaths() {
         <button class="tab-btn px-4 py-2 text-sm font-medium border-b-2 border-primary text-text" data-tab="modules">Modules & Leçons</button>
         <button class="tab-btn px-4 py-2 text-sm font-medium border-b-2 border-transparent text-text-muted hover:text-text" data-tab="settings">Paramètres</button>
         <button class="tab-btn px-4 py-2 text-sm font-medium border-b-2 border-transparent text-text-muted hover:text-text" data-tab="students">Apprenants</button>
+        <button class="tab-btn px-4 py-2 text-sm font-medium border-b-2 border-transparent text-text-muted hover:text-text" data-tab="resources">Ressources</button>
         <button class="tab-btn px-4 py-2 text-sm font-medium border-b-2 border-transparent text-text-muted hover:text-text" data-tab="preview">Aperçu</button>
       </div>
 
@@ -139,6 +140,101 @@ export async function getStaticPaths() {
         </div>
       </div>
 
+      <!-- Resources tab -->
+      <div class="tab-content" id="tab-resources" style="display: none;">
+        <div class="bg-surface rounded-xl p-8 border border-border">
+          <div class="flex items-center justify-between mb-6">
+            <h2 class="text-xl font-semibold">Ressources du cours</h2>
+            <div class="flex gap-2">
+              <button id="upload-resource-btn" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors text-sm font-medium">
+                + Ajouter une ressource
+              </button>
+            </div>
+          </div>
+
+          <!-- Upload form (hidden by default) -->
+          <div id="upload-form-container" class="mb-6" style="display: none;">
+            <div class="bg-background border border-border rounded-lg p-6">
+              <h3 class="text-lg font-semibold mb-4">Ajouter une ressource</h3>
+
+              <!-- Source selection -->
+              <div class="mb-4">
+                <label class="block text-sm font-medium text-text mb-2">Source</label>
+                <div class="flex gap-4">
+                  <label class="flex items-center gap-2 cursor-pointer">
+                    <input type="radio" name="source" value="upload" checked class="accent-primary" />
+                    <span class="text-sm">Fichier local</span>
+                  </label>
+                  <label class="flex items-center gap-2 cursor-pointer">
+                    <input type="radio" name="source" value="google_docs" class="accent-primary" />
+                    <span class="text-sm">Google Docs</span>
+                  </label>
+                  <label class="flex items-center gap-2 cursor-pointer">
+                    <input type="radio" name="source" value="google_slides" class="accent-primary" />
+                    <span class="text-sm">Google Slides</span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Title -->
+              <div class="mb-4">
+                <label class="block text-sm font-medium text-text mb-2">Titre de la ressource</label>
+                <input type="text" id="resource-title" class="block w-full rounded-md bg-surface border border-border text-text p-2.5" placeholder="Ex: Fiche de révision — Chapitre 3" />
+              </div>
+
+              <!-- Description -->
+              <div class="mb-4">
+                <label class="block text-sm font-medium text-text mb-2">Description (optionnelle)</label>
+                <textarea id="resource-desc" rows="2" class="block w-full rounded-md bg-surface border border-border text-text p-2.5" placeholder="Courte description pour l'élève"></textarea>
+              </div>
+
+              <!-- File drop zone -->
+              <div id="drop-zone" class="mb-4 border-2 border-dashed border-border rounded-lg p-8 text-center cursor-pointer hover:border-primary transition-colors">
+                <input type="file" id="file-input" class="hidden" accept=".pdf,.docx,.pptx,.xlsx,.txt,.zip,.csv" />
+                <div id="drop-zone-content">
+                  <p class="text-text-muted text-sm mb-2">Glissez un fichier ici ou cliquez pour sélectionner</p>
+                  <p class="text-text-muted text-xs">PDF, DOCX, PPTX, XLSX, TXT, ZIP, CSV</p>
+                </div>
+                <div id="file-selected" class="hidden">
+                  <p class="text-primary font-medium" id="file-name"></p>
+                  <p class="text-text-muted text-xs" id="file-size"></p>
+                </div>
+              </div>
+
+              <!-- Google URL (hidden by default) -->
+              <div id="google-url-section" class="mb-4" style="display: none;">
+                <label class="block text-sm font-medium text-text mb-2">URL Google Docs / Slides</label>
+                <input type="url" id="google-url" class="block w-full rounded-md bg-surface border border-border text-text p-2.5" placeholder="https://docs.google.com/..." />
+                <p class="text-text-muted text-xs mt-1">Le fichier sera converti en PDF automatiquement.</p>
+              </div>
+
+              <!-- Publish toggle -->
+              <div class="mb-6">
+                <label class="flex items-center gap-2 cursor-pointer">
+                  <input type="checkbox" id="resource-published" checked class="accent-primary" />
+                  <span class="text-sm">Rendre visible aux élèves</span>
+                </label>
+              </div>
+
+              <!-- Actions -->
+              <div class="flex gap-3">
+                <button id="save-resource-btn" class="flex-1 py-3 px-4 bg-gradient-to-r from-primary to-primary/80 text-background font-semibold rounded-lg hover:from-primary/90 hover:to-primary/70 transition-all shadow-lg">
+                  Sauvegarder
+                </button>
+                <button id="cancel-resource-btn" class="px-6 py-3 bg-surface border border-border text-text-muted rounded-lg hover:text-text transition-colors">
+                  Annuler
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Resources list -->
+          <div id="resources-list" class="space-y-3">
+            <p class="text-text-muted text-center py-8">Chargement des ressources...</p>
+          </div>
+        </div>
+      </div>
+
       <!-- Preview tab -->
       <div class="tab-content" id="tab-preview" style="display: none;">
         <div class="bg-surface rounded-xl p-8 border border-border">
@@ -151,6 +247,9 @@ export async function getStaticPaths() {
     </div>
   </section>
 </Layout>
+
+<!-- PDF-lib for client-side PDF watermarking -->
+<script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
 
 <script>
   const SUPABASE_URL = import.meta.env.PUBLIC_SUPABASE_URL;
@@ -271,6 +370,9 @@ export async function getStaticPaths() {
 
       // Load students
       loadStudents();
+
+      // Load resources
+      loadResources();
 
       // Load preview
       loadPreview();
@@ -551,6 +653,374 @@ export async function getStaticPaths() {
     `;
   }
 
+  // ============================================================
+  // RESOURCES MANAGEMENT
+  // ============================================================
+  let currentResources = [];
+
+  async function loadResources() {
+    const container = document.getElementById('resources-list');
+    if (!container || !currentCourse) return;
+
+    const token = getToken();
+    if (!token) return;
+
+    try {
+      const res = await fetch(
+        `${SUPABASE_URL}/rest/v1/materials?course_id=eq.${currentCourse.id}&order=sort_order.asc&is_published=eq.true&select=*`,
+        {
+          headers: {
+            'apikey': SUPABASE_KEY,
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+
+      if (!res.ok) {
+        container.innerHTML = '<p class="text-text-muted text-center py-8">Aucune ressource disponible.</p>';
+        return;
+      }
+
+      currentResources = await res.json();
+
+      if (currentResources.length === 0) {
+        container.innerHTML = '<p class="text-text-muted text-center py-8">Aucune ressource. Cliquez sur "Ajouter une ressource" pour en ajouter une.</p>';
+        return;
+      }
+
+      container.innerHTML = '';
+      currentResources.forEach((res, idx) => {
+        const div = document.createElement('div');
+        div.className = 'flex items-center justify-between bg-background border border-border rounded-lg p-4';
+        const typeIcons = {
+          google_docs: '📄',
+          google_slides: '📊',
+          pdf: '📕',
+          docx: '📘',
+          pptx: '📙',
+          xlsx: '📗',
+          zip: '📦',
+          other: '📎'
+        };
+        const icon = typeIcons[res.file_type] || '📎';
+        const sizeStr = res.file_size ? formatFileSize(res.file_size) : '';
+        div.innerHTML = `
+          <div class="flex items-center gap-4 flex-1">
+            <span class="text-2xl">${icon}</span>
+            <div>
+              <h3 class="font-semibold">${res.title}</h3>
+              <p class="text-text-muted text-sm">${res.original_filename || res.file_type}${sizeStr ? ' — ' + sizeStr : ''}</p>
+              ${res.description ? `<p class="text-text-muted text-xs mt-1">${res.description}</p>` : ''}
+            </div>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="text-xs text-text-muted">${res.download_count} téléchargements</span>
+            <a href="${res.pdf_url || res.file_url}" target="_blank" class="px-3 py-1.5 bg-primary/20 text-primary border border-primary/30 rounded-lg hover:bg-primary/30 transition-colors text-sm">
+              Télécharger
+            </a>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    } catch (err) {
+      container.innerHTML = '<p class="text-error text-center py-8">Erreur lors du chargement des ressources.</p>';
+    }
+  }
+
+  function formatFileSize(bytes) {
+    if (bytes < 1024) return bytes + ' o';
+    if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' Ko';
+    return (bytes / 1048576).toFixed(1) + ' Mo';
+  }
+
+  // Upload form toggle
+  document.getElementById('upload-resource-btn')?.addEventListener('click', () => {
+    const form = document.getElementById('upload-form-container');
+    form.style.display = 'block';
+    form.scrollIntoView({ behavior: 'smooth' });
+  });
+
+  document.getElementById('cancel-resource-btn')?.addEventListener('click', () => {
+    document.getElementById('upload-form-container').style.display = 'none';
+    resetUploadForm();
+  });
+
+  // Source radio buttons toggle
+  document.querySelectorAll('input[name="source"]').forEach(radio => {
+    radio.addEventListener('change', (e) => {
+      const isGoogle = e.target.value !== 'upload';
+      document.getElementById('drop-zone').style.display = isGoogle ? 'none' : 'block';
+      document.getElementById('google-url-section').style.display = isGoogle ? 'block' : 'none';
+    });
+  });
+
+  // File drop zone
+  const dropZone = document.getElementById('drop-zone');
+  const fileInput = document.getElementById('file-input');
+
+  dropZone?.addEventListener('click', () => fileInput?.click());
+
+  dropZone?.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    dropZone.classList.add('border-primary');
+  });
+
+  dropZone?.addEventListener('dragleave', () => {
+    dropZone.classList.remove('border-primary');
+  });
+
+  dropZone?.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropZone.classList.remove('border-primary');
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+      handleFileSelect(files[0]);
+    }
+  });
+
+  fileInput?.addEventListener('change', (e) => {
+    if (e.target.files.length > 0) {
+      handleFileSelect(e.target.files[0]);
+    }
+  });
+
+  function handleFileSelect(file) {
+    document.getElementById('file-name').textContent = file.name;
+    document.getElementById('file-size').textContent = formatFileSize(file.size);
+    document.getElementById('drop-zone-content').classList.add('hidden');
+    document.getElementById('file-selected').classList.remove('hidden');
+    window._selectedFile = file;
+  }
+
+  function resetUploadForm() {
+    document.getElementById('resource-title').value = '';
+    document.getElementById('resource-desc').value = '';
+    document.getElementById('google-url').value = '';
+    document.getElementById('resource-published').checked = true;
+    fileInput.value = '';
+    document.getElementById('drop-zone-content').classList.remove('hidden');
+    document.getElementById('file-selected').classList.add('hidden');
+    window._selectedFile = null;
+    document.querySelector('input[name="source"][value="upload"]').checked = true;
+    document.getElementById('drop-zone').style.display = 'block';
+    document.getElementById('google-url-section').style.display = 'none';
+  }
+
+  // Save resource
+  document.getElementById('save-resource-btn')?.addEventListener('click', async () => {
+    const token = getToken();
+    if (!token || !currentCourse) return;
+
+    const title = document.getElementById('resource-title').value.trim();
+    const description = document.getElementById('resource-desc').value.trim();
+    const source = document.querySelector('input[name="source"]:checked').value;
+    const isPublished = document.getElementById('resource-published').checked;
+
+    if (!title) {
+      alert('Veuillez entrer un titre.');
+      return;
+    }
+
+    let fileUrl = '';
+    let pdfUrl = null;
+    let fileType = 'other';
+    let originalFilename = null;
+    let fileSize = null;
+
+    if (source === 'upload') {
+      const file = window._selectedFile;
+      if (!file) {
+        alert('Veuillez sélectionner un fichier.');
+        return;
+      }
+
+      // Upload to Supabase Storage
+      fileUrl = await uploadToStorage(file);
+      if (!fileUrl) {
+        alert('Erreur lors du téléchargement du fichier.');
+        return;
+      }
+
+      originalFilename = file.name;
+      fileSize = file.size;
+
+      // Determine file type
+      const ext = file.name.split('.').pop().toLowerCase();
+      const typeMap = {
+        pdf: 'pdf', docx: 'docx', doc: 'docx',
+        pptx: 'pptx', ppt: 'pptx',
+        xlsx: 'xlsx', xls: 'xlsx',
+        zip: 'zip', txt: 'other', csv: 'other'
+      };
+      fileType = typeMap[ext] || 'other';
+
+      // Generate PDF with watermark (client-side for PDF, server-side for others)
+      if (ext === 'pdf') {
+        pdfUrl = await applyWatermark(file);
+      } else {
+        // For non-PDF files, we'll generate PDF server-side via a Supabase Edge Function
+        pdfUrl = null; // Will be filled by the edge function
+      }
+    } else {
+      // Google Docs / Slides
+      const googleUrl = document.getElementById('google-url').value.trim();
+      if (!googleUrl) {
+        alert('Veuillez entrer une URL Google Docs / Slides.');
+        return;
+      }
+
+      fileType = source;
+      fileUrl = googleUrl;
+
+      // Generate PDF from Google Docs/Slides via Google API (export)
+      pdfUrl = await exportGoogleToPdf(googleUrl, source);
+      if (!pdfUrl) {
+        alert('Erreur lors de la conversion du fichier Google.');
+        return;
+      }
+    }
+
+    // Save to Supabase
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/materials`, {
+        method: 'POST',
+        headers: {
+          'apikey': SUPABASE_KEY,
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+          'Prefer': 'return=representation'
+        },
+        body: JSON.stringify({
+          course_id: currentCourse.id,
+          title,
+          description: description || null,
+          file_type: fileType,
+          file_url: fileUrl,
+          pdf_url: pdfUrl,
+          original_filename: originalFilename,
+          file_size: fileSize,
+          is_published: isPublished,
+          sort_order: currentResources.length
+        })
+      });
+
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.message || 'Échec de la sauvegarde');
+      }
+
+      alert('Ressource ajoutée avec succès !');
+      document.getElementById('upload-form-container').style.display = 'none';
+      resetUploadForm();
+      loadResources();
+    } catch (err) {
+      alert(`Erreur: ${err.message}`);
+    }
+  });
+
+  // Upload file to Supabase Storage
+  async function uploadToStorage(file) {
+    const token = getToken();
+    const folder = currentCourse.slug;
+    const fileName = `${Date.now()}-${file.name}`;
+    const path = `materials/${folder}/${fileName}`;
+
+    const res = await fetch(
+      `${SUPABASE_URL}/storage/v1/object/materials/${folder}/${fileName}`,
+      {
+        method: 'PUT',
+        headers: {
+          'apikey': SUPABASE_KEY,
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': file.type || 'application/octet-stream'
+        },
+        body: file
+      }
+    );
+
+    if (!res.ok) {
+      console.error('[upload] Storage error:', res.status, res.statusText);
+      return null;
+    }
+
+    // Get public URL
+    const urlRes = await fetch(
+      `${SUPABASE_URL}/storage/v1/object/public/materials/${folder}/${fileName}`,
+      {
+        headers: {
+          'apikey': SUPABASE_KEY,
+          'Authorization': `Bearer ${token}`
+        }
+      }
+    );
+
+    if (urlRes.ok) {
+      return `${SUPABASE_URL}/storage/v1/object/public/materials/${folder}/${fileName}`;
+    }
+
+    return `${SUPABASE_URL}/storage/v1/object/materials/${folder}/${fileName}`;
+  }
+
+  // Apply watermark to PDF
+  async function applyWatermark(file) {
+    // Client-side PDF watermark using PDF-lib
+    const arrayBuffer = await file.arrayBuffer();
+    const pdfDoc = await PDFLib.PDFDocument.load(arrayBuffer);
+    const pages = pdfDoc.getPages();
+    const { width, height } = pages[0].getSize();
+
+    // Embed font for watermark text
+    const font = await pdfDoc.embedFont(PDFLib.StandardFonts.Helvetica);
+    const fontSize = Math.max(40, Math.min(width, height) / 10);
+    const textColor = PDFLib.rgb(0.15, 0.15, 0.15);
+
+    for (const page of pages) {
+      page.drawText('Level Up Formation — Document protégé', {
+        x: width / 2 - (fontSize * 20),
+        y: height / 2,
+        size: fontSize,
+        font,
+        color: textColor,
+        opacity: 0.3,
+        rotate: PDFLib.degrees(45),
+      });
+    }
+
+    const watermarkPdfBytes = await pdfDoc.save();
+    const watermarkFile = new Blob([watermarkPdfBytes], { type: 'application/pdf' });
+
+    // Upload watermarked PDF
+    const watermarkedFile = new File([watermarkFile], `watermarked-${file.name}`, { type: 'application/pdf' });
+    return uploadToStorage(watermarkedFile);
+  }
+
+  // Export Google Docs/Slides to PDF via Google API
+  async function exportGoogleToPdf(googleUrl, type) {
+    // For now, use Google's export URL format
+    // In production, this should use the Google Drive API via Composio
+    const fileId = extractGoogleFileId(googleUrl);
+    if (!fileId) {
+      console.error('[google-export] Invalid Google URL');
+      return null;
+    }
+
+    // Generate a temporary export link
+    // This will be replaced with a proper server-side export via Google API
+    const exportUrl = `https://docs.google.com/${type === 'google_docs' ? 'document/d/${fileId}/export' : 'presentation/d/${fileId}/export'}?format=pdf`;
+
+    // For now, return the export URL directly
+    // In production: download PDF → apply watermark → upload to storage
+    return exportUrl;
+  }
+
+  function extractGoogleFileId(url) {
+    const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+    return match ? match[1] : null;
+  }
+
+  // Load resources when course loads
+  // (added to loadCourse function below)
   // Logout
   document.getElementById('logout-btn')?.addEventListener('click', logout);
 </script>
