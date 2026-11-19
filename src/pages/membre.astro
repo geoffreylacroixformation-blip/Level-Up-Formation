@@ -10,67 +10,64 @@ const t = useTranslations(lang);
   <div class="py-12">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div id="auth-section" class="mb-12">
-        <div id="login-form" class="max-w-md mx-auto bg-surface rounded-xl p-8">
-          <div class="text-center mb-6">
-            <h1 class="font-display text-2xl font-bold mb-2">{t.auth.login}</h1>
+        <div id="login-form" class="max-w-[900px] mx-auto rounded-3xl overflow-hidden shadow-[0_0_60px_rgba(114,9,183,0.15)] border border-[rgba(114,9,183,0.2)]" style="display:flex; min-height:500px;">
+          <!-- Left panel -->
+          <div class="auth-memb-overlay hidden md:flex md:w-[45%] flex-col items-center justify-center p-12 relative" style="background: linear-gradient(135deg, #1a1a2e 0%, #2d1b69 50%, #0f0f1a 100%);">
+            <div style="position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(circle at 30% 20%, rgba(0,255,136,0.06) 0%, transparent 50%), radial-gradient(circle at 70% 80%, rgba(114,9,183,0.1) 0%, transparent 50%);pointer-events:none;"></div>
+            <div class="auth-memb-overlay-content relative z-10 text-center">
+              <h2 style="font-family:'Orbitron',sans-serif;font-size:1.6rem;font-weight:700;color:#00ff88;margin-bottom:16px;text-shadow:0 0 20px rgba(0,255,136,0.4);">Level Up</h2>
+              <p style="color:rgba(255,255,255,0.6);font-size:0.95rem;line-height:1.6;margin-bottom:32px;">Accédez à votre espace personnel pour suivre vos formations et progresser.</p>
+              <button class="auth-memb-back-btn" style="padding:12px 32px;border:2px solid #00ff88;border-radius:12px;background:transparent;color:#00ff88;font-family:'Inter',sans-serif;font-weight:600;font-size:0.9rem;cursor:pointer;transition:all 0.3s ease;letter-spacing:0.5px;">← Retour au site</button>
+            </div>
           </div>
 
-          <div class="flex gap-2 mb-6">
-            <button type="button" id="tab-login" class="flex-1 py-2 bg-primary text-white rounded-lg font-medium">
-              {t.auth.login}
-            </button>
-            <button type="button" id="tab-register" class="flex-1 py-2 bg-surface-light text-text-muted border border-border rounded-lg font-medium cursor-pointer hover:bg-surface-light/80 transition-colors">
-              {t.auth.register}
-            </button>
+          <!-- Right panel (form) -->
+          <div class="auth-memb-form-panel flex-1" style="background:rgba(15,15,26,0.95);backdrop-filter:blur(20px);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px 40px;">
+            <div style="font-family:'Orbitron',sans-serif;font-size:1.8rem;font-weight:700;background:linear-gradient(135deg,#00ff88,#7209b7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:8px;">LEVEL UP</div>
+            <div style="color:rgba(255,255,255,0.4);font-size:0.85rem;margin-bottom:36px;">Espace Membre</div>
+
+            <!-- Tab buttons -->
+            <div class="flex gap-3 mb-8" style="max-width:320px;width:100%;">
+              <button type="button" id="tab-login" class="flex-1 py-2.5 rounded-xl font-semibold text-sm cursor-pointer transition-all active-tab">
+                {t.auth.login}
+              </button>
+              <button type="button" id="tab-register" class="flex-1 py-2.5 rounded-xl font-semibold text-sm cursor-pointer transition-all inactive-tab">
+                {t.auth.register}
+              </button>
+            </div>
+
+            <form id="auth-form" class="w-full" style="max-width:320px;">
+              <div class="auth-memb-input-group mb-5">
+                <label for="email" style="display:block;color:rgba(255,255,255,0.5);font-size:0.85rem;margin-bottom:8px;font-weight:500;">{t.auth.email}</label>
+                <input type="email" id="email" name="email" required placeholder="votre@email.com"
+                  style="width:100%;padding:14px 18px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:12px;color:white;font-size:0.95rem;font-family:'Inter',sans-serif;transition:all 0.3s ease;"
+                  autocomplete="email" />
+              </div>
+              <div class="auth-memb-input-group mb-5">
+                <label for="password" style="display:block;color:rgba(255,255,255,0.5);font-size:0.85rem;margin-bottom:8px;font-weight:500;">{t.auth.password}</label>
+                <input type="password" id="password" name="password" required placeholder="••••••••"
+                  style="width:100%;padding:14px 18px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:12px;color:white;font-size:0.95rem;font-family:'Inter',sans-serif;transition:all 0.3s ease;"
+                  autocomplete="current-password" />
+              </div>
+              <div id="confirm-password-field" class="auth-memb-input-group mb-5 hidden">
+                <label for="confirm-password" style="display:block;color:rgba(255,255,255,0.5);font-size:0.85rem;margin-bottom:8px;font-weight:500;">{t.auth.confirmPassword}</label>
+                <input type="password" id="confirm-password" name="confirm-password" placeholder="••••••••"
+                  style="width:100%;padding:14px 18px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:12px;color:white;font-size:0.95rem;font-family:'Inter',sans-serif;transition:all 0.3s ease;" />
+              </div>
+              <button type="submit" id="submit-btn" class="auth-memb-submit-btn w-full py-3.5 rounded-xl font-bold text-sm cursor-pointer transition-all"
+                style="background:linear-gradient(135deg,#7209b7,#00ff88);color:white;border:none;box-shadow:0 4px 20px rgba(114,9,183,0.3);letter-spacing:0.5px;">
+                Se connecter
+              </button>
+            </form>
+
+            <div class="mt-4 text-center">
+              <button id="magic-link-btn" style="font-size:0.85rem;color:rgba(255,255,255,0.4);cursor:pointer;transition:color 0.3s;border:none;background:none;text-decoration:underline;text-underline-offset:3px;">
+                {t.auth.magicLink}
+              </button>
+            </div>
+
+            <div id="auth-error" class="mt-4 p-3 text-sm rounded-xl hidden w-full" style="max-width:320px;margin-left:auto;margin-right:auto;"></div>
           </div>
-
-          <form id="auth-form" class="space-y-4">
-            <div>
-              <label for="email" class="block text-sm font-medium mb-1">{t.auth.email}</label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                required
-                class="w-full px-4 py-2 bg-surface-light border border-border rounded-lg focus:border-primary focus:outline-none"
-                placeholder="votre@email.com"
-              />
-            </div>
-            <div>
-              <label for="password" class="block text-sm font-medium mb-1">{t.auth.password}</label>
-              <input
-                type="password"
-                id="password"
-                name="password"
-                required
-                class="w-full px-4 py-2 bg-surface-light border border-border rounded-lg focus:border-primary focus:outline-none"
-              />
-            </div>
-            <div id="confirm-password-field" class="hidden">
-              <label for="confirm-password" class="block text-sm font-medium mb-1">{t.auth.confirmPassword}</label>
-              <input
-                type="password"
-                id="confirm-password"
-                name="confirm-password"
-                class="w-full px-4 py-2 bg-surface-light border border-border rounded-lg focus:border-primary focus:outline-none"
-              />
-            </div>
-            <button
-              type="submit"
-              id="submit-btn"
-              class="w-full py-3 bg-primary text-white rounded-lg font-semibold transition-colors"
-            >
-              Se connecter
-            </button>
-          </form>
-
-          <div class="mt-4 text-center">
-            <button id="magic-link-btn" class="text-sm text-accent">
-              {t.auth.magicLink}
-            </button>
-          </div>
-
-          <div id="auth-error" class="mt-4 p-3 text-error text-sm hidden"></div>
         </div>
       </div>
 
@@ -90,12 +87,10 @@ const t = useTranslations(lang);
             <p class="text-2xl font-bold" id="courses-count">0</p>
             <p class="text-text-muted text-sm">{t.member.myCourses}</p>
           </div>
-
           <div class="bg-surface rounded-xl p-6">
             <p class="text-2xl font-bold" id="progress-percent">0%</p>
             <p class="text-text-muted text-sm">{t.member.progress}</p>
           </div>
-
           <div class="bg-surface rounded-xl p-6">
             <p class="text-2xl font-bold" id="badges-count">0</p>
             <p class="text-text-muted text-sm">{t.member.badges}</p>
@@ -125,6 +120,46 @@ const t = useTranslations(lang);
   </div>
 </Layout>
 
+<style>
+  .active-tab {
+    background: linear-gradient(135deg, #7209b7, #00ff88) !important;
+    color: white !important;
+    border: none !important;
+    box-shadow: 0 4px 20px rgba(114, 9, 183, 0.3) !important;
+  }
+  .inactive-tab {
+    background: rgba(255, 255, 255, 0.04) !important;
+    color: rgba(255, 255, 255, 0.5) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  }
+  .active-tab:hover {
+    box-shadow: 0 8px 30px rgba(114, 9, 183, 0.5) !important;
+  }
+  .auth-memb-input-group input:focus {
+    outline: none;
+    border-color: #7209b7 !important;
+    box-shadow: 0 0 20px rgba(114, 9, 183, 0.15) !important;
+    background: rgba(114, 9, 183, 0.05) !important;
+  }
+  .auth-memb-submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(114, 9, 183, 0.5) !important;
+  }
+  .auth-memb-back-btn:hover {
+    background: rgba(0, 255, 136, 0.1) !important;
+    box-shadow: 0 0 25px rgba(0, 255, 136, 0.3) !important;
+    transform: translateY(-2px);
+  }
+  #magic-link-btn:hover {
+    color: #00ff88 !important;
+  }
+  .auth-memb-overlay .back-btn:hover {
+    background: rgba(0, 255, 136, 0.1) !important;
+    box-shadow: 0 0 25px rgba(0, 255, 136, 0.3) !important;
+    transform: translateY(-2px);
+  }
+</style>
+
 <script define:vars={{}}>
 import { createClient } from '@supabase/supabase-js';
 
@@ -132,7 +167,7 @@ const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL || '';
 const supabaseAnonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY || '';
 
 // ============================================
-// TAB SWITCHING (always works, no Supabase needed)
+// TAB SWITCHING
 // ============================================
 const tabLogin = document.getElementById('tab-login');
 const tabRegister = document.getElementById('tab-register');
@@ -145,46 +180,45 @@ let isLoginMode = true;
 const urlParams = new URLSearchParams(window.location.search);
 if (urlParams.get('tab') === 'register') {
   isLoginMode = false;
-  tabRegister?.classList.add('bg-primary', 'text-white');
-  tabRegister?.classList.remove('bg-surface-light', 'text-text-muted');
-  tabLogin?.classList.remove('bg-primary', 'text-white');
-  tabLogin?.classList.add('bg-surface-light', 'text-text-muted');
+  tabRegister?.classList.add('active-tab');
+  tabRegister?.classList.remove('inactive-tab');
+  tabLogin?.classList.remove('active-tab');
+  tabLogin?.classList.add('inactive-tab');
   confirmPasswordField?.classList.remove('hidden');
   authError?.classList.add('hidden');
   const submitBtn = document.getElementById('submit-btn');
   if (submitBtn) submitBtn.textContent = "S'inscrire";
-  // Clean URL
   const url = new URL(window.location);
   url.searchParams.delete('tab');
   window.history.replaceState({}, '', url);
 }
 
 tabLogin?.addEventListener('click', () => {
-isLoginMode = true;
-tabLogin.classList.add('bg-primary', 'text-white');
-tabLogin.classList.remove('bg-surface-light', 'text-text-muted');
-tabRegister?.classList.remove('bg-primary', 'text-white');
-tabRegister?.classList.add('bg-surface-light', 'text-text-muted');
-confirmPasswordField?.classList.add('hidden');
-authError?.classList.add('hidden');
-const submitBtn = document.getElementById('submit-btn');
-if (submitBtn) { submitBtn.textContent = 'Se connecter'; submitBtn.disabled = false; }
+  isLoginMode = true;
+  tabLogin?.classList.add('active-tab');
+  tabLogin?.classList.remove('inactive-tab');
+  tabRegister?.classList.remove('active-tab');
+  tabRegister?.classList.add('inactive-tab');
+  confirmPasswordField?.classList.add('hidden');
+  authError?.classList.add('hidden');
+  const submitBtn = document.getElementById('submit-btn');
+  if (submitBtn) { submitBtn.textContent = 'Se connecter'; submitBtn.disabled = false; }
 });
 
 tabRegister?.addEventListener('click', () => {
-isLoginMode = false;
-tabRegister.classList.add('bg-primary', 'text-white');
-tabRegister.classList.remove('bg-surface-light', 'text-text-muted');
-tabLogin?.classList.remove('bg-primary', 'text-white');
-tabLogin?.classList.add('bg-surface-light', 'text-text-muted');
-confirmPasswordField?.classList.remove('hidden');
-authError?.classList.add('hidden');
-const submitBtn = document.getElementById('submit-btn');
-if (submitBtn) { submitBtn.textContent = "S'inscrire"; submitBtn.disabled = false; }
+  isLoginMode = false;
+  tabRegister?.classList.add('active-tab');
+  tabRegister?.classList.remove('inactive-tab');
+  tabLogin?.classList.remove('active-tab');
+  tabLogin?.classList.add('inactive-tab');
+  confirmPasswordField?.classList.remove('hidden');
+  authError?.classList.add('hidden');
+  const submitBtn = document.getElementById('submit-btn');
+  if (submitBtn) { submitBtn.textContent = "S'inscrire"; submitBtn.disabled = false; }
 });
 
 // ============================================
-// AUTH (only if Supabase is configured)
+// AUTH
 // ============================================
 if (supabaseUrl && supabaseAnonKey) {
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
@@ -210,6 +244,9 @@ authForm?.addEventListener('submit', async (e) => {
       if (submitBtn) { submitBtn.textContent = originalText; submitBtn.disabled = false; }
       if (error && authError) {
         authError.textContent = error.message;
+        authError.style.color = '#ff6b6b';
+        authError.style.background = 'rgba(255,107,107,0.08)';
+        authError.style.border = '1px solid rgba(255,107,107,0.2)';
         authError.classList.remove('hidden');
       }
     } else {
@@ -217,6 +254,9 @@ authForm?.addEventListener('submit', async (e) => {
       if (confirmInput && password !== confirmInput.value) {
         if (authError) {
           authError.textContent = 'Les mots de passe ne correspondent pas';
+          authError.style.color = '#ff6b6b';
+          authError.style.background = 'rgba(255,107,107,0.08)';
+          authError.style.border = '1px solid rgba(255,107,107,0.2)';
           authError.classList.remove('hidden');
         }
         return;
@@ -226,17 +266,24 @@ authForm?.addEventListener('submit', async (e) => {
       if (submitBtn) { submitBtn.textContent = originalText; submitBtn.disabled = false; }
       if (error && authError) {
         authError.textContent = error.message;
+        authError.style.color = '#ff6b6b';
+        authError.style.background = 'rgba(255,107,107,0.08)';
+        authError.style.border = '1px solid rgba(255,107,107,0.2)';
         authError.classList.remove('hidden');
       } else if (data?.user?.identities?.length === 0) {
         if (authError) {
           authError.textContent = 'Un compte avec cet email existe déjà. Utilisez "Connexion" ou "Mot de passe oublié".';
+          authError.style.color = '#f59e0b';
+          authError.style.background = 'rgba(245,158,11,0.08)';
+          authError.style.border = '1px solid rgba(245,158,11,0.2)';
           authError.classList.remove('hidden');
-          authError.classList.add('text-warning');
         }
       } else if (authError) {
         authError.textContent = 'Compte créé ! Vérifiez votre boîte mail pour confirmer votre adresse.';
+        authError.style.color = '#00ff88';
+        authError.style.background = 'rgba(0,255,136,0.08)';
+        authError.style.border = '1px solid rgba(0,255,136,0.2)';
         authError.classList.remove('hidden');
-        authError.classList.add('text-primary');
       }
     }
   }
@@ -254,6 +301,9 @@ document.getElementById('magic-link-btn')?.addEventListener('click', async () =>
   if (!emailInput || !emailInput.value) {
     if (authError) {
       authError.textContent = 'Veuillez entrer votre email';
+      authError.style.color = '#ff6b6b';
+      authError.style.background = 'rgba(255,107,107,0.08)';
+      authError.style.border = '1px solid rgba(255,107,107,0.2)';
       authError.classList.remove('hidden');
     }
     return;
@@ -261,11 +311,16 @@ document.getElementById('magic-link-btn')?.addEventListener('click', async () =>
   const { error } = await supabase.auth.signInWithOtp({ email: emailInput.value });
   if (error && authError) {
     authError.textContent = error.message;
+    authError.style.color = '#ff6b6b';
+    authError.style.background = 'rgba(255,107,107,0.08)';
+    authError.style.border = '1px solid rgba(255,107,107,0.2)';
     authError.classList.remove('hidden');
   } else if (authError) {
     authError.textContent = 'Lien magique envoyé ! Vérifiez votre boîte mail.';
+    authError.style.color = '#00ff88';
+    authError.style.background = 'rgba(0,255,136,0.08)';
+    authError.style.border = '1px solid rgba(0,255,136,0.2)';
     authError.classList.remove('hidden');
-    authError.classList.add('text-primary');
   }
 });
 
@@ -292,12 +347,20 @@ supabase.auth.getSession().then(({ data: { session } }) => {
     if (userName) userName.textContent = session.user.email?.split('@')[0] || 'Utilisateur';
   }
 });
-} else {
-// Show a message if Supabase is not configured
-const authErrorEl = document.getElementById('auth-error');
-if (authErrorEl) {
-  authErrorEl.textContent = 'Configuration Supabase manquante. Impossible de se connecter.';
-  authErrorEl.classList.remove('hidden');
 }
+
+// ============================================
+// RESPONSIVE: show/hide left panel on mobile
+// ============================================
+const authSection = document.getElementById('auth-section');
+if (authSection) {
+  const observer = new MutationObserver(() => {
+    const lf = document.getElementById('login-form');
+    const dashboardEl = document.getElementById('dashboard');
+    if (lf && dashboardEl && !dashboardEl.classList.contains('hidden')) {
+      lf.style.display = 'none';
+    }
+  });
+  observer.observe(document.getElementById('dashboard')!, { attributes: true, attributeFilter: ['class'] });
 }
 </script>
