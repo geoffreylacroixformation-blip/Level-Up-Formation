@@ -74,3 +74,36 @@ loginForm?.addEventListener('submit', async (e) => {
     submitBtn.textContent = 'Se connecter';
   }
 });
+
+// ============================================
+// FORGOT PASSWORD (RESET)
+// ============================================
+const forgotPasswordLink = document.getElementById('forgot-password-link');
+forgotPasswordLink?.addEventListener('click', async (e) => {
+  e.preventDefault();
+  const email = document.getElementById('email').value;
+  if (!email) {
+    errorMsg.textContent = 'Veuillez entrer votre email d\'abord, puis cliquez sur "Mot de passe oublié".';
+    errorMsg.style.display = 'block';
+    return;
+  }
+  try {
+    const { createClient } = await import('https://esm.sh/@supabase/supabase-js@2');
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/admin/reset-password`,
+    });
+    if (error) {
+      errorMsg.textContent = error.message;
+      errorMsg.style.display = 'block';
+      successMsg.style.display = 'none';
+    } else {
+      errorMsg.style.display = 'none';
+      successMsg.textContent = 'Lien de réinitialisation envoyé ! Vérifiez votre boîte mail.';
+      successMsg.style.display = 'block';
+    }
+  } catch (err) {
+    errorMsg.textContent = 'Erreur lors de l\'envoi du lien de réinitialisation.';
+    errorMsg.style.display = 'block';
+  }
+});
