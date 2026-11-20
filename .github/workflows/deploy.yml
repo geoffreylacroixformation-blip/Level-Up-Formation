@@ -38,12 +38,15 @@ jobs:
           PUBLIC_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
 
-      - name: Inject Supabase credentials into admin-login.js
+      - name: Inject Supabase credentials into static files
         run: |
           sed -i "s|import.meta.env.PUBLIC_SUPABASE_URL|'${{ secrets.SUPABASE_URL }}'|g" dist/assets/admin-login.js
           sed -i "s|import.meta.env.PUBLIC_SUPABASE_ANON_KEY|'${{ secrets.SUPABASE_ANON_KEY }}'|g" dist/assets/admin-login.js
-          echo "Injected credentials into admin-login.js"
-          grep -c "supabase.co" dist/assets/admin-login.js && echo "OK" || echo "FAIL"
+          find dist -name "*.html" -exec sed -i "s|import.meta.env.PUBLIC_SUPABASE_URL|'${{ secrets.SUPABASE_URL }}'|g" {} +
+          find dist -name "*.html" -exec sed -i "s|import.meta.env.PUBLIC_SUPABASE_ANON_KEY|'${{ secrets.SUPABASE_ANON_KEY }}'|g" {} +
+          echo "Injected credentials into admin-login.js and all HTML files"
+          grep -c "supabase.co" dist/assets/admin-login.js && echo "JS OK" || echo "JS FAIL"
+          grep -c "supabase.co" dist/reset-password/index.html && echo "HTML OK" || echo "HTML FAIL"
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
