@@ -38,11 +38,13 @@ jobs:
           PUBLIC_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
 
-      - name: Inject Supabase credentials into JS files
+      - name: Inject Supabase credentials into all JS files
         run: |
+          sed -i "s|import.meta.env.PUBLIC_SUPABASE_URL|'${{ secrets.SUPABASE_URL }}'|g" dist/supabase-inject.js
+          sed -i "s|import.meta.env.PUBLIC_SUPABASE_ANON_KEY|'${{ secrets.SUPABASE_ANON_KEY }}'|g" dist/supabase-inject.js
           sed -i "s|import.meta.env.PUBLIC_SUPABASE_URL|'${{ secrets.SUPABASE_URL }}'|g" dist/assets/admin-login.js
           sed -i "s|import.meta.env.PUBLIC_SUPABASE_ANON_KEY|'${{ secrets.SUPABASE_ANON_KEY }}'|g" dist/assets/admin-login.js
-          echo "Injected into admin-login.js"
+          echo "Injected into all JS files"
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}

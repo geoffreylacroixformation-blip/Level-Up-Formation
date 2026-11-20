@@ -170,20 +170,13 @@ const t = useTranslations(lang);
   }
 </style>
 
-<script define:vars={{}}>
+<script type="module" src="/supabase-inject.js"></script>
+    <script define:vars={{}}>
 import { createClient } from '@supabase/supabase-js';
 
-// Load Supabase credentials from JSON config (injected by GitHub Actions)
-let supabaseUrl = '';
-let supabaseAnonKey = '';
-try {
-  const res = await fetch('/supabase-config.json');
-  const config = await res.json();
-  supabaseUrl = config.SUPABASE_URL || '';
-  supabaseAnonKey = config.SUPABASE_ANON_KEY || '';
-} catch (e) {
-  console.error('Failed to load Supabase config:', e);
-}
+// Credentials injected by workflow via supabase-inject.js
+const supabaseUrl = window.SUPABASE_URL || '';
+const supabaseAnonKey = window.SUPABASE_ANON_KEY || '';
 
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 

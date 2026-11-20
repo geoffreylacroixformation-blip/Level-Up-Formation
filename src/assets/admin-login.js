@@ -1,6 +1,6 @@
-// Supabase credentials - injected at build time
-const SUPABASE_URL = import.meta.env.PUBLIC_SUPABASE_URL || '';
-const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY || '';
+// Supabase credentials - injected at build time via supabase-inject.js (window.SUPABASE_URL)
+const SUPABASE_URL = window.SUPABASE_URL || '';
+const SUPABASE_ANON_KEY = window.SUPABASE_ANON_KEY || '';
 
 const loginForm = document.getElementById('loginForm');
 const errorMsg = document.getElementById('errorMsg');
