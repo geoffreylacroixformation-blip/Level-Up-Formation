@@ -157,5 +157,13 @@
     "cgv": "CGV",
     "privacy": "Confidentialité",
     "copyright": "© 2026 Level-Up Formation. Tous droits réservés."
+  },
+  "auth": {
+    "login": "Connexion",
+    "register": "S'inscrire",
+    "email": "Email",
+    "password": "Mot de passe",
+    "confirmPassword": "Confirmer le mot de passe",
+    "magicLink": "Envoyer un lien magique"
   }
 }
