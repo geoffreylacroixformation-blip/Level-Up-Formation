@@ -38,28 +38,11 @@ jobs:
           PUBLIC_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
 
-      - name: Inject Supabase credentials into static files
+      - name: Inject Supabase credentials into JS files
         run: |
-          python3 -c "
-          import os, re, glob
-          url = os.environ.get('SUPABASE_URL', '')
-          key = os.environ.get('SUPABASE_ANON_KEY', '')
-          if not url or not key:
-              print('ERROR: Supabase secrets are empty!')
-              exit(1)
-          replacements = [
-              (url, 'import.meta.env.PUBLIC_SUPABASE_URL'),
-              (key, 'import.meta.env.PUBLIC_SUPABASE_ANON_KEY'),
-          ]
-          files_to_fix = ['dist/assets/admin-login.js'] + glob.glob('dist/**/*.html', recursive=True)
-          for fpath in files_to_fix:
-              content = open(fpath, 'r').read()
-              for value, placeholder in replacements:
-                  content = content.replace(placeholder, repr(value)[1:-1])
-              open(fpath, 'w').write(content)
-              print(f'Injected into {fpath}')
-          print('Done!')
-          "
+          sed -i "s|import.meta.env.PUBLIC_SUPABASE_URL|'${{ secrets.SUPABASE_URL }}'|g" dist/assets/admin-login.js
+          sed -i "s|import.meta.env.PUBLIC_SUPABASE_ANON_KEY|'${{ secrets.SUPABASE_ANON_KEY }}'|g" dist/assets/admin-login.js
+          echo "Injected into admin-login.js"
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
