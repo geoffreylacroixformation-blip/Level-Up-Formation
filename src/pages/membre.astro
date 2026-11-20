@@ -173,8 +173,19 @@ const t = useTranslations(lang);
 <script define:vars={{}}>
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL || '';
-const supabaseAnonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY || '';
+// Load Supabase credentials from JSON config (injected by GitHub Actions)
+let supabaseUrl = '';
+let supabaseAnonKey = '';
+try {
+  const res = await fetch('/supabase-config.json');
+  const config = await res.json();
+  supabaseUrl = config.SUPABASE_URL || '';
+  supabaseAnonKey = config.SUPABASE_ANON_KEY || '';
+} catch (e) {
+  console.error('Failed to load Supabase config:', e);
+}
+
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 // ============================================
 // TAB SWITCHING
@@ -230,9 +241,6 @@ tabRegister?.addEventListener('click', () => {
 // ============================================
 // AUTH
 // ============================================
-if (supabaseUrl && supabaseAnonKey) {
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
-
 const loginForm = document.getElementById('login-form');
 const dashboard = document.getElementById('dashboard');
 const authForm = document.getElementById('auth-form') as HTMLFormElement | null;
@@ -393,7 +401,6 @@ supabase.auth.getSession().then(({ data: { session } }) => {
     if (userName) userName.textContent = session.user.email?.split('@')[0] || 'Utilisateur';
   }
 });
-}
 
 // ============================================
 // RESPONSIVE: show/hide left panel on mobile
