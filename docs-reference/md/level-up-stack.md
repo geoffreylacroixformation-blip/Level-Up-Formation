@@ -48,10 +48,10 @@ Cloudflare Pages (site statique Astro)
 || Plateforme | Cloudflare Pages (gratuit) ||
 || URL publique | `https://levelup-formation.pages.dev` ||
 || Déploiement | GitHub Actions (`cloudflare/pages-action@v1`) ||
-|| Environment variables - SUPABASE_URL | https://snnswoqgneyuqofnyxgn.supabase.co
-|| Environment variables - SUPABASE_ANON_KEY | [REDACTED]
-|| CF_API_TOKEN | [REDACTED] — dans les secrets GitHub
-|| CF_ACCOUNT_ID | [REDACTED] — dans les secrets GitHub
+| Environment variables - SUPABASE_URL | [CONFIGURE_GITHUB_SECRET]
+| Environment variables - SUPABASE_ANON_KEY | [CONFIGURE_GITHUB_SECRET]
+| CF_API_TOKEN | [CONFIGURE_GITHUB_SECRET]
+| CF_ACCOUNT_ID | [CONFIGURE_GITHUB_SECRET]
 ### Backend / Auth
 | Élément | Détail |
 |---|---|
@@ -170,20 +170,18 @@ Cloudflare Pages (site statique Astro)
 
 ### Secrets Supabase Edge Functions
 ```env
-STRIPE_SECRET_KEY=sk_test_51TTTt4D1j69KRlZpMjKubuMy97apUe3XTeH8bU4odqUQH45XkIurvDX9CPmADffuoNUHWmjNZdhAZa9LFALAb7Mi00hfxU3dKqSITE_URL=https://geoffreylacroixformation-blip.github.io/Level-Up-Formation
-STRIPE_WEBHOOK_SECRET=whsec_temporaire
-SUPABASE_URL=https://geoffreylacroixformation-blip.github.io/Level-Up-Formation
-SUPABASE_SERVICE_ROLE_KEY=[REDACTED_SERVICE_ROLE]GduIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4MTg3ODE2MywiZXhwIjoyMDk3NDU0MTYzfQ.YMbh77XipcWfsW8S2Osq4cTCP_8LtFtDii6XPKJuPRk```
+STRIPE_SECRET_KEY=[CONFIGURE_SECRET]
+STRIPE_WEBHOOK_SECRET=[CONFIGURE_SECRET]
+SUPABASE_URL=[CONFIGURE_SECRET]
+SUPABASE_SERVICE_ROLE_KEY=[CONFIGURE_SECRET]
+```
 
 ### Frontend Astro (.env)
 ```env
-TOKEN=[REDACTED_SUPABASE_TOKEN]
-SUPABASE_SERVICE_ROLE_KEY=[REDACTED_SERVICE_ROLE]GduIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4MTg3ODE2MywiZXhwIjoyMDk3NDU0MTYzfQ.YMbh77XipcWfsW8S2Osq4cTCP_8LtFtDii6XPKJuPRk
-
-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
-
-sb_publishable_RkJTuRZy7c1ozpsyaGgG9g_Cmoh9a9_
-https://snnswoqgneyuqofnyxgn.supabase.co
+PUBLIC_SUPABASE_URL=[CONFIGURE_SECRET]
+PUBLIC_SUPABASE_ANON_KEY=[CONFIGURE_SECRET]
+SUPABASE_SERVICE_ROLE_KEY=[CONFIGURE_SECRET]
+```
 
 ---
 
