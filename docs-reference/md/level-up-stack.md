@@ -1,5 +1,5 @@
 # Level Up — Stack Technique Complète
-> Dernière mise à jour : 15 juillet 2026
+> Dernière mise à jour : 22 novembre 2026
 
 ---
 
@@ -48,9 +48,10 @@ Cloudflare Pages (site statique Astro)
 || Plateforme | Cloudflare Pages (gratuit) ||
 || URL publique | `https://levelup-formation.pages.dev` ||
 || Déploiement | GitHub Actions (`cloudflare/pages-action@v1`) ||
-| Environment variables - SUPABASE_URL | https://snnswoqgneyuqofnyxgn.supabase.co
-| Environment variables - SUPABASE_ANON_KEY | [REDACTED_SUPABASE_KEY]
-
+|| Environment variables - SUPABASE_URL | https://snnswoqgneyuqofnyxgn.supabase.co
+|| Environment variables - SUPABASE_ANON_KEY | [REDACTED]
+|| CF_API_TOKEN | [REDACTED] — dans les secrets GitHub
+|| CF_ACCOUNT_ID | [REDACTED] — dans les secrets GitHub
 ### Backend / Auth
 | Élément | Détail |
 |---|---|
@@ -220,6 +221,34 @@ L'agent Webmaster est responsable de :
 - Générer des rapports sur les inscriptions et progressions des apprenants
 - Alerter en cas d'échec webhook Stripe
 - Gérer les nouvelles pages ou modules de cours
+
+---
+
+## 🤖 Accès GitHub via Composio
+
+L'agent dispose d'un accès GitHub complet via Composio (compte `geoffreylacroixformation-blip` connecté, status ACTIVE).
+
+### Outils principaux
+| Outil | Usage |
+|---|---|
+| `GITHUB_COMMIT_MULTIPLE_FILES` | Commiter des fichiers |
+| `GITHUB_CREATE_A_BRANCH` | Créer des branches |
+| `GITHUB_CREATE_A_PULL_REQUEST` | Créer des PRs |
+| `GITHUB_MERGE_A_PULL_REQUEST` | Fusionner des PRs |
+| `GITHUB_CREATE_AN_ISSUE` | Créer des tickets |
+| `GITHUB_GET_A_REPOSITORY` | Infos repo |
+| `GITHUB_LIST_COMMITS` | Lister les commits |
+| `GITHUB_GET_CATALOG_MODELS` | Modèles AI GitHub |
+| `GITHUB_CREATE_INFERENCE_CHAT_COMPLETIONS` | Inférence IA (GPT-4, Claude, Llama) |
+
+### Compte connecté
+- **Owner** : `geoffreylacroixformation-blip`
+- **Repo** : `Level-Up-Formation`
+- **Status** : ACTIVE
+- **Account type** : PRIVATE
+
+### Limitations
+- `COMPOSIO_PROXY_EXECUTE` peut être bloqué par les Enhanced Controls → privilégier les outils `GITHUB_*`
 
 
 

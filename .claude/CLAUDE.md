@@ -88,6 +88,57 @@ URL : `https://levelup-formation.pages.dev`
 - `SUPABASE_URL` : URL Supabase
 - `SUPABASE_ANON_KEY` : Clé anon Supabase
 
+## Accès GitHub via Composio
+L'agent dispose d'un accès GitHub via Composio (compte `geoffreylacroixformation-blip` connecté).
+
+### Outils disponibles
+| Outil | Usage |
+|---|---|
+| `GITHUB_COMMIT_MULTIPLE_FILES` | Créer/mettre à jour/supprimer des fichiers dans un commit |
+| `GITHUB_CREATE_A_BRANCH` / `GITHUB_CREATE_A_REFERENCE` | Créer des branches |
+| `GITHUB_GET_A_REPOSITORY` | Récupérer les infos du repo |
+| `GITHUB_GET_A_BRANCH` | Récupérer le SHA d'une branche |
+| `GITHUB_GET_A_REFERENCE` | Récupérer une ref git |
+| `GITHUB_LIST_COMMITS` | Lister les commits |
+| `GITHUB_CREATE_A_PULL_REQUEST` | Créer une PR |
+| `GITHUB_LIST_PULL_REQUESTS` | Lister les PRs |
+| `GITHUB_GET_A_PULL_REQUEST` | Récupérer une PR |
+| `GITHUB_MERGE_A_PULL_REQUEST` | Fusionner une PR |
+| `GITHUB_CREATE_AN_ISSUE` | Créer un ticket |
+| `GITHUB_LIST_ISSUES` | Lister les tickets |
+| `GITHUB_UPDATE_ISSUE_TYPE` | Modifier un type de ticket |
+| `GITHUB_LIST_ISSUE_TYPES` | Lister les types de ticket |
+| `GITHUB_LIST_AVAILABLE_MACHINE_TYPES_FOR_A_REPOSITORY` | Machines Codespaces |
+| `GITHUB_GET_DEFAULT_ATTRIBUTES_FOR_A_CODESPACE` | Config Codespaces |
+| `GITHUB_CREATE_A_CODESPACE_IN_A_REPOSITORY` | Créer un Codespace |
+| `GITHUB_GET_CATALOG_MODELS` | Modèles AI GitHub |
+| `GITHUB_CREATE_INFERENCE_CHAT_COMPLETIONS` | Inférence IA (GPT-4, Claude, Llama) |
+| `GITHUB_CREATE_INFERENCE_EMBEDDINGS` | Embeddings IA |
+
+### Compte connecté
+- **Owner** : `geoffreylacroixformation-blip`
+- **Repo** : `Level-Up-Formation`
+- **Status** : ACTIVE
+- **Account type** : PRIVATE
+
+### Exemple : Commit via Composio
+```
+Tool: GITHUB_COMMIT_MULTIPLE_FILES
+Args:
+  owner: "geoffreylacroixformation-blip"
+  repo: "Level-Up-Formation"
+  branch: "main"
+  message: "feat: description du changement"
+  base_branch: "main"  # si la branche n'existe pas
+  upserts:
+    - path: "chemin/du/fichier.md"
+      content: "contenu du fichier"
+```
+
+### Limitations connues
+- `COMPOSIO_PROXY_EXECUTE` peut être bloqué par les Enhanced Controls → utiliser les outils spécifiques `GITHUB_*` à la place
+- Les Enhanced Controls peuvent empêcher les appels directs → privilégier les outils Composio dédiés
+
 ## Base de données
 - URL Supabase : `https://snnswoqgneyuqofnyxgn.supabase.co`
 - 9 migrations SQL dans `supabase/migrations/`
