@@ -7,7 +7,7 @@ import tailwindcss from '@tailwindcss/vite';
 export default defineConfig({
   output: 'static',
   base: '/Level-Up-Formation/',
-  site: 'https://geoffreylacroixformation-blip.github.io/Level-Up-Formation',
+  site: 'https://levelup-formation.pages.dev',
   build: {
     assets: 'assets',
   },
