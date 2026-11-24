@@ -6,7 +6,7 @@ const lang = defaultLang;
 const t = useTranslations(lang);
 ---
 
-<Layout title={t.member.title}>
+<Layout title={t.member.title} supabaseUrl="https://nqrgwneabqzqgqyfqztg.supabase.co" supabaseAnonKey="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5xcmd3bmVhYnF6cWdxeWZxenRnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM0MzEyMzEsImV4cCI6MjA3OTAwNzIzMX0.9YnMW6QMM47xPjwgOJwCX2r0YVakLHj9aKmqUfH0HlE">
   <div class="py-12">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div id="auth-section" class="mb-12">
@@ -26,12 +26,13 @@ const t = useTranslations(lang);
             <div style="font-family:'Orbitron',sans-serif;font-size:1.8rem;font-weight:700;background:linear-gradient(135deg,#00ff88,#7209b7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:8px;">LEVEL UP</div>
             <div style="color:rgba(255,255,255,0.4);font-size:0.85rem;margin-bottom:36px;">Espace Membre</div>
 
-            <!-- Tab buttons -->
-            <div class="flex gap-3 mb-8" style="max-width:320px;width:100%;">
-              <button type="button" id="tab-login" class="flex-1 py-2.5 rounded-xl font-semibold text-sm cursor-pointer transition-all active-tab">
+            <!-- Tab buttons (sliding) -->
+            <div class="flex gap-3 mb-8" style="max-width:320px;width:100%;position:relative;height:42px;">
+              <div id="tab-slider" style="position:absolute;top:0;left:0;height:42px;border-radius:12px;background:linear-gradient(135deg,#7209b7,#00ff88);box-shadow:0 4px 20px rgba(114,9,183,0.3);transition:left 0.4s cubic-bezier(0.4,0,0.2,1), width 0.4s cubic-bezier(0.4,0,0.2,1);z-index:0;"></div>
+              <button type="button" id="tab-login" class="flex-1 py-2.5 rounded-xl font-semibold text-sm cursor-pointer relative z-10" style="color:white;border:none;background:transparent;">
                 {t.auth.login}
               </button>
-              <button type="button" id="tab-register" class="flex-1 py-2.5 rounded-xl font-semibold text-sm cursor-pointer transition-all inactive-tab">
+              <button type="button" id="tab-register" class="flex-1 py-2.5 rounded-xl font-semibold text-sm cursor-pointer relative z-10" style="color:rgba(255,255,255,0.5);border:none;background:transparent;">
                 {t.auth.register}
               </button>
             </div>
@@ -128,20 +129,6 @@ const t = useTranslations(lang);
 </Layout>
 
 <style>
-  .active-tab {
-    background: linear-gradient(135deg, #7209b7, #00ff88) !important;
-    color: white !important;
-    border: none !important;
-    box-shadow: 0 4px 20px rgba(114, 9, 183, 0.3) !important;
-  }
-  .inactive-tab {
-    background: rgba(255, 255, 255, 0.04) !important;
-    color: rgba(255, 255, 255, 0.5) !important;
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  }
-  .active-tab:hover {
-    box-shadow: 0 8px 30px rgba(114, 9, 183, 0.5) !important;
-  }
   .auth-memb-input-group input:focus {
     outline: none;
     border-color: #7209b7 !important;
@@ -170,34 +157,48 @@ const t = useTranslations(lang);
   }
 </style>
 
-<script type="module" src="/Level-Up-Formation/supabase-inject.js"></script>
-    <script define:vars={{}}>
+<script>
 import { createClient } from '@supabase/supabase-js';
 
-// Credentials injected by workflow via supabase-inject.js
 const supabaseUrl = window.SUPABASE_URL || '';
 const supabaseAnonKey = window.SUPABASE_ANON_KEY || '';
-
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 // ============================================
-// TAB SWITCHING
+// SLIDING TAB ANIMATION
 // ============================================
-const tabLogin = document.getElementById('tab-login');
-const tabRegister = document.getElementById('tab-register');
+const tabSlider = document.getElementById('tab-slider');
+const tabLoginBtn = document.getElementById('tab-login');
+const tabRegisterBtn = document.getElementById('tab-register');
 const confirmPasswordField = document.getElementById('confirm-password-field');
 const authError = document.getElementById('auth-error');
 
 let isLoginMode = true;
 
+function updateSlider(toRegister: boolean) {
+  if (!tabSlider || !tabLoginBtn || !tabRegisterBtn) return;
+  const container = tabSlider.parentElement!;
+  const containerWidth = container.offsetWidth;
+  const gap = 12; // gap-3 = 12px total
+  const btnWidth = (containerWidth - gap) / 2;
+
+  if (toRegister) {
+    tabSlider.style.left = `${btnWidth + gap / 2}px`;
+    tabSlider.style.width = `${btnWidth}px`;
+    tabLoginBtn.style.color = 'rgba(255,255,255,0.5)';
+    tabRegisterBtn.style.color = 'white';
+  } else {
+    tabSlider.style.left = '0';
+    tabSlider.style.width = `${btnWidth}px`;
+    tabLoginBtn.style.color = 'white';
+    tabRegisterBtn.style.color = 'rgba(255,255,255,0.5)';
+  }
+}
+
 // Auto-switch to register tab if ?tab=register is in URL
 const urlParams = new URLSearchParams(window.location.search);
 if (urlParams.get('tab') === 'register') {
   isLoginMode = false;
-  tabRegister?.classList.add('active-tab');
-  tabRegister?.classList.remove('inactive-tab');
-  tabLogin?.classList.remove('active-tab');
-  tabLogin?.classList.add('inactive-tab');
   confirmPasswordField?.classList.remove('hidden');
   authError?.classList.add('hidden');
   const submitBtn = document.getElementById('submit-btn');
@@ -205,31 +206,29 @@ if (urlParams.get('tab') === 'register') {
   const url = new URL(window.location);
   url.searchParams.delete('tab');
   window.history.replaceState({}, '', url);
+  setTimeout(() => updateSlider(false), 50);
 }
 
-tabLogin?.addEventListener('click', () => {
+tabLoginBtn?.addEventListener('click', () => {
   isLoginMode = true;
-  tabLogin?.classList.add('active-tab');
-  tabLogin?.classList.remove('inactive-tab');
-  tabRegister?.classList.remove('active-tab');
-  tabRegister?.classList.add('inactive-tab');
+  updateSlider(false);
   confirmPasswordField?.classList.add('hidden');
   authError?.classList.add('hidden');
   const submitBtn = document.getElementById('submit-btn');
   if (submitBtn) { submitBtn.textContent = 'Se connecter'; submitBtn.disabled = false; }
 });
 
-tabRegister?.addEventListener('click', () => {
+tabRegisterBtn?.addEventListener('click', () => {
   isLoginMode = false;
-  tabRegister?.classList.add('active-tab');
-  tabRegister?.classList.remove('inactive-tab');
-  tabLogin?.classList.remove('active-tab');
-  tabLogin?.classList.add('inactive-tab');
+  updateSlider(true);
   confirmPasswordField?.classList.remove('hidden');
   authError?.classList.add('hidden');
   const submitBtn = document.getElementById('submit-btn');
   if (submitBtn) { submitBtn.textContent = "S'inscrire"; submitBtn.disabled = false; }
 });
+
+// Initialize slider position
+setTimeout(() => updateSlider(isLoginMode), 50);
 
 // ============================================
 // AUTH
