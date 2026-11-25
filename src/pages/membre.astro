@@ -28,7 +28,7 @@ const t = useTranslations(lang);
 
             <!-- Tab buttons (sliding) -->
             <div class="flex gap-3 mb-8" style="max-width:320px;width:100%;position:relative;height:42px;">
-              <div id="tab-slider" style="position:absolute;top:0;left:0;height:42px;border-radius:12px;background:linear-gradient(135deg,#7209b7,#00ff88);box-shadow:0 4px 20px rgba(114,9,183,0.3);transition:left 0.4s cubic-bezier(0.4,0,0.2,1), width 0.4s cubic-bezier(0.4,0,0.2,1);z-index:0;"></div>
+              <div id="tab-slider" style="position:absolute;top:0;left:0;height:42px;width:148px;border-radius:12px;background:linear-gradient(135deg,#7209b7,#00ff88);box-shadow:0 4px 20px rgba(114,9,183,0.3);transition:left 0.4s cubic-bezier(0.4,0,0.2,1), width 0.4s cubic-bezier(0.4,0,0.2,1);z-index:0;"></div>
               <button type="button" id="tab-login" class="flex-1 py-2.5 rounded-xl font-semibold text-sm cursor-pointer relative z-10" style="color:white;border:none;background:transparent;">
                 {t.auth.login}
               </button>
@@ -175,9 +175,9 @@ const authError = document.getElementById('auth-error');
 
 let isLoginMode = true;
 
-function updateSlider(toRegister: boolean) {
+function updateSlider(toRegister) {
   if (!tabSlider || !tabLoginBtn || !tabRegisterBtn) return;
-  const container = tabSlider.parentElement!;
+  const container = tabSlider.parentElement;
   const containerWidth = container.offsetWidth;
   const gap = 12; // gap-3 = 12px total
   const btnWidth = (containerWidth - gap) / 2;
